@@ -72,4 +72,12 @@ is $word->inflect(1, 2), 'pidämme';
 is $word->inflect(2, 2), 'pidätte';
 is $word->inflect(3, 2), 'pitävät';
 
+$word = Lingua::Poly::FI::Word::Verb::Type1->new('antaa');
+is $word->inflect(1, 1), 'annan';
+is $word->inflect(2, 1), 'annat';
+is $word->inflect(3, 1), 'antaa';
+is $word->inflect(1, 2), 'annamme';
+is $word->inflect(2, 2), 'annatte';
+is $word->inflect(3, 2), 'antavat';
+
 done_testing;
