@@ -9,6 +9,15 @@ README.md
 README.pod
 dist.ini
 lib/Lingua/Poly.pm
+lib/Lingua/Poly/FI/Word/Verb.pm
+lib/Lingua/Poly/FI/Word/Verb/Type1.pm
+lib/Lingua/Poly/Word.pm
+lib/Lingua/Poly/Word/Verb.pm
+perlcritic.rc
+po/POTFILES
+po/de.po
+po/make-potfiles
 t/author-critic.t
 t/author-pod-syntax.t
+t/fi/verb1.t
 t/release-cpan-changes.t

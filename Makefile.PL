@@ -16,16 +16,30 @@ my %WriteMakefileArgs = (
   "LICENSE" => "unrestricted",
   "NAME" => "Lingua::Poly",
   "PREREQ_PM" => {
+    "Carp" => 0,
+    "Exporter" => 0,
+    "Lingua::Poly::FI::Word" => 0,
+    "Locale::TextDomain" => 0,
+    "base" => 0,
     "strict" => 0
+  },
+  "TEST_REQUIRES" => {
+    "Test::More" => 0
   },
   "VERSION" => "v0.1.0",
   "test" => {
-    "TESTS" => "t/*.t"
+    "TESTS" => "t/*.t t/fi/*.t"
   }
 );
 
 
 my %FallbackPrereqs = (
+  "Carp" => 0,
+  "Exporter" => 0,
+  "Lingua::Poly::FI::Word" => 0,
+  "Locale::TextDomain" => 0,
+  "Test::More" => 0,
+  "base" => 0,
   "strict" => 0
 );
 
