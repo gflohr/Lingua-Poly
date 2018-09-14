@@ -80,4 +80,12 @@ is $word->inflect(1, 2), 'annamme';
 is $word->inflect(2, 2), 'annatte';
 is $word->inflect(3, 2), 'antavat';
 
+$word = Lingua::Poly::FI::Word::Verb::Type1->new('kertoa');
+is $word->inflect(1, 1), 'kerron';
+is $word->inflect(2, 1), 'kerrot';
+is $word->inflect(3, 1), 'kertoo';
+is $word->inflect(1, 2), 'kerromme';
+is $word->inflect(2, 2), 'kerrotte';
+is $word->inflect(3, 2), 'kertovat';
+
 done_testing;
