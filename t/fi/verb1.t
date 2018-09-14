@@ -88,4 +88,12 @@ is $word->inflect(1, 2), 'kerromme';
 is $word->inflect(2, 2), 'kerrotte';
 is $word->inflect(3, 2), 'kertovat';
 
+$word = Lingua::Poly::FI::Word::Verb::Type1->new('kulkea');
+is $word->inflect(1, 1), 'kuljen';
+is $word->inflect(2, 1), 'kuljet';
+is $word->inflect(3, 1), 'kulkee';
+is $word->inflect(1, 2), 'kuljemme';
+is $word->inflect(2, 2), 'kuljette';
+is $word->inflect(3, 2), 'kulkevat';
+
 done_testing;
