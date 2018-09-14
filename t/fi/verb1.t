@@ -10,6 +10,7 @@
 
 use strict;
 
+use utf8;
 use Test::More;
 use Lingua::Poly::FI::Word::Verb::Type1;
 
@@ -62,5 +63,13 @@ is $word->inflect(3, 1), 'kylpee';
 is $word->inflect(1, 2), 'kylvemme';
 is $word->inflect(2, 2), 'kylvette';
 is $word->inflect(3, 2), 'kylpevät';
+
+$word = Lingua::Poly::FI::Word::Verb::Type1->new('pitää');
+is $word->inflect(1, 1), 'pidän';
+is $word->inflect(2, 1), 'pidät';
+is $word->inflect(3, 1), 'pitää';
+is $word->inflect(1, 2), 'pidämme';
+is $word->inflect(2, 2), 'pidätte';
+is $word->inflect(3, 2), 'pitävät';
 
 done_testing;

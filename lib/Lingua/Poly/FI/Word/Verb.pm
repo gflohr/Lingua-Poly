@@ -11,6 +11,7 @@
 package Lingua::Poly::FI::Word::Verb;
 
 use strict;
+use utf8;
 
 use Locale::TextDomain qw(Lingua-Poly);
 
