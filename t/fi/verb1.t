@@ -96,4 +96,12 @@ is $word->inflect(1, 2), 'kuljemme';
 is $word->inflect(2, 2), 'kuljette';
 is $word->inflect(3, 2), 'kulkevat';
 
+$word = Lingua::Poly::FI::Word::Verb::Type1->new('särkeä');
+is $word->inflect(1, 1), 'särjen';
+is $word->inflect(2, 1), 'särjet';
+is $word->inflect(3, 1), 'särkee';
+is $word->inflect(1, 2), 'särjemme';
+is $word->inflect(2, 2), 'särjette';
+is $word->inflect(3, 2), 'särkevät';
+
 done_testing;
