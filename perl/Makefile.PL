@@ -16,12 +16,27 @@ my %WriteMakefileArgs = (
   "LICENSE" => "unrestricted",
   "NAME" => "Lingua::Poly",
   "PREREQ_PM" => {
+    "CGI::Cookie" => 0,
     "Carp" => 0,
+    "Config::General" => 0,
+    "DBI" => 0,
+    "Digest::SHA" => 0,
+    "Encode" => 0,
     "Exporter" => 0,
+    "HTTP::Status" => 0,
+    "JSON" => 0,
     "Lingua::Poly::FI::Word" => 0,
+    "Locale::Messages" => 0,
     "Locale::TextDomain" => 0,
+    "MIME::Base64" => 0,
+    "Plack::Request" => 0,
+    "Plack::Response" => 0,
+    "Time::HiRes" => 0,
     "base" => 0,
-    "strict" => 0
+    "constant" => 0,
+    "strict" => 0,
+    "utf8" => 0,
+    "vars" => 0
   },
   "TEST_REQUIRES" => {
     "Test::More" => 0
@@ -34,13 +49,28 @@ my %WriteMakefileArgs = (
 
 
 my %FallbackPrereqs = (
+  "CGI::Cookie" => 0,
   "Carp" => 0,
+  "Config::General" => 0,
+  "DBI" => 0,
+  "Digest::SHA" => 0,
+  "Encode" => 0,
   "Exporter" => 0,
+  "HTTP::Status" => 0,
+  "JSON" => 0,
   "Lingua::Poly::FI::Word" => 0,
+  "Locale::Messages" => 0,
   "Locale::TextDomain" => 0,
+  "MIME::Base64" => 0,
+  "Plack::Request" => 0,
+  "Plack::Response" => 0,
   "Test::More" => 0,
+  "Time::HiRes" => 0,
   "base" => 0,
-  "strict" => 0
+  "constant" => 0,
+  "strict" => 0,
+  "utf8" => 0,
+  "vars" => 0
 );
 
 
