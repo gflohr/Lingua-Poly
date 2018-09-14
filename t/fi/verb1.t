@@ -47,4 +47,12 @@ is $word->inflect(1, 2), 'otamme';
 is $word->inflect(2, 2), 'otatte';
 is $word->inflect(3, 2), 'ottavat';
 
+$word = Lingua::Poly::FI::Word::Verb::Type1->new('lukea');
+is $word->inflect(1, 1), 'luen';
+is $word->inflect(2, 1), 'luet';
+is $word->inflect(3, 1), 'lukee';
+is $word->inflect(1, 2), 'luemme';
+is $word->inflect(2, 2), 'luette';
+is $word->inflect(3, 2), 'lukevat';
+
 done_testing;
