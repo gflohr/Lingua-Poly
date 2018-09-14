@@ -22,6 +22,38 @@ sub inflect {
     $self->SUPER::_preInflect($person, $numerus, %options);
 
     my $stem = substr $$self, 0, -1;
+    if ($person != 3) {
+        my %gradations1 = (
+            kk => 'k',
+            pp => 'p',
+            tt => 't',
+            k => '',
+            p => 'v',
+            t => 'd',
+            nt => 'nn',
+            rt => 'rr',
+            KK => 'K',
+            PP => 'P',
+            TT => 'T',
+            K => '',
+            P => 'V',
+            T => 'D',
+            NT => 'NN',
+            RT => 'RR',
+        );
+        my $gradations1 =  join '|', keys %gradations1;
+        my %gradations2 = (
+            lke => 'lje',
+            rke => 'rje',
+            LKE => 'LJE',
+            RKE => 'RJE',
+        );
+        my $gradations2 =  join '|', keys %gradations2;
+
+        if ($stem !~ s/($gradations2)$/$gradations2{$1}/) {
+            $stem !~ s/($gradations1)(.)$/$gradations1{$1}$2/;
+        }
+    }
 
     return $self->_ending($stem, $person, $numerus);
 }

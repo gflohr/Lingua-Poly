@@ -6,6 +6,9 @@ Lingua-Poly is a system to disassemble human languages.
 
 Pre-alpha, incomplete.
 
+The first language being implemented is Finnish. Currently, verbs of
+conjguation type 1 ("asua", "nukkua", "kulkea", etc.) can be conjugated.
+
 ## Copyright
 
 Copyright (C) 2018 Guido Flohr  <guido.flohr@cantanea.com>, all rights
