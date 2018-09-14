@@ -12,10 +12,13 @@ package Lingua::Poly::Word;
 
 use strict;
 
+use Encode;
+
 sub new {
     my ($class, $word) = @_;
 
     my $copy = $word;
+    Encode::_utf8_on($copy);
 
     bless \$copy, $class;
 }
