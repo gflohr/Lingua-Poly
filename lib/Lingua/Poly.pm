@@ -12,6 +12,18 @@ package Lingua::Poly;
 
 use strict;
 
+require Carp;
+
+require Exporter;
+our @ISA = qw(Exporter);
+our @EXPORT_OK = qw(carp);
+
+sub carp {
+    my ($msg) = @_;
+
+
+}
+
 1;
 
 =head1 NAME

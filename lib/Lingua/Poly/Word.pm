@@ -12,6 +12,14 @@ package Lingua::Poly::Word;
 
 use strict;
 
+sub new {
+    my ($class, $word) = @_;
+
+    my $copy = $word;
+
+    bless \$copy, $class;
+}
+
 1;
 
 =head1 NAME

@@ -12,11 +12,19 @@ package Lingua::Poly::Word::Verb;
 
 use strict;
 
+use Carp;
 use Locale::TextDomain qw(Lingua-Poly);
 
 use base qw(Lingua::Poly::Word);
 
 sub name { __"Verb" }
+
+sub _preInflect {
+    my ($self, $person, $numerus, %options) = @_;
+
+    croak "Person must be 1, 2, or 3" if $person < 1 || $person > 3;
+    croak "Numerus must be 1 or 2" if $numerus != 1 && $numerus != 2;
+}
 
 1;
 

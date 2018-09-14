@@ -8,43 +8,22 @@
 # to Public License, Version 2, as published by Sam Hocevar. See
 # http://www.wtfpl.net/ for more details.
 
-package Lingua::Poly::FI::Word::Verb;
+package Lingua::Poly::FI::Word::Verb::Type1;
 
 use strict;
 
 use Locale::TextDomain qw(Lingua-Poly);
 
-use base qw(Lingua::Poly::Word::Verb Lingua::Poly::FI::Word);
+use base qw(Lingua::Poly::FI::Word::Verb);
 
-sub tenses {
-     my (undef, $localized) = @_;
+sub inflect {
+    my ($self, $person, $numerus, %options) = @_;
+ 
+    $self->SUPER::_preInflect($person, $numerus, %options);
 
-     my @tenses = (N__('Present'), 
-                   N__('Imperfect'), 
-                   N__('Perfect'), 
-                   N__('Pluperfect'));
-     if ($localized) {
-         map { __($_) } @tenses;
-     } else {
-         return @tenses;
-     }
-}
+    my $stem = substr $$self, 0, -1;
 
-sub _ending {
-    my ($self, $stem, $person, $numerus) = @_;
-
-    if ($person < 3) {
-        return $stem . qw(n t mme tte)[$person + ($numerus << 1) - 3];
-    } elsif ($numerus == 1) {
-        # Double the vowel.
-        $stem =~ s/(.)$/$1$1/;
-        # FIXME! Avoid three vowels in a row.
-        return $stem;
-    } elsif ($stem =~ /[aou]/i) {
-        return $stem . 'vat';
-    } else  {
-        return $stem . 'vät';
-    }
+    return $self->_ending($stem, $person, $numerus);
 }
 
 1;
