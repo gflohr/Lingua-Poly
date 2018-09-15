@@ -16,6 +16,7 @@ use strict;
 
 use Locale::TextDomain qw(Lingua-Poly);
 
+use HTTP::Status qw(:constants);
 use Lingua::Poly::API::Logger qw(session);
 use Lingua::Poly::Util::String qw(empty http_date);
 
@@ -29,6 +30,8 @@ sub new {
     bless $self, $class;
 }
 
+sub realm { 'session' }
+
 sub pathInfo {
     shift->{_path_info};
 }
@@ -36,7 +39,15 @@ sub pathInfo {
 sub auto {
     my ($self) = @_;
 
-    my $session = $self->_authenticate || return;
+    my $session = $self->_authenticate;
+    my $authorized = $self->_authorize($session) || return;
+    if (!$authorized) {
+        if ($session) {
+            Lingua::Poly::API->new->resultError(HTTP_FORBIDDEN);
+        } else  {
+            Lingua::Poly::API->new->resultError(HTTP_UNAUTHORIZED);
+        }
+    }
 
     return $session;
 }
@@ -58,6 +69,20 @@ sub _authenticate {
     }
 
     return $session if $session;
+
+    return;
+}
+
+sub _authorize {
+    my ($self, $session) = @_;
+
+    my $uid = $session->{uid};
+
+    # All methods are allowed for all logged in users by default.
+    if (defined $uid) {
+        $session->authorized(1);
+        return $self;
+    }
 
     return;
 }

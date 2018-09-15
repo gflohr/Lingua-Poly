@@ -1,7 +1,7 @@
 #! /bin/false
 #
 # Lingua-Poly   Language Disassembling Library
-# Copyright (C) 2018 Guido Flohr <guido.flohr@Lingua::Poly::API.com>
+# Copyright (C) 2018 Guido Flohr <guido.flohr@cantanea.com>
 #               All rights reserved
 #
 # This library is free software. It comes without any warranty, to
@@ -10,20 +10,11 @@
 # to Public License, Version 2, as published by Sam Hocevar. See
 # http://www.wtfpl.net/ for more details.
 
-package Lingua::Poly::API::Controller::ping;
+package Lingua::Poly::API::PublicController;
 
 use strict;
 
-use Lingua::Poly;
-
 use base qw(Lingua::Poly::API::Controller);
 
-sub run {
-    my ($self) = @_;
-
-    Lingua::Poly::API->new->resultSuccess;
-
-    return $self;
-}
-
 1;
+

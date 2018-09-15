@@ -76,4 +76,13 @@ sub uid {
 	shift->{__uid};
 }
 
+sub authorized {
+    my ($self, $authorized) = @_;
+
+    $self->{__authorized} = 1 if (@_ >  1);
+
+    return $self if $self->{__authorized};
+    return;
+}
+
 1;

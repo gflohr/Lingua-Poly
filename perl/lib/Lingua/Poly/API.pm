@@ -116,10 +116,7 @@ sub run {
         my $session = eval { $controller->auto(@path_info) };
         if ($@) {
             $self->resultError(HTTP_UNAUTHORIZED);
-            $self->{__payload}->{description} = $@;
-        } elsif (!$session) {
-            $self->resultError(HTTP_UNAUTHORIZED);
-        } else {
+        } elsif (!$self->{__payload}->{code}) {
             $self->{__session} = $session;
             $controller->run(@path_info);
         }
