@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { HeaderComponent } from './header/header.component';
+import { FooterComponent } from './footer/footer.component';
 
 @NgModule({
   imports: [
@@ -10,10 +11,12 @@ import { HeaderComponent } from './header/header.component';
     NgbModule
   ],
   exports: [
-    HeaderComponent
+    HeaderComponent,
+    FooterComponent
   ],
   declarations: [
-    HeaderComponent
+    HeaderComponent,
+    FooterComponent
   ]
 })
 export class LayoutModule { }
