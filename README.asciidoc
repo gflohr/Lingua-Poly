@@ -23,6 +23,32 @@ Pre-alpha, incomplete.
 The first language being implemented is Finnish. Currently, verbs of
 conjguation type 1 ("asua", "nukkua", "kulkea", etc.) can be conjugated.
 
+[[prerequisites]]
+== Prerequisites
+
+=== Node.js
+
+https://nodejs.org/[Node.js] is required in order to build or run the front-end.
+
+=== Yarn
+
+You will also need https://yarnpkg.com/[Yarn]. The https://yarnpkg.com/[website]
+has information on how to install it.
+
+=== Perl
+
+You need https://www.perl.org/[Perl] in order to run the backend.
+
+Install the required Perl modules with 'cpanm':
+
+[source,bash]
+----
+$ cd /path/to/Lingua-Poly
+$ cd perl
+$ sudo cpanm --installdeps .
+$ sudo cpanm -n .
+----
+
 [[getting-started]]
 == Getting Started
 
@@ -122,6 +148,53 @@ $ echo "UPDATE users SET password = '{SHA512}c7ad44cbad762a5da0a452f9e854fdc1e0e
 
 Replace "user@example.com" with the user's login, and the part beginning
 with `{SHA512}` with the output of the above one-liner.
+
+[[frontend]]
+== Frontend
+
+=== Static Distribution
+
+Build the frontend like this:
+
+[source,bash]
+----
+$ cd /path/to/Lingua-Poly
+$ yarn run build
+yarn run v1.3.2
+$ ng build
+                                                                              u Date: 2018-09-15T08:18:32.873Z
+Hash: ad5d2f974c866b850a32
+Time: 5189ms
+chunk {main} main.js, main.js.map (main) 9.38 kB [initial] [rendered]
+chunk {polyfills} polyfills.js, polyfills.js.map (polyfills) 227 kB [initial] [rendered]
+chunk {runtime} runtime.js, runtime.js.map (runtime) 5.22 kB [entry] [rendered]
+chunk {styles} styles.js, styles.js.map (styles) 15.6 kB [initial] [rendered]
+chunk {vendor} vendor.js, vendor.js.map (vendor) 2.94 MB [initial] [rendered]
+✨  Done in 9.21s.
+----
+
+This will create a directory named 'dist' with all frontend files. Move the
+contents of this directory into the document root of your web server or ...
+
+=== Run Development Version
+
+Alternatively you can run the application with a built-in web server:
+
+[source,bash]
+----
+$ cd /path/to/Poly-Lingua
+$ yarn start
+yarn run v1.3.2
+$ ng serve --open
+** Angular Live Development Server is listening on localhost:4200, open your browser on http://localhost:4200/ **
+...
+----
+
+The application is then available at http://localhost:4200/.
+
+You have to tell the development web server the URI of the backend API
+server. Copy the file 'proxy.conf.json.sample'  to  'proxy.conf.json'
+and edit it to your needs.
 
 [[copyright]]
 == Copyright
