@@ -87,7 +87,5 @@ sub _authorize {
     return;
 }
 
-sub run { shift }
-
 1;
 

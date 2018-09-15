@@ -118,7 +118,14 @@ sub run {
             $self->resultError(HTTP_UNAUTHORIZED);
         } elsif (!$self->{__payload}->{code}) {
             $self->{__session} = $session;
-            $controller->run(@path_info);
+            my $method = lc $self->request->method;
+            if ($controller->can($method)) {
+                $controller->$method(@path_info);
+            } elsif ($controller->can('get')) {
+                $controller->get(@path_info);
+            } else  {
+                $self->resultError(HTTP_METHOD_NOT_ALLOWED);
+            }
         }
     };
     if ($@) {

@@ -18,7 +18,7 @@ use Lingua::Poly;
 
 use base qw(Lingua::Poly::API::Controller);
 
-sub run {
+sub get {
     my ($self) = @_;
 
     Lingua::Poly::API->new->resultSuccess;
