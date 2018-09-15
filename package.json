@@ -1,6 +1,12 @@
 {
   "name": "lingua-poly",
-  "version": "0.0.0",
+  "version": "0.1.0",
+  "description": "A system for disassembling  languages",
+  "homepage": "https://github.com/gflohr/Lingua-Poly",
+  "bugs": {
+    "url": "https://github.com/gflohr/Lingua-Poly/issues"
+  },
+  "license": "WTFPL",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
