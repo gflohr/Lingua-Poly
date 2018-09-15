@@ -8,11 +8,10 @@
 # to Public License, Version 2, as published by Sam Hocevar. See
 # http://www.wtfpl.net/ for more details.
 
-use  strict;
+use strict;
 
-use Lingua::Poly::API;
-use Lingua::Poly::API::Core::PSGI;
+use Test::More;
 
-Lingua::Poly::API->new;
+use_ok 'Lingua::Poly::API';
 
-sub { Lingua::Poly::API::Core::PSGI->run(@_) };
+done_testing;

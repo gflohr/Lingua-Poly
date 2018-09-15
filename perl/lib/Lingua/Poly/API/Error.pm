@@ -39,10 +39,11 @@ sub message {
     my ($code) = @_;
 
     if ($code > 0) {
-    	my $message = HTTP::Status::status_message($code);
-    	return $code if defined $message;
+        my $message = HTTP::Status::status_message($code);
+        return $message if defined $message;
+        return $code;
     }
-    
+
     $code = -$code;
     if ($code >= 0 && $code <= $#messages) {
         return $messages[$code];

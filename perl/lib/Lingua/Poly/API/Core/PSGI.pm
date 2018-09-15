@@ -23,6 +23,10 @@ use Lingua::Poly::Util::String qw(empty);
 sub run {
     my ($self, $env) = @_;
 
+    if (Lingua::Poly::API->new->debugging('request')) {
+        $DB::single = 1;
+    }
+
     $env->{HTTP_HOST} = $env->{HTTP_X_FORWARDED_HOST} 
         if $env->{HTTP_X_FORWARDED_HOST};
     $env->{SERVER_PORT} = $env->{HTTP_X_FORWARDED_PORT} 

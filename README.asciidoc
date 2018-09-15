@@ -11,7 +11,7 @@
 [[lingua-poly]]
 = Lingua-Poly
 
-Lingua-Poly is a system to disassemble human languages.
+Lingua-Poly is a system for disassembling human languages.
 
 toc::[]
 
@@ -88,11 +88,13 @@ $ PERL5LIB=lib plackup lingua-poly.psgi
 
 Other environment variables than 'PERL5LIB':
 
-LINGUA_POLY_API_DEBUG::
+LINGUA_POLY_DEBUG::
 A list of debugging realms separated by commas, spaces, tabs, colons, or
 pipe symbols. The following realms are currently supported:
   core::: the core API framework
+  session::: session handling and controller methods
   db::: database-related stuff
+  request::: set a debugger breakpoint at the beginning of the request handler
   all::: all of the above
 
 [[manually-create-passwords]]

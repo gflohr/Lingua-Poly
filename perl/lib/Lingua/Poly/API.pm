@@ -219,6 +219,8 @@ sub __controller {
     $self->debug("resolving controller path '$path'");
     my $prefix = $self->config->{prefix};
     if (!empty $prefix) {
+        # FIXME! Allow multiple slashes everywhere and normalize them into
+        # one.
         die "controller path '$path' outside of prefix '$prefix'.\n"
             if $path !~ s/^$prefix//;
         $self->debug("normalized controller path '$path'")
@@ -226,7 +228,12 @@ sub __controller {
     my @tries = split /\/+/, $path;
     $tries[0] = 'Controller';
 
-    my $base_path = $self->baseDirectory . 'Lingua::Poly::API';
+    my $pkg_path = __PACKAGE__;
+    $pkg_path =~ s{::}{/}g;
+    $pkg_path .= '.pm';
+    my $base_path = $INC{$pkg_path};
+    $base_path =~ s/\.pm$//i;
+    $self->debug("base path: $base_path");
     my @path_info;
     while (@tries) {
         my $module_path = $base_path . '/' . join '/', @tries;
@@ -237,7 +244,7 @@ sub __controller {
 
         if (-e $module_path) {
             my $class = join '::', 'Lingua::Poly::API', @tries;
-            my $module_name = join '/', 'Lingua::Poly::API', @tries;
+            my $module_name = join '/', 'Lingua/Poly/API', @tries;
             $module_name .= '.pm';
 
             $self->debug("loading controller class '$class'");
@@ -250,7 +257,6 @@ sub __controller {
    
     die "could not resolve controller path for URI " . $request->uri . "\n"; 
 }
-
 
 sub __initialize {
     my ($self) = @_;
