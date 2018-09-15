@@ -123,5 +123,8 @@
       }
     }
   },
-  "defaultProject": "Lingua-Poly"
+  "defaultProject": "Lingua-Poly",
+  "cli": {
+    "packageManager": "yarn"
+  }
 }
