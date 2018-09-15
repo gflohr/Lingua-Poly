@@ -324,14 +324,6 @@
     border-bottom: 1px solid rgba(0, 0, 0, .05)
 }
 
-.bd-sidenav {
-    display: block;
-}
-
-.bd-sidenav li {
-    margin-left: 1rem;
-}
-
 .bd-toc-link {
     display: block;
     padding: .25rem 1.5rem;
@@ -362,6 +354,14 @@
 
 .bd-toc-item.active>.bd-toc-link:hover {
     background-color: transparent
+}
+
+.bd-sidenav {
+    display: block!important;
+}
+
+.bd-sidenav li {
+    margin-left: 1rem;
 }
 
 .bd-toc-item.active>.bd-sidenav {
