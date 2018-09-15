@@ -75,6 +75,26 @@ prefix: /api/v1
 Make sure that the configured database user has sufficient privileges to
 read and write all tables in the database.
 
+[[starting-the-backend-server]]
+=== Starting the Backend Server
+
+Start the backend server like this:
+
+[source,bash]
+----
+$ cd /path/to/Lingua-Poly/perl
+$ PERL5LIB=lib plackup lingua-poly.psgi
+----
+
+Other environment variables than 'PERL5LIB':
+
+LINGUA_POLY_API_DEBUG::
+A list of debugging realms separated by commas, spaces, tabs, colons, or
+pipe symbols. The following realms are currently supported:
+  core::: the core API framework
+  db::: database-related stuff
+  all::: all of the above
+
 [[manually-create-passwords]]
 === Manually Create Passwords
 
