@@ -263,10 +263,6 @@ sub __initialize {
 
     $self->{__config} = $self->__readConfig;
 
-    my %system_conf = %{$self->{__config}};
-    $system_conf{'DOCUMENT-ROOT'} = $system_conf{DOCUMENT_ROOT} 
-        = $self->baseDirectory;
-
     $self->{__db} = Lingua::Poly::API::DB->new($self->{__config}->{database});
 
     # Throw away old sessions.
