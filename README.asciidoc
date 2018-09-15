@@ -173,8 +173,9 @@ chunk {vendor} vendor.js, vendor.js.map (vendor) 2.94 MB [initial] [rendered]
 ✨  Done in 9.21s.
 ----
 
-This will create a directory named 'dist' with all frontend files. Move the
-contents of this directory into the document root of your web server or ...
+This will create a directory named 'dist/Lingua-Poly' with all frontend files.
+Move the contents of this directory into the document root of your web server
+or ...
 
 === Run Development Version
 
