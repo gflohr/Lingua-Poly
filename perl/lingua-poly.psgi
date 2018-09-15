@@ -15,4 +15,4 @@ use Lingua::Poly::API::Core::PSGI;
 
 Lingua::Poly::API->new;
 
-sub { Linguas::Poly::API::core::PSGI->run(@_) };
+sub { Lingua::Poly::API::core::PSGI->run(@_) };

@@ -19,7 +19,7 @@ sub realm {
 }
 
 use Time::HiRes qw(gettimeofday);
-use Config::General;
+use YAML;
 use Plack::Request;
 use Plack::Response;
 use HTTP::Status qw(:constants);
@@ -278,18 +278,21 @@ sub __readConfig {
     my ($self) = @_;
     
     my $base_dir = $self->baseDirectory;
-    my $config_file = "$base_dir/api.conf";
-    $self->debug("Reading configuration file '$config_file'.");
-    my %config = eval { Config::General->new($config_file)->getall };
+    my $config_file = "$base_dir/api.conf.yaml";
+    $self->debug("reading configuration file '$config_file'.");
+    open my $fh, '<', $config_file
+         or $self->fatal("cannot open '$config_file' for reading: $!");
+    my $yaml = join '', $fh->getlines;
+    my $config = eval { YAML::Load($yaml) };
     $self->fatal($@) if $@;
 
-    $self->fatal("no <database> section in '$config_file'.") 
-        unless $config{database};
+    $self->fatal("no database section in '$config_file'.") 
+        unless $config->{database};
     
     # Set default values.
-    $config{session}->{timeout} //= 10 * 60;
+    $config->{session}->{timeout} //= 10 * 60;
         
-    return \%config;
+    return $config;
 }
 
 1;

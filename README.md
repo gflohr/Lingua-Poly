@@ -35,6 +35,24 @@ $ psql linguapoly <schema.sql
 Replace "linguapoly" with the name of the  database created above. Run the
 command in the root directory of this project.
 
+### Configuration
+
+You need a minimal configuration file `api.conf.yaml` in [YAML](http://yaml.org/)
+format in the current directory:
+
+```yaml
+database:
+    dbname: linguapoly
+    user: nobody
+    pass: mysecretpassword
+session:
+    timeout: 600
+prefix: /api/v1
+```
+
+Make sure that the configured database user has sufficient privileges to read
+and write all tables in the database.
+
 ### Manually Create Passwords
 
 You can manually create a password (digest) with this one-liner:
