@@ -16,17 +16,9 @@
       <span class="navbar-brand mr-0 mr-md-2">Lingua::Poly</span>
       <ul class="navbar-nav flex-row ml-md-auto d-none d-md-flex">
         <li class="nav-item dropdown">
-          <a class="nav-item nav-link mr-md-2" href="#" id="bd-versions">
+          <a class="nav-item nav-link mr-md-2" href="#">
           v0.1.0
           </a>
-          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="bd-versions">
-            <a class="dropdown-item active" href="/docs/4.1/">Latest (4.1.x)</a>
-            <a class="dropdown-item" href="https://getbootstrap.com/docs/4.0/">v4.0.0</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="https://v4-alpha.getbootstrap.com/">v4 Alpha 6</a>
-            <a class="dropdown-item" href="https://getbootstrap.com/docs/3.3/">v3.3.7</a>
-            <a class="dropdown-item" href="https://getbootstrap.com/2.3.2/">v2.3.2</a>
-          </div>
         </li>
         <li class="nav-item">
           <a class="nav-link p-2" href="https://github.com/twbs/bootstrap" target="_blank" rel="noopener" aria-label="GitHub">
@@ -70,9 +62,9 @@
               <a class="bd-toc-link" href="#">Features</a>
               <ul class="nav bd-sidenav">
                 <li class="active bd-sidenav-active">
-                <li><a href="#">Start</a></li>
-                <li><a href="#">Search Word</a></li>
-                <li><a href="#">Analyze Text</a></li>
+                <li><a href="#">{{ 'Start' |  translate:param }}</a></li>
+                <li><a href="#">{{ 'Search word' | translate:param  }}</a></li>
+                <li><a href="#">{{ 'Analyze Text' | translate:param }}</a></li>
               </ul>
             </div>
             <div class="bd-toc-item">
