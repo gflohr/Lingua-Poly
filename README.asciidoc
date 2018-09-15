@@ -1,10 +1,22 @@
+:idprefix:
+:idseparator: -
+:sectanchors:
+:sectlinks:
+:sectnumlevels: 4
+:sectnums:
+:toc: macro
+:toclevels: 4
+:toc-title: 
+
 [[lingua-poly]]
 = Lingua-Poly
 
 Lingua-Poly is a system to disassemble human languages.
 
-[[status]]
-== Status
+toc::[]
+
+[[getting-started]]
+== Getting Started
 
 Pre-alpha, incomplete.
 
