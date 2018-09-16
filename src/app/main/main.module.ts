@@ -5,6 +5,7 @@ import { CoreModule } from '../core/core.module';
 import { mainRoutes }  from './main.routes';
 import { StartComponent } from './components/start/start.component';
 import { LegalDisclosureComponent } from './components/legal-disclosure/legal-disclosure.component';
+import { DataPrivacyComponent } from './components/data-privacy/data-privacy.component';
 
 @NgModule({
   imports: [
@@ -12,6 +13,6 @@ import { LegalDisclosureComponent } from './components/legal-disclosure/legal-di
     RouterModule.forChild(mainRoutes),
     CoreModule
   ],
-  declarations: [StartComponent, LegalDisclosureComponent]
+  declarations: [StartComponent, LegalDisclosureComponent, DataPrivacyComponent]
 })
 export class MainModule { }
