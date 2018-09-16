@@ -14,7 +14,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "extract": "./extract-strings"
+    "extract": "node node_modules/ngx-translate-extract/bin/cli.js --input=./src --output=src/assets/i18n/en.po --clean --sort --format=pot --marker=_"
   },
   "private": true,
   "dependencies": {

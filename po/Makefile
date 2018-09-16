@@ -2,6 +2,7 @@
 
 srcdir = .
 libdir = ../perl/lib
+jsi18ndir = ../src/assets/i18n
 
 MSGMERGE  = msgmerge
 MSGFMT    = msgfmt
@@ -34,6 +35,9 @@ pot: $(TD).pot
 
 clean:
 	rm -f *~ *.bak *.gmo
+
+js.pot: ../src/assets/i18n/en.po
+	$(srcdir)/make-js-pot
 
 $(TD).pot: $(POTFILES)
 	$(XGETTEXT) --output=$(srcdir)/$(TD).pox --from-code=utf-8 \

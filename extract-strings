@@ -1,6 +1,0 @@
-#! /bin/bash
-
-set -x
-node node_modules/ngx-translate-extract/bin/cli.js --input=./src --output=src/assets/i18n/{en,de}.json --clean --sort --format=namespaced-json --marker=_
-node node_modules/ngx-translate-extract/bin/cli.js --input=./src --output=src/assets/en.po --clean --sort --format=pot --marker=_
-

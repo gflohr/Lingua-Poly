@@ -1,0 +1,12 @@
+msgid "Analyze text"
+msgstr ""
+
+msgid "Search word"
+msgstr ""
+
+msgid "Start"
+msgstr ""
+
+msgid "Sign-in"
+msgstr ""
+

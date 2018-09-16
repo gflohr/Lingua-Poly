@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: Guido Flohr <guido.flohr@cantanea.com>\n"
-"POT-Creation-Date: 2018-09-16 11:57+0300\n"
+"POT-Creation-Date: 2018-09-16 13:35+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -35,4 +35,16 @@ msgstr ""
 
 #: ../perl/lib/Lingua/Poly/Word/Verb.pm:20
 msgid "Verb"
+msgstr ""
+
+msgid "Analyze text"
+msgstr ""
+
+msgid "Search word"
+msgstr ""
+
+msgid "Start"
+msgstr ""
+
+msgid "Sign-in"
 msgstr ""
