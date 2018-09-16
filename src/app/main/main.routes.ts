@@ -11,5 +11,5 @@ export const mainRoutes = [
     { path: 'legal-disclosure', component: LegalDisclosureComponent },
     { path: 'disclaimer', component: DisclaimerComponent },
     { path: 'data-privacy', component: DataPrivacyComponent },
-    { path: ':lingua/mytest/:foo/:bar/:baz', component:  DataPrivacyComponent },
+    { path: ':lingua/mytest', component:  StartComponent },
 ];
