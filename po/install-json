@@ -1,0 +1,65 @@
+#! /usr/bin/env perl
+#
+# Lingua-Poly   Language Disassembling Library
+# Copyright (C) 2018 Guido Flohr <guido.flohr@cantanea.com>
+#               All rights reserved
+#
+# This library is free software. It comes without any warranty, to
+# the extent permitted by applicable law. You can redistribute it
+# and/or modify it under the terms of the Do What the Fuck You Want
+# to Public License, Version 2, as published by Sam Hocevar. See
+# http://www.wtfpl.net/ for more details.
+
+use strict;
+
+use Locale::PO;
+use JSON;
+
+sub save_json($$);
+
+my @linguas = @ARGV or die "Usage: $0 LINGUAS\n";
+my $default_lingua = shift @linguas;
+
+my $en_po = '../src/assets/i18n/en.po';
+my $entries = Locale::PO->load_file_asarray($en_po, 'utf-8')
+    or die "$0: cannot open '$en_po' for reading: $!\n";
+
+my %needed;
+foreach my $entry(@$entries) {
+    my $msgid = $entry->msgid;
+    next if '""' eq $msgid;
+    my $msgstr = $entry->dequote($entry->msgstr);
+    next if !length $msgstr;
+    $needed{$msgstr} = $entry->dequote($msgid);
+}
+save_json "../src/assets/i18n/$default_lingua.json", {reverse %needed};
+
+foreach my $lingua (@linguas) {
+    my %msgs;
+    # Actually we should read the gmo file, not the po.
+    my $entries = Locale::PO->load_file_asarray("$lingua.po", 'utf-8')
+        or die "$0: cannot open '$lingua.po' for reading: $!\n";
+
+    foreach my $entry (@$entries) {
+        my $msgid = $entry->dequote($entry->msgid);
+        next if !exists $needed{$msgid};
+        my $msgstr = $entry->dequote($entry->msgstr);
+        next if '""' eq $msgstr;
+        $msgs{$needed{$msgid}} = $msgstr; 
+    }
+
+    my $json_file = "../src/assets/i18n/$lingua.json";
+    save_json $json_file, \%msgs;
+}
+
+
+sub save_json($$) {
+    my ($filename, $data) = @_;
+
+    print "generating '$filename'.\n";
+    open my $fh, '>:encoding(utf8)', $filename
+        or die "cannot open '$filename' for writing: $!\n";
+    $fh->print(encode_json $data)
+        or die "cannot write to '$filename': $!\n";
+    $fh->close or die "cannot close '$filename': $!\n";
+}

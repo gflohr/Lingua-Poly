@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Lingua-Poly\n"
 "Report-Msgid-Bugs-To: Guido Flohr <guido.flohr@cantanea.com>\n"
-"POT-Creation-Date: 2018-09-16 11:57+0300\n"
-"PO-Revision-Date: 2018-09-14 16:56+0300\n"
+"POT-Creation-Date: 2018-09-16 13:35+0300\n"
+"PO-Revision-Date: 2018-09-16 13:54+0300\n"
 "Last-Translator: Guido Flohr <guido.flohr@cantanea.com>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -36,3 +36,15 @@ msgstr "Plusquamperfekt"
 #: ../perl/lib/Lingua/Poly/Word/Verb.pm:20
 msgid "Verb"
 msgstr "Verb"
+
+msgid "Analyze text"
+msgstr "Text analysieren"
+
+msgid "Search word"
+msgstr "Wort suchen"
+
+msgid "Start"
+msgstr "Start"
+
+msgid "Sign-in"
+msgstr "Anmelden"

@@ -48,7 +48,9 @@ $(TD).pot: $(POTFILES)
                 -e "print Locale::TextDomain->options"` && \
 	rm -f $@ && mv $(TD).pox $@
 
-install: $(MO_FILES)
+install: install-mo install-json
+
+install-mo: $(MO_FILES)
 	cd $(srcdir); \
 	targetdir='$(libdir)/LocaleData'; \
 	languages='$(LINGUAS)'; \
@@ -59,6 +61,10 @@ install: $(MO_FILES)
 		echo "installing $$cat as $$dest"; \
 		cp -f $$cat $$dest && chmod 644 $$dest || exit 1; \
 	done
+
+install-json: $(MO_FILES)
+	cd $(srcdir)
+	$(srcdir)/install-json en $(LINGUAS)
 
 update-mo: $(MO_FILES)
 
