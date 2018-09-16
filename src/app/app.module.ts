@@ -15,6 +15,7 @@ import { AppComponent } from './app.component';
   ],
   imports: [
     BrowserModule,
+    RouterModule.forRoot(appRoutes),
     CoreModule,
     AuthModule,
     LayoutModule
