@@ -26,8 +26,12 @@
             <div class="bd-toc-item">
               <a class="bd-toc-link" href="#">Legal</a>
               <ul class="nav bd-sidenav">
-                <li><a routerLink="/legal-disclosure">{{ 'Legal Disclosure' | translate }}</a></li>
-                <li><a href="#">{{ 'Data Privacy Policy' |  translate }}</a></li>
+                <li><a routerLink="/legal-disclosure"
+                       routerLinkActive="active bd-sidenav-active">{{ 'Legal Disclosure' | translate }}</a></li>
+                <li><a routerLink="/data-privacy"
+                       routerLinkActive="active bd-sidenav-active">{{ 'Data Privacy Statement' | translate }}</a></li>
+                <li><a routerLink="/disclaimer"
+                       routerLinkActive="active bd-sidenav-active">{{ 'Disclaimer' | translate }}</a></li>
               </ul>
             </div>
           </nav>
