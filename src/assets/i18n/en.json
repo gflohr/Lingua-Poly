@@ -1,5 +1,8 @@
 {
-	"Analyze Text": "Analyze Text",
+	"Analyze text": "",
 	"Search word": "Search word",
-	"Start": "Start"
+	"Start": "Start",
+	"null": {
+		"Sign-In": ""
+	}
 }
