@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: Guido Flohr <guido.flohr@cantanea.com>\n"
-"POT-Creation-Date: 2018-09-14 17:09+0300\n"
+"POT-Creation-Date: 2018-09-16 11:57+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,22 +17,22 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../lib/Lingua/Poly/Word/Verb.pm:19
-msgid "Verb"
-msgstr ""
-
-#: ../lib/Lingua/Poly/FI/Word/Verb.pm:22
+#: ../perl/lib/Lingua/Poly/FI/Word/Verb.pm:23
 msgid "Present"
 msgstr ""
 
-#: ../lib/Lingua/Poly/FI/Word/Verb.pm:23
+#: ../perl/lib/Lingua/Poly/FI/Word/Verb.pm:24
 msgid "Imperfect"
 msgstr ""
 
-#: ../lib/Lingua/Poly/FI/Word/Verb.pm:24
+#: ../perl/lib/Lingua/Poly/FI/Word/Verb.pm:25
 msgid "Perfect"
 msgstr ""
 
-#: ../lib/Lingua/Poly/FI/Word/Verb.pm:25
+#: ../perl/lib/Lingua/Poly/FI/Word/Verb.pm:26
 msgid "Pluperfect"
+msgstr ""
+
+#: ../perl/lib/Lingua/Poly/Word/Verb.pm:20
+msgid "Verb"
 msgstr ""

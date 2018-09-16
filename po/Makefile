@@ -1,7 +1,7 @@
 # Makefile for various po files.
 
 srcdir = .
-libdir = ../lib
+libdir = ../perl/lib
 
 MSGMERGE  = msgmerge
 MSGFMT    = msgfmt
