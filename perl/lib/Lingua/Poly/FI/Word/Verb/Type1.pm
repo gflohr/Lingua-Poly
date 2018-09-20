@@ -28,7 +28,7 @@ sub inflect {
             kk => 'k',
             pp => 'p',
             tt => 't',
-            k => '',
+            '(?<=[aeiouäöyAEIOUÄÖY])k' => '',
             p => 'v',
             t => 'd',
             nt => 'nn',

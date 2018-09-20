@@ -56,6 +56,15 @@ is $word->inflect(1, 2), 'luemme';
 is $word->inflect(2, 2), 'luette';
 is $word->inflect(3, 2), 'lukevat';
 
+# But not here!
+$word = Lingua::Poly::FI::Word::Verb::Type1->new('itkeä');
+is $word->inflect(1, 1), 'itken';
+is $word->inflect(2, 1), 'itket';
+is $word->inflect(3, 1), 'itkee';
+is $word->inflect(1, 2), 'itkemme';
+is $word->inflect(2, 2), 'itkette';
+is $word->inflect(3, 2), 'itkevät';
+
 $word = Lingua::Poly::FI::Word::Verb::Type1->new('kylpeä');
 is $word->inflect(1, 1), 'kylven';
 is $word->inflect(2, 1), 'kylvet';
