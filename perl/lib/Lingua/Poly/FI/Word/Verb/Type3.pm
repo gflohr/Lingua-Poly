@@ -21,10 +21,11 @@ my $vowel = "aeiou\x{e4}\x{f6}yAEIOU\x{c4}\x{d6}Y";
 
 sub inflect {
     my ($self, $person, $numerus, %options) = @_;
- 
+
     my $stem = substr $$self, 0, -2;
     # Gradation type 2 for verbs ending in -lla and -llä, when they have 3
     # syllables or more.
+    # FIXME! This is mostly guesswork!
     if ($stem !~ /vella$/i
         && $stem =~ s/([$vowel]+)([^$vowel]+)([$vowel]+)l$/$1/) {
         my ($consonants, $vowels) = map { lc } ($2, $3);
