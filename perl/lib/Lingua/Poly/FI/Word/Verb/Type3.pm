@@ -37,6 +37,7 @@ sub inflect {
             mm => 'mp',
             ll =>  'lt',
             nn => 'nt',
+            rr => 'rt',
         );
         $consonants = $gradations{$consonants} || $consonants;
 

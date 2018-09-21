@@ -133,4 +133,13 @@ is $word->inflect(1, 2)->[1], 'kuunnellaan';
 is $word->inflect(2, 2), 'kuuntelette';
 is $word->inflect(3, 2), 'kuuntelevat';
 
+$word = Lingua::Poly::FI::Word::Verb->new('imarrella');
+is $word->inflect(1, 1), 'imartelen';
+is $word->inflect(2, 1), 'imartelet';
+is $word->inflect(3, 1), 'imartelee';
+is $word->inflect(1, 2)->[0], 'imartelemme';
+is $word->inflect(1, 2)->[1], 'imarrellaan';
+is $word->inflect(2, 2), 'imartelette';
+is $word->inflect(3, 2), 'imartelevat';
+
 done_testing;
