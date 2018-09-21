@@ -8,7 +8,7 @@
 # to Public License, Version 2, as published by Sam Hocevar. See
 # http://www.wtfpl.net/ for more details.
 
-package Lingua::Poly::FI::Word::Verb::Type1;
+package Lingua::Poly::FI::Word::Verb::Type2;
 
 use strict;
 use utf8;
@@ -20,41 +20,7 @@ use base qw(Lingua::Poly::FI::Word::Verb);
 sub inflect {
     my ($self, $person, $numerus, %options) = @_;
  
-    $self->SUPER::_preInflect($person, $numerus, %options);
-
-    my $stem = substr $$self, 0, -1;
-    if ($person != 3) {
-        my %gradations1 = (
-            kk => 'k',
-            pp => 'p',
-            tt => 't',
-            '(?<=[aeiouäöyAEIOUÄÖY])k' => '',
-            p => 'v',
-            t => 'd',
-            nt => 'nn',
-            rt => 'rr',
-            KK => 'K',
-            PP => 'P',
-            TT => 'T',
-            K => '',
-            P => 'V',
-            T => 'D',
-            NT => 'NN',
-            RT => 'RR',
-        );
-        my $gradations1 =  join '|', keys %gradations1;
-        my %gradations2 = (
-            lke => 'lje',
-            rke => 'rje',
-            LKE => 'LJE',
-            RKE => 'RJE',
-        );
-        my $gradations2 =  join '|', keys %gradations2;
-
-        if ($stem !~ s/($gradations2)$/$gradations2{$1}/) {
-            $stem !~ s/($gradations1)(.)$/$gradations1{$1}$2/;
-        }
-    }
+    my $stem = substr $$self, 0, -2;
 
     return $self->_ending($stem, $person, $numerus);
 }
@@ -63,7 +29,7 @@ sub inflect {
 
 =head1 NAME
 
-Lingua::Poly::FI::Word::Verb::Type1
+Lingua::Poly::FI::Word::Verb::Type2;
 
 =head1 SYNOPSIS
 

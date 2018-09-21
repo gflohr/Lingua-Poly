@@ -16,8 +16,11 @@ use utf8;
 use Locale::TextDomain qw(Lingua-Poly);
 
 use Lingua::Poly::FI::Word::Verb::Type1;
+use Lingua::Poly::FI::Word::Verb::Type2;
 
 use base qw(Lingua::Poly::Word::Verb Lingua::Poly::FI::Word);
+
+my $vowel = "aeiouäöyAEIOUÄÖY";
 
 sub new {
     my ($class, $infinitive) = @_;
@@ -25,8 +28,10 @@ sub new {
     my $self =  $class->SUPER::new($infinitive);
 
     my $type;
-    if ($infinitive =~ /[aeiouäöyAEIOUÄÖY][aäAÄ]$/) {
+    if ($infinitive =~ /[$vowel][aäAÄ]$/) {
         $type = 1;
+    } elsif ($infinitive =~ /[$vowel][dD][aäAÄ]$/) {
+        $type = 2;
     } else {
         die  __x("Unrecognized verb '{verb}'!\n", verb => $infinitive);
     }
@@ -57,8 +62,7 @@ sub _ending {
         return $stem . qw(n t mme tte)[$person + ($numerus << 1) - 3];
     } elsif ($numerus == 1) {
         # Double the vowel.
-        $stem =~ s/(.)$/$1$1/;
-        # FIXME! Avoid three vowels in a row.
+        $stem =~ s/(.)$/$1$1/ unless $stem =~ /(.)\1$/;
         return $stem;
     } elsif ($stem =~ /[aou]/i) {
         return $stem . 'vat';
