@@ -20,7 +20,7 @@ use Lingua::Poly::FI::Word::Verb::Type2;
 
 use base qw(Lingua::Poly::Word::Verb Lingua::Poly::FI::Word);
 
-my $vowel = "aeiouäöyAEIOUÄÖY";
+my $vowel = "aeiou\x{e4}\x{f6}yAEIOU\x{c4}\x{d6}Y";
 
 sub new {
     my ($class, $infinitive) = @_;
@@ -34,9 +34,9 @@ sub new {
     my $lc = lc $$self;
     if (exists $exceptions{$lc}) {
         $type =  $exceptions{$lc};
-    } elsif ($infinitive =~ /[$vowel][aäAÄ]$/) {
+    } elsif ($lc =~ /[$vowel][a\x{e4}]$/) {
         $type = 1;
-    } elsif ($infinitive =~ /[$vowel][dD][aäAÄ]$/) {
+    } elsif ($lc =~ /[$vowel][dD][a\x{e4}]$/) {
         $type = 2;
     } else {
         die  __x("Unrecognized verb '{verb}'!\n", verb => $infinitive);

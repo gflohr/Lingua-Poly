@@ -48,7 +48,7 @@ is $word->inflect(1, 1), 'otan';
 is $word->inflect(2, 1), 'otat';
 is $word->inflect(3, 1), 'ottaa';
 is $word->inflect(1, 2)->[0], 'otamme';
-is $word->inflect(1, 2)->[1], 'otataan';
+is $word->inflect(1, 2)->[1], 'otetaan';
 is $word->inflect(2, 2), 'otatte';
 is $word->inflect(3, 2), 'ottavat';
 
@@ -85,7 +85,7 @@ is $word->inflect(1, 1), 'pidän';
 is $word->inflect(2, 1), 'pidät';
 is $word->inflect(3, 1), 'pitää';
 is $word->inflect(1, 2)->[0], 'pidämme';
-is $word->inflect(1, 2)->[1], 'pidätään';
+is $word->inflect(1, 2)->[1], 'pidetään';
 is $word->inflect(2, 2), 'pidätte';
 is $word->inflect(3, 2), 'pitävät';
 
@@ -94,7 +94,7 @@ is $word->inflect(1, 1), 'annan';
 is $word->inflect(2, 1), 'annat';
 is $word->inflect(3, 1), 'antaa';
 is $word->inflect(1, 2)->[0], 'annamme';
-is $word->inflect(1, 2)->[1], 'annataan';
+is $word->inflect(1, 2)->[1], 'annetaan';
 is $word->inflect(2, 2), 'annatte';
 is $word->inflect(3, 2), 'antavat';
 
@@ -106,6 +106,15 @@ is $word->inflect(1, 2)->[0], 'kerromme';
 is $word->inflect(1, 2)->[1], 'kerrotaan';
 is $word->inflect(2, 2), 'kerrotte';
 is $word->inflect(3, 2), 'kertovat';
+
+$word = Lingua::Poly::FI::Word::Verb->new('ymmärtää');
+is $word->inflect(1, 1), 'ymmärrän';
+is $word->inflect(2, 1), 'ymmärrät';
+is $word->inflect(3, 1), 'ymmärtää';
+is $word->inflect(1, 2)->[0], 'ymmärrämme';
+is $word->inflect(1, 2)->[1], 'ymmärretään';
+is $word->inflect(2, 2), 'ymmärrätte';
+is $word->inflect(3, 2), 'ymmärtävät';
 
 $word = Lingua::Poly::FI::Word::Verb->new('kulkea');
 is $word->inflect(1, 1), 'kuljen';

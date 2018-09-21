@@ -58,8 +58,12 @@ sub inflect {
 
     if ($person == 1 && $numerus == 2) {
         my $regular = $self->_ending($stem, $person, $numerus);
-        my $coll =  $stem;
-        if ($stem =~ /[aou]/i) {
+        my $coll = $stem;
+        if ($coll =~ s/[aA]$/e/) {
+            $coll .= 'taan';
+        } elsif ($coll =~ s/[\x{e4}\x{c4}]$/e/) {
+            $coll .= 'tään';
+        } elsif ($stem =~ /[aou]/i) {
             $coll = $stem . 'taan';
         } else {
             $coll = $stem . 'tään';
