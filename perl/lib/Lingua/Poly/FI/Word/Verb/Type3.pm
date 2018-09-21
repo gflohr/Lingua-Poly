@@ -28,7 +28,9 @@ sub inflect {
     if ($stem =~ s/([$vowel]+)([^$vowel]+)([$vowel]+)l$/$1/) {
         my ($consonants, $vowels) = map { lc } ($2, $3);
         my %gradations = (
-            t => 'tt'
+            k => 'kk',
+            p => 'pp',
+            t => 'tt',
         );
         $consonants = $gradations{$consonants} || $consonants;
 

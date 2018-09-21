@@ -70,4 +70,22 @@ is $word->inflect(1, 2)->[1], 'ajatellaan';
 is $word->inflect(2, 2), 'ajattelette';
 is $word->inflect(3, 2), 'ajattelevat';
 
+$word = Lingua::Poly::FI::Word::Verb->new('nakella');
+is $word->inflect(1, 1), 'nakkelen';
+is $word->inflect(2, 1), 'nakkelet';
+is $word->inflect(3, 1), 'nakkelee';
+is $word->inflect(1, 2)->[0], 'nakkelemme';
+is $word->inflect(1, 2)->[1], 'nakellaan';
+is $word->inflect(2, 2), 'nakkelette';
+is $word->inflect(3, 2), 'nakkelevat';
+
+$word = Lingua::Poly::FI::Word::Verb->new('tapella');
+is $word->inflect(1, 1), 'tappelen';
+is $word->inflect(2, 1), 'tappelet';
+is $word->inflect(3, 1), 'tappelee';
+is $word->inflect(1, 2)->[0], 'tappelemme';
+is $word->inflect(1, 2)->[1], 'tapellaan';
+is $word->inflect(2, 2), 'tappelette';
+is $word->inflect(3, 2), 'tappelevat';
+
 done_testing;
