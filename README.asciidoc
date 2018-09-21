@@ -20,8 +20,8 @@ toc::[]
 
 Pre-alpha, incomplete.
 
-The first language being implemented is Finnish. Currently, verbs of
-conjguation type 1 ("asua", "nukkua", "kulkea", etc.) can be conjugated.
+The first language being implemented is Finnish. Currently, the present
+tense indicative active of Finnish verbs is being implemented.
 
 [[prerequisites]]
 == Prerequisites
