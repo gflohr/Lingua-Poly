@@ -115,4 +115,13 @@ is $word->inflect(1, 2)->[1], 'ommellaan';
 is $word->inflect(2, 2), 'ompelette';
 is $word->inflect(3, 2), 'ompelevat';
 
+$word = Lingua::Poly::FI::Word::Verb->new('puhallella');
+is $word->inflect(1, 1), 'puhaltelen';
+is $word->inflect(2, 1), 'puhaltelet';
+is $word->inflect(3, 1), 'puhaltelee';
+is $word->inflect(1, 2)->[0], 'puhaltelemme';
+is $word->inflect(1, 2)->[1], 'puhallellaan';
+is $word->inflect(2, 2), 'puhaltelette';
+is $word->inflect(3, 2), 'puhaltelevat';
+
 done_testing;
