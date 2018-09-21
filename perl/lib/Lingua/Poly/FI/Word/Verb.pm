@@ -15,7 +15,26 @@ use utf8;
 
 use Locale::TextDomain qw(Lingua-Poly);
 
+use Lingua::Poly::FI::Word::Verb::Type1;
+
 use base qw(Lingua::Poly::Word::Verb Lingua::Poly::FI::Word);
+
+sub new {
+    my ($class, $infinitive) = @_;
+
+    my $self =  $class->SUPER::new($infinitive);
+
+    my $type;
+    if ($infinitive =~ /[aeiouäöyAEIOUÄÖY][aäAÄ]$/) {
+        $type = 1;
+    } else {
+        die  __x("Unrecognized verb '{verb}'!\n", verb => $infinitive);
+    }
+
+    $class = "Lingua::Poly::FI::Word::Verb::Type$type";
+
+    bless $self, $class;
+}
 
 sub tenses {
      my (undef, $localized) = @_;
