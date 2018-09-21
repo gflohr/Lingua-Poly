@@ -56,6 +56,17 @@ sub inflect {
         }
     }
 
+    if ($person == 1 && $numerus == 2) {
+        my $regular = $self->_ending($stem, $person, $numerus);
+        my $coll =  $stem;
+        if ($stem =~ /[aou]/i) {
+            $coll = $stem . 'taan';
+        } else {
+            $coll = $stem . 'tään';
+        }
+        return [$regular, $coll];
+    }
+
     return $self->_ending($stem, $person, $numerus);
 }
 

@@ -29,6 +29,13 @@ sub inflect {
         $stem = substr $$self, 0, -2;
     }
 
+    if ($person == 1 && $numerus == 2) {
+        my $regular = $self->_ending($stem, $person, $numerus);
+        my $coll =  $$self;
+        $coll =~ s/(.)$/$1$1n/;
+        return [$regular, $coll];
+    }
+
     return $self->_ending($stem, $person, $numerus);
 }
 
