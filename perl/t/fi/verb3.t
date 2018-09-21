@@ -97,4 +97,13 @@ is $word->inflect(1, 2)->[1], 'jaellaan';
 is $word->inflect(2, 2), 'jakelette';
 is $word->inflect(3, 2), 'jakelevat';
 
+$word = Lingua::Poly::FI::Word::Verb->new('suudella');
+is $word->inflect(1, 1), 'suutelen';
+is $word->inflect(2, 1), 'suutelet';
+is $word->inflect(3, 1), 'suutelee';
+is $word->inflect(1, 2)->[0], 'suutelemme';
+is $word->inflect(1, 2)->[1], 'suudellaan';
+is $word->inflect(2, 2), 'suutelette';
+is $word->inflect(3, 2), 'suutelevat';
+
 done_testing;

@@ -33,6 +33,7 @@ sub inflect {
             k => 'kk',
             p => 'pp',
             t => 'tt',
+            d => 't',
         );
         $consonants = $gradations{$consonants} || $consonants;
 
