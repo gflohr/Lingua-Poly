@@ -25,7 +25,8 @@ sub inflect {
     my $stem = substr $$self, 0, -2;
     # Gradation type 2 for verbs ending in -lla and -llä, when they have 3
     # syllables or more.
-    if ($stem =~ s/([$vowel]+)([^$vowel]+)([$vowel]+)l$/$1/) {
+    if ($stem !~ /vella$/i
+        && $stem =~ s/([$vowel]+)([^$vowel]+)([$vowel]+)l$/$1/) {
         my ($consonants, $vowels) = map { lc } ($2, $3);
         my %gradations = (
             k => 'kk',
@@ -35,6 +36,19 @@ sub inflect {
         $consonants = $gradations{$consonants} || $consonants;
 
         $stem .= $consonants . $vowels . 'l';
+    } elsif ($stem =~ s/([^$vowel])([$vowel])([$vowel])l$/$1/) {
+        my ($vowel1, $vowel2) = ($2, $3);
+        my $lc = lc "$vowel1$vowel2";
+
+        my %diphtongs = map { $_ => 1} 
+                        ("ai", "au", "\x{e4}y", "oi", "ou", "ei", "eu",
+                         "\x{f6}i", "\x{f6}y", "ui", "uo", "iu", "iy", "ie",
+                         "yi", "y\x{f6}");
+        
+        if (!$diphtongs{$lc} && $vowel1 ne $vowel2) {
+            $vowel1 .= 'k';
+        }
+        $stem .= $vowel1 . $vowel2 . 'l';
     }
 
     $stem .= 'e';

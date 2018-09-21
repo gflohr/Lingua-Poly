@@ -88,4 +88,13 @@ is $word->inflect(1, 2)->[1], 'tapellaan';
 is $word->inflect(2, 2), 'tappelette';
 is $word->inflect(3, 2), 'tappelevat';
 
+$word = Lingua::Poly::FI::Word::Verb->new('jaella');
+is $word->inflect(1, 1), 'jakelen';
+is $word->inflect(2, 1), 'jakelet';
+is $word->inflect(3, 1), 'jakelee';
+is $word->inflect(1, 2)->[0], 'jakelemme';
+is $word->inflect(1, 2)->[1], 'jaellaan';
+is $word->inflect(2, 2), 'jakelette';
+is $word->inflect(3, 2), 'jakelevat';
+
 done_testing;
