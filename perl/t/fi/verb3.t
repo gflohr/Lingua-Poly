@@ -61,4 +61,13 @@ is $word->inflect(1, 2)->[1], 'ollaan';
 is $word->inflect(2, 2), 'olette';
 is $word->inflect(3, 2), 'ovat';
 
+$word = Lingua::Poly::FI::Word::Verb->new('ajatella');
+is $word->inflect(1, 1), 'ajattelen';
+is $word->inflect(2, 1), 'ajattelet';
+is $word->inflect(3, 1), 'ajattelee';
+is $word->inflect(1, 2)->[0], 'ajattelemme';
+is $word->inflect(1, 2)->[1], 'ajatellaan';
+is $word->inflect(2, 2), 'ajattelette';
+is $word->inflect(3, 2), 'ajattelevat';
+
 done_testing;

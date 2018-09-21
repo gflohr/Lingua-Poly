@@ -25,8 +25,14 @@ sub inflect {
     my $stem = substr $$self, 0, -2;
     # Gradation type 2 for verbs ending in -lla and -llä, when they have 3
     # syllables or more.
-    if ($stem =~ /([$vowel]+)([^$vowel]+)([$vowel]+)l$/) {
+    if ($stem =~ s/([$vowel]+)([^$vowel]+)([$vowel]+)l$/$1/) {
+        my ($consonants, $vowels) = map { lc } ($2, $3);
+        my %gradations = (
+            t => 'tt'
+        );
+        $consonants = $gradations{$consonants} || $consonants;
 
+        $stem .= $consonants . $vowels . 'l';
     }
 
     $stem .= 'e';
