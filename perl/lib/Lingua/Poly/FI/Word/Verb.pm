@@ -26,9 +26,15 @@ sub new {
     my ($class, $infinitive) = @_;
 
     my $self =  $class->SUPER::new($infinitive);
-
+    my %exceptions = (
+        "n\x{e4}hd\x{e4}"  => 2,
+        tehdä  => 2,
+    );
     my $type;
-    if ($infinitive =~ /[$vowel][aäAÄ]$/) {
+    my $lc = lc $$self;
+    if (exists $exceptions{$lc}) {
+        $type =  $exceptions{$lc};
+    } elsif ($infinitive =~ /[$vowel][aäAÄ]$/) {
         $type = 1;
     } elsif ($infinitive =~ /[$vowel][dD][aäAÄ]$/) {
         $type = 2;

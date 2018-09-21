@@ -24,4 +24,12 @@ is $word->inflect(1, 2), 'saamme';
 is $word->inflect(2, 2), 'saatte';
 is $word->inflect(3, 2), 'saavat';
 
+$word = Lingua::Poly::FI::Word::Verb->new('nähdä');
+is $word->inflect(1, 1), 'näen';
+is $word->inflect(2, 1), 'näet';
+is $word->inflect(3, 1), 'näkee';
+is $word->inflect(1, 2), 'näemme';
+is $word->inflect(2, 2), 'näette';
+is $word->inflect(3, 2), 'näkevät';
+
 done_testing;

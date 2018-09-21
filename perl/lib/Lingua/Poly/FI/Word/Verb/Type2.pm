@@ -20,7 +20,14 @@ use base qw(Lingua::Poly::FI::Word::Verb);
 sub inflect {
     my ($self, $person, $numerus, %options) = @_;
  
-    my $stem = substr $$self, 0, -2;
+    my $stem;
+    if ($$self =~ /[hH]..$/) {
+        # nähdä or tehdä.
+        $stem = substr $$self, 0, -3;
+        $stem .= $person == 3 ? 'ke' : 'e';
+    } else {
+        $stem = substr $$self, 0, -2;
+    }
 
     return $self->_ending($stem, $person, $numerus);
 }
