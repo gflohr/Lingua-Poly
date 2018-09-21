@@ -106,4 +106,13 @@ is $word->inflect(1, 2)->[1], 'suudellaan';
 is $word->inflect(2, 2), 'suutelette';
 is $word->inflect(3, 2), 'suutelevat';
 
+$word = Lingua::Poly::FI::Word::Verb->new('ommella');
+is $word->inflect(1, 1), 'ompelen';
+is $word->inflect(2, 1), 'ompelet';
+is $word->inflect(3, 1), 'ompelee';
+is $word->inflect(1, 2)->[0], 'ompelemme';
+is $word->inflect(1, 2)->[1], 'ommellaan';
+is $word->inflect(2, 2), 'ompelette';
+is $word->inflect(3, 2), 'ompelevat';
+
 done_testing;
