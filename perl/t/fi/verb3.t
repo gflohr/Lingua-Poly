@@ -124,4 +124,13 @@ is $word->inflect(1, 2)->[1], 'puhallellaan';
 is $word->inflect(2, 2), 'puhaltelette';
 is $word->inflect(3, 2), 'puhaltelevat';
 
+$word = Lingua::Poly::FI::Word::Verb->new('kuunnella');
+is $word->inflect(1, 1), 'kuuntelen';
+is $word->inflect(2, 1), 'kuuntelet';
+is $word->inflect(3, 1), 'kuuntelee';
+is $word->inflect(1, 2)->[0], 'kuuntelemme';
+is $word->inflect(1, 2)->[1], 'kuunnellaan';
+is $word->inflect(2, 2), 'kuuntelette';
+is $word->inflect(3, 2), 'kuuntelevat';
+
 done_testing;
