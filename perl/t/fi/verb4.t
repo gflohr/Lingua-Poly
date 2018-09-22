@@ -43,4 +43,13 @@ is $word->inflect(1, 2)->[1], 'napataan';
 is $word->inflect(2, 2), 'nappaatte';
 is $word->inflect(3, 2), 'nappaavat';
 
+$word = Lingua::Poly::FI::Word::Verb->new('mitata');
+is $word->inflect(1, 1), 'mittaan';
+is $word->inflect(2, 1), 'mittaat';
+is $word->inflect(3, 1), 'mittaa';
+is $word->inflect(1, 2)->[0], 'mittaamme';
+is $word->inflect(1, 2)->[1], 'mitataan';
+is $word->inflect(2, 2), 'mittaatte';
+is $word->inflect(3, 2), 'mittaavat';
+
 done_testing;
