@@ -37,7 +37,7 @@ sub inflect {
             $vowel1 .= 'k';
         }
         $stem .= $vowel1 . $vowel2 . 'l';
-    } elsif ($stem =~ s/([$vowel]+)([k])(.)$/$1/i) {
+    } elsif ($stem =~ s/([$vowel]+)([kp])(.)$/$1/i) {
         my ($consonants, $vowel) = map { lc $_ } ($2, $3);
         my %gradations = (
             k => 'kk',
