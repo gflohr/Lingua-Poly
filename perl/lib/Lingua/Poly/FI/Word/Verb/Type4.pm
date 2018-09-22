@@ -37,19 +37,15 @@ sub inflect {
             $vowel1 .= 'k';
         }
         $stem .= $vowel1 . $vowel2 . 'l';
-    } elsif ($stem =~ s/([$vowel]+)([kpt])(.)$/$1/i) {
+    } elsif ($stem =~ s/([$vowel]+)([kptv])(.)$/$1/i) {
         my ($consonants, $vowel) = map { lc $_ } ($2, $3);
         my %gradations = (
             k => 'kk',
             p => 'pp',
             t => 'tt',
-            d => 't',
-            mm => 'mp',
-            ll =>  'lt',
-            nn => 'nt',
-            rr => 'rt',
+            v => 'p',
         );
-        $consonants = $gradations{$consonants};
+        $consonants = $gradations{$consonants} || $consonants;
 
         $stem .= $consonants . $vowel;
     }

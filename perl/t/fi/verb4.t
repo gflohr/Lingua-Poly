@@ -52,4 +52,13 @@ is $word->inflect(1, 2)->[1], 'mitataan';
 is $word->inflect(2, 2), 'mittaatte';
 is $word->inflect(3, 2), 'mittaavat';
 
+$word = Lingua::Poly::FI::Word::Verb->new('tavata');
+is $word->inflect(1, 1), 'tapaan';
+is $word->inflect(2, 1), 'tapaat';
+is $word->inflect(3, 1), 'tapaa';
+is $word->inflect(1, 2)->[0], 'tapaamme';
+is $word->inflect(1, 2)->[1], 'tavataan';
+is $word->inflect(2, 2), 'tapaatte';
+is $word->inflect(3, 2), 'tapaavat';
+
 done_testing;
