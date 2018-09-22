@@ -18,6 +18,7 @@ use Locale::TextDomain qw(Lingua-Poly);
 use Lingua::Poly::FI::Word::Verb::Type1;
 use Lingua::Poly::FI::Word::Verb::Type2;
 use Lingua::Poly::FI::Word::Verb::Type3;
+use Lingua::Poly::FI::Word::Verb::Type4;
 
 use base qw(Lingua::Poly::Word::Verb Lingua::Poly::FI::Word);
 
@@ -41,6 +42,8 @@ sub new {
         $type = 2;
     } elsif ($lc =~ /([lnr])\1[a\x{e4}]$/i || $lc =~ /sta/i) {
         $type = 3;
+    } elsif  ($lc =~ /[aou\x{e4}\x{f6}]/) {
+        $type = 4;
     } else {
         die  __x("Unrecognized verb '{verb}'!\n", verb => $infinitive);
     }
