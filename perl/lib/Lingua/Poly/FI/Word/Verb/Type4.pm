@@ -23,26 +23,8 @@ sub inflect {
     my ($self, $person, $numerus, %options) = @_;
 
     my $stem = substr $$self, 0, -2;
-    # Gradation type 2 for verbs ending in -lla and -llä, when they have 3
-    # syllables or more.
     # FIXME! This is mostly guesswork!
-    if ($stem !~ /vella$/i
-        && $stem =~ s/([$vowel]+)([^$vowel]+)([$vowel]+)l$/$1/) {
-        my ($consonants, $vowels) = map { lc } ($2, $3);
-        my %gradations = (
-            k => 'kk',
-            p => 'pp',
-            t => 'tt',
-            d => 't',
-            mm => 'mp',
-            ll =>  'lt',
-            nn => 'nt',
-            rr => 'rt',
-        );
-        $consonants = $gradations{$consonants} || $consonants;
-
-        $stem .= $consonants . $vowels . 'l';
-    } elsif ($stem =~ s/([^$vowel])([$vowel])([$vowel])l$/$1/) {
+    if (0) {
         my ($vowel1, $vowel2) = ($2, $3);
         my $lc = lc "$vowel1$vowel2";
 
@@ -55,6 +37,21 @@ sub inflect {
             $vowel1 .= 'k';
         }
         $stem .= $vowel1 . $vowel2 . 'l';
+    } elsif ($stem =~ s/([$vowel]+)([k])(.)$/$1/i) {
+        my ($consonants, $vowel) = map { lc $_ } ($2, $3);
+        my %gradations = (
+            k => 'kk',
+            p => 'pp',
+            t => 'tt',
+            d => 't',
+            mm => 'mp',
+            ll =>  'lt',
+            nn => 'nt',
+            rr => 'rt',
+        );
+        $consonants = $gradations{$consonants};
+
+        $stem .= $consonants . $vowel;
     }
 
     if ($stem =~ /[aou]/i) {
