@@ -1,0 +1,25 @@
+openapi: '3.0.2'
+info:
+  title: 'Mojolicious OpenAPI WebApp'
+  version:  '1.0'
+components:
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: MOJOSID
+paths:
+  /items:
+    get:
+      x-mojo-to: 'item#list'
+      security:
+      - cookieAuth: []
+      responses:
+        200:
+          description: Some items as an array of strings
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
