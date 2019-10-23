@@ -14,11 +14,9 @@ package Lingua::Poly::RestAPI;
 
 use strict;
 
-use Mojo::Base 'Mojolicious';
+use Mojo::Base ('Mojolicious', 'Lingua::Poly::RestAPI::Logger');
 
-sub realm {
-    return shift->{__initialized} ? 'core' : 'init';
-}
+sub realm { 'core' }
 
 use Time::HiRes qw(gettimeofday);
 use YAML;
@@ -29,14 +27,37 @@ use Locale::TextDomain qw(Lingua-Poly);
 use Locale::Messages qw(turn_utf_8_off);
 use CGI::Cookie;
 
-use Lingua::Poly::API::Logger;
-use Lingua::Poly::API::DB;
 use Lingua::Poly::Util::String qw(empty);
 use Lingua::Poly::API::Session;
 use Lingua::Poly::API::Error;
 
+use Lingua::Poly::RestAPI::Logger;
+use Lingua::Poly::RestAPI::DB;
+
 sub startup {
 	my ($self) = @_;
+
+	$self->moniker('lingua-poly-api');
+
+	eval {
+		my $config = $self->plugin('YamlConfig');
+	};
+	if ($@) {
+		$self->config({});
+	}
+
+	my $config = $self->config;
+	$config->{database} //= {};
+	$config->{database}->{dbname} //= 'linguapoly';
+	$config->{database}->{username} //= '';
+
+	$config->{session} //= {};
+	$config->{session}->{timeout} ||= 2 * 60 * 60;
+
+	my $db = Lingua::Poly::RestAPI::DB->new($self->app);
+	$self->app->defaults(db => $db);
+
+	$db->transaction(DELETE_SESSION_STALE => $config->{session}->{timeout});
 
 	$self->plugin(OpenAPI => {
 			spec => $self->static->file('openapi.yaml')->path,
@@ -88,27 +109,6 @@ sub __initialize {
     $self->{__initialized} = 1;
 
     return $self;
-}
-
-sub __readConfig {
-    my ($self) = @_;
-
-    my $base_dir = $self->baseDirectory;
-    my $config_file = "$base_dir/api.conf.yaml";
-    $self->debug("reading configuration file '$config_file'.");
-    open my $fh, '<', $config_file
-         or $self->fatal("cannot open '$config_file' for reading: $!");
-    my $yaml = join '', $fh->getlines;
-    my $config = eval { YAML::Load($yaml) };
-    $self->fatal($@) if $@;
-
-    $self->fatal("no database section in '$config_file'.")
-        unless $config->{database};
-
-    # Set default values.
-    $config->{session}->{timeout} //= 10 * 60;
-
-    return $config;
 }
 
 1;
