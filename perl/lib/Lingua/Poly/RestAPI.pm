@@ -39,20 +39,23 @@ sub startup {
 
 	$self->moniker('lingua-poly-api');
 
-	eval {
-		my $config = $self->plugin('YamlConfig');
-	};
-	if ($@) {
-		$self->config({});
+	$self->plugin('Util::RandomString');
+
+	my $config = $self->plugin('YamlConfig');
+
+	if (!$config->{secrets} || !ref $config->{secrets}
+	    || 'ARRAY' ne $config->secrets) {
+		warn random_string;
 	}
 
-	my $config = $self->config;
 	$config->{database} //= {};
 	$config->{database}->{dbname} //= 'linguapoly';
 	$config->{database}->{username} //= '';
 
 	$config->{session} //= {};
 	$config->{session}->{timeout} ||= 2 * 60 * 60;
+
+	warn $self->random_string->();
 
 	my $db = Lingua::Poly::RestAPI::DB->new($self->app);
 	$self->app->defaults(db => $db);
