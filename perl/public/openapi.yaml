@@ -7,7 +7,7 @@ components:
     cookieAuth:
       type: apiKey
       in: cookie
-      name: MOJOSID
+      name: id 
 paths:
   /items:
     get:

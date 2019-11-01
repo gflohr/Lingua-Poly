@@ -28,11 +28,11 @@ use Locale::Messages qw(turn_utf_8_off);
 use CGI::Cookie;
 
 use Lingua::Poly::Util::String qw(empty);
-use Lingua::Poly::API::Session;
 use Lingua::Poly::API::Error;
 
 use Lingua::Poly::RestAPI::Logger;
 use Lingua::Poly::RestAPI::DB;
+use Lingua::Poly::RestAPI::Session;
 
 sub startup {
 	my ($self) = @_;
@@ -64,6 +64,10 @@ EOF
 	$config->{session} //= {};
 	$config->{session}->{timeout} ||= 2 * 60 * 60;
 
+	# FIXME! How can we enforce the prefix?
+	$config->{path} = '/api/v1';
+	$config->{path} = '/';
+
 	my $db = Lingua::Poly::RestAPI::DB->new($self->app);
 	$self->app->defaults(db => $db);
 
@@ -73,30 +77,12 @@ EOF
 			spec => $self->static->file('openapi.yaml')->path,
 			schema => 'v3',
 	});
-}
 
-sub __session {
-    my ($self, $session_id) = @_;
+	$self->hook(before_dispatch => sub {
+		my ($c) = @_;
 
-    if ($#_ > 0) {
-        my $config = $self->config;
-
-        my $path = $config->{prefix};
-        $path = '/' if empty $path;
-
-        $self->{__session} = Lingua::Poly::API::Session->new(
-            session_id => $session_id);
-        $session_id = $self->{__session}->id;
-        $self->response->{cookies}->{tsid} = {
-            path => $path,
-            'max-age' => $config->{session}->{timeout},
-            secure => $config->{session}->{ssl},
-            httponly => 1,
-            value => $session_id,
-        };
-    }
-
-    return $self->{__session};
+		$c->stash->{session} = Lingua::Poly::RestAPI::Session->new($c);
+	});
 }
 
 sub __initialize {
