@@ -41,11 +41,20 @@ sub startup {
 
 	$self->plugin('Util::RandomString');
 
-	my $config = $self->plugin('YamlConfig');
+	my $config = $self->plugin('yaml_config');
 
 	if (!$config->{secrets} || !ref $config->{secrets}
-	    || 'ARRAY' ne $config->secrets) {
-		warn random_string;
+	    || 'ARRAY' ne ref $config->{secrets}) {
+		my $secret = $self->random_string(length => 40,
+		                                  alphabet => ['0' .. '9', 'a' .. 'f']);
+		$self->log->fatal(<<EOF);
+configuration variable "secrets" missing.  Try:
+
+secrets:
+- $secret
+EOF
+
+		exit 1;
 	}
 
 	$config->{database} //= {};
@@ -54,8 +63,6 @@ sub startup {
 
 	$config->{session} //= {};
 	$config->{session}->{timeout} ||= 2 * 60 * 60;
-
-	warn $self->random_string->();
 
 	my $db = Lingua::Poly::RestAPI::DB->new($self->app);
 	$self->app->defaults(db => $db);
