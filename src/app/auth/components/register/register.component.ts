@@ -20,4 +20,7 @@ export class RegisterComponent implements OnInit {
 	ngOnInit() {
 	}
 
+	onSubmit() {
+		console.log(this.registerForm.value);
+	}
 }

@@ -1,7 +1,7 @@
 <h1>{{ 'Register' }}</h1>
 <div class="register-form-container">
 	<div class="row h-100">
-		<form class="col-12" [formGroup]="registerForm">
+		<form class="col-12" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
 			<div class="form-group">
 				<label for="username">Username</label>
 				<input formControlName="username" type="text"
@@ -26,7 +26,8 @@
 				<input formControlName="password2" type="password"
 				       class="form-control" id="password2" placeholder="Repeat password">
 			</div>
-			<button type="submit" class="btn btn-success btn-block">Register</button>
+			<button type="submit" [disabled]="!registerForm.valid"
+			        class="btn btn-success btn-block">Register</button>
 		</form>
 	</div>
 </div>
