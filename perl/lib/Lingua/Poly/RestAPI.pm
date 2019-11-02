@@ -67,6 +67,10 @@ EOF
 	$config->{path} = '/api/v1';
 	$config->{path} = '/';
 
+	$config->{smtp} //= {};
+	$config->{smtp}->{host} //= 'localhost';
+	$config->{smtp}->{port} //= 1025;
+
 	my $db = Lingua::Poly::RestAPI::DB->new($self->app);
 	$self->app->defaults(db => $db);
 
