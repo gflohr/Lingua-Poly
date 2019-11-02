@@ -4,7 +4,7 @@
 		<form class="col-12">
 			<div class="form-group">
 				<label for="username">Username</label>
-				<input required type="text" class="form-control" id="username"
+				<input [formControl]="username" type="text" class="form-control" id="username"
 				       aria-describedby="usernameHelp" placeholder="Enter a username">
 				<small id="usernameHelp" class="form-text text-muted">This name will be displayed.</small>
 			</div>
