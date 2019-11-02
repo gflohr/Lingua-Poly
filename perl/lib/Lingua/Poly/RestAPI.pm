@@ -45,8 +45,7 @@ sub startup {
 
 	if (!$config->{secrets} || !ref $config->{secrets}
 	    || 'ARRAY' ne ref $config->{secrets}) {
-		my $secret = $self->random_string(length => 40,
-		                                  alphabet => ['0' .. '9', 'a' .. 'f']);
+		my $secret = $self->random_string(entropy => 256);
 		$self->log->fatal(<<EOF);
 configuration variable "secrets" missing.  Try:
 
