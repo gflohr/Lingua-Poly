@@ -23,7 +23,28 @@
 				<input formControlName="password" type="password"
 				       class="form-control" id="password" placeholder="Password">
 				<small *ngIf="registerForm.get('password').touched && registerForm.get('password').errors && registerForm.get('password').errors.required"
-				       class="form-text alert alert-danger">This field is required.</small>
+					   class="form-text alert alert-danger">This field is required.</small>
+				<small *ngIf="registerForm.get('passwordStrength').value !== null"
+				       class="form-text text-muted">
+					Password strength:
+					{{ registerForm.get('passwordStrength').value }}
+				</small>
+				<div *ngIf="registerForm.errors && registerForm.errors.weakPassword">
+					<small *ngIf="registerForm.errors.weakPassword.feedback.warning === ''"
+					       class="form-text alert alert-danger">
+						Password too weak!
+					</small>
+					<small *ngIf="registerForm.errors.weakPassword.feedback.warning !== ''"
+						   class="form-text alert alert-danger">
+						{{ registerForm.errors.weakPassword.feedback.warning }}
+					</small>
+					<ul *ngIf="registerForm.errors.weakPassword.feedback.suggestions.length">
+						<li *ngFor="let s of registerForm.errors.weakPassword.feedback.suggestions">
+							<small class="form-text text-muted">{{ s }}</small>
+						</li>
+					</ul>
+				</div>
+				<input formControlName="passwordStrength" type="hidden" />
 			</div>
 			<div class="form-group">
 				<label for="password2">Repeat password</label>

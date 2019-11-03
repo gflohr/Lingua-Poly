@@ -15,8 +15,9 @@ export class RegisterComponent {
 		username: ['', Validators.required],
 		email: ['', [Validators.required, Validators.email]],
 		password: ['', Validators.required],
-		password2: ['', Validators.required ]]
-	}, { validators: PasswordValidator.passwordMatch });
+		passwordStrength: [ null ],
+		password2: ['', Validators.required ]
+	}, { validators: [ PasswordValidator.passwordMatch, PasswordValidator.passwordStrength ] });
 
 	onSubmit() {
 		console.log(this.registerForm);
