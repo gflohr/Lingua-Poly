@@ -1,7 +1,7 @@
 #! /bin/false
 #
 # Lingua-Poly   Language Disassembling Library
-# Copyright (C) 2018 Guido Flohr <guido.flohr@cantanea.com>
+# Copyright (C) 2018-2019 Guido Flohr <guido.flohr@cantanea.com>
 #               All rights reserved
 #
 # This library is free software. It comes without any warranty, to
@@ -23,11 +23,11 @@ my %realms;
 
 sub import {
     my ($class, @args) = @_;
-    
+
     return $class->SUPER::import(@args) if $class ne __PACKAGE__;
 
     my $realm = shift @args;
-    
+
     my $caller = caller 0;
 
     if (!exists $realms{$caller}) {
@@ -35,7 +35,7 @@ sub import {
         no strict 'refs';
         push @{"$caller\::ISA"}, __PACKAGE__;
     }
-    
+
     return;
 }
 
@@ -66,10 +66,10 @@ sub __log {
 
 sub realm {
     my ($self) = @_;
-    
+
     my $realm = $realms{ref $self};
     $realm = 'unspecified' if empty $realm;
-    
+
     return $realm;
 }
 

@@ -1,7 +1,7 @@
 #! /bin/false
 #
 # Lingua-Poly   Language Disassembling Library
-# Copyright (C) 2018 Guido Flohr <guido.flohr@Lingua::Poly::API.com>
+# Copyright (C) 2018-2019 Guido Flohr <guido.flohr@Lingua::Poly::API.com>
 #               All rights reserved
 #
 # This library is free software. It comes without any warranty, to

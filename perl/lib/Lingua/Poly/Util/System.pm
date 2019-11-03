@@ -1,7 +1,7 @@
 #! /bin/false
 #
 # Lingua-Poly   Language Disassembling Library
-# Copyright (C) 2018 Guido Flohr <guido.flohr@Lingua::Poly::API.com>
+# Copyright (C) 2018-2019 Guido Flohr <guido.flohr@Lingua::Poly::API.com>
 #               All rights reserved
 #
 # This library is free software. It comes without any warranty, to
@@ -22,23 +22,23 @@ use vars qw(@EXPORT_OK);
 
 sub random_bytes($) {
     my ($number) = @_;
-    
-    open my $fh, "</dev/urandom" 
+
+    open my $fh, "</dev/urandom"
         or die "Cannot open '</dev/urandom' for reading: $!\n";
     $number == sysread $fh, my $bytes, $number
         or die "Cannot read from '</dev/urandom': $!\n";
-        
+
     return $bytes;
 }
 
 sub random_chars($) {
     my ($number) = @_;
-    
+
     my $length = 1 + int (3 * $number / 4);
     my $bytes = random_bytes $length;
-    
+
     require MIME::Base64;
-    
+
     my $string = MIME::Base64::encode_base64url($bytes);
 
     return substr $string, 0, $number;
@@ -46,9 +46,9 @@ sub random_chars($) {
 
 sub password_digest($) {
     my ($cleartext) = @_;
-    
+
     require Digest::SHA;
-    
+
     return '{SHA512}' . (Digest::SHA::sha512_hex $cleartext) . '=';
 }
 

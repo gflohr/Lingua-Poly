@@ -1,5 +1,5 @@
 # Lingua-Poly   Language Disassembling Library
-# Copyright (C) 2018 Guido Flohr <guido.flohr@cantanea.com>
+# Copyright (C) 2018-2019 Guido Flohr <guido.flohr@cantanea.com>
 #               All rights reserved
 #
 # This library is free software. It comes without any warranty, to
@@ -46,11 +46,11 @@ sub inflect {
         my ($vowel1, $vowel2) = ($2, $3);
         my $lc = lc "$vowel1$vowel2";
 
-        my %diphtongs = map { $_ => 1} 
+        my %diphtongs = map { $_ => 1}
                         ("ai", "au", "\x{e4}y", "oi", "ou", "ei", "eu",
                          "\x{f6}i", "\x{f6}y", "ui", "uo", "iu", "iy", "ie",
                          "yi", "y\x{f6}");
-        
+
         if (!$diphtongs{$lc} && $vowel1 ne $vowel2) {
             $vowel1 .= 'k';
         }
@@ -85,7 +85,7 @@ Lingua::Poly::FI::Word::Verb::Type2;
 
 =head1 COPYRIGHT
 
-Copyright (C) 2018 Guido Flohr  <guido.flohr@cantanea.com>, all rights
+Copyright (C) 2018-2019 Guido Flohr  <guido.flohr@cantanea.com>, all rights
 reserved.
 
 This library is free software. It comes without any warranty, to

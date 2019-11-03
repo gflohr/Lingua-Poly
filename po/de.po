@@ -1,5 +1,5 @@
 # German translations for Lingua-Poly.
-# Copyright (C) 2018 Guido Flohr
+# Copyright (C) 2018-2019 Guido Flohr
 # This file is distributed under the same license as the Lingua-Poly package.
 # Guido Flohr <guido.flohr@cantanea.com>, 2018.
 #

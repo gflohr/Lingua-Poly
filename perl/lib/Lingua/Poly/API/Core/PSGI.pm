@@ -1,7 +1,7 @@
 #! /bin/false
 #
 # Lingua-Poly   Language Disassembling Library
-# Copyright (C) 2018 Guido Flohr <guido.flohr@cantanea.com>
+# Copyright (C) 2018-2019 Guido Flohr <guido.flohr@cantanea.com>
 #               All rights reserved
 #
 # This library is free software. It comes without any warranty, to
@@ -27,14 +27,14 @@ sub run {
         $DB::single = 1;
     }
 
-    $env->{HTTP_HOST} = $env->{HTTP_X_FORWARDED_HOST} 
+    $env->{HTTP_HOST} = $env->{HTTP_X_FORWARDED_HOST}
         if $env->{HTTP_X_FORWARDED_HOST};
-    $env->{SERVER_PORT} = $env->{HTTP_X_FORWARDED_PORT} 
+    $env->{SERVER_PORT} = $env->{HTTP_X_FORWARDED_PORT}
         if $env->{HTTP_X_FORWARDED_PORT};
-    
+
     my $api = Lingua::Poly::API->new;
     $api->initRequest(Plack::Request->new($env));
-  
+
     $api->run;
 
     return $api->response->finalize;

@@ -1,7 +1,7 @@
 #! /usr/bin/env perl
 #
 # Lingua-Poly   Language Disassembling Library
-# Copyright (C) 2018 Guido Flohr <guido.flohr@cantanea.com>
+# Copyright (C) 2018-2019 Guido Flohr <guido.flohr@cantanea.com>
 #               All rights reserved
 #
 # This library is free software. It comes without any warranty, to
@@ -27,7 +27,7 @@ foreach my $entry(@$entries) {
         warn "$en_po: translation missing for $msgid\n";
         next;
     }
-    push @po, Locale::PO->new(-msgid => $entry->dequote($msgstr), 
+    push @po, Locale::PO->new(-msgid => $entry->dequote($msgstr),
                               -msgstr => '');
 }
 my $js_pot = 'js.pot';

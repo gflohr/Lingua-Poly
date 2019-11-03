@@ -1,7 +1,7 @@
 #! /bin/false
 #
 # Lingua-Poly   Language Disassembling Library
-# Copyright (C) 2018 Guido Flohr <guido.flohr@Lingua::Poly::API.com>
+# Copyright (C) 2018-2019 Guido Flohr <guido.flohr@Lingua::Poly::API.com>
 #               All rights reserved
 #
 # This library is free software. It comes without any warranty, to
@@ -19,7 +19,7 @@ use DBI;
 use Lingua::Poly::API::Logger qw(db);
 
 use constant STATEMENTS => {
-	
+
     DELETE_SESSION => <<EOF,
 DELETE FROM sessions
   WHERE sid = ?
@@ -29,7 +29,7 @@ DELETE FROM sessions
   WHERE EXTRACT(EPOCH FROM(NOW() - last_seen)) > ?
 EOF
     INSERT_SESSION => <<EOF,
-INSERT INTO sessions(sid, user_id, footprint) 
+INSERT INTO sessions(sid, user_id, footprint)
   VALUES(?, ?, ?)
 EOF
     SELECT_SESSION_INFO => <<EOF,
@@ -54,7 +54,7 @@ sub new {
 
     my $self = {};
     bless $self, $class;
-    
+
     my $dbname = $config->{dbname};
     $class->debug("connecting to database '$dbname' as '$config->{user}'.");
     my $dbh = eval {
@@ -83,7 +83,7 @@ sub finalize {
     if ($self->{__dbh}->{ActiveKids}) {
     	$self->{__dbh}->rollback;
     }
-    
+
     return $self;
 }
 
@@ -92,8 +92,8 @@ sub execute {
 
     my $sth = $self->getIterator($statement, @args);
     $sth->finish;
-    
-    return $self; 
+
+    return $self;
 }
 
 sub getIterator {
@@ -111,35 +111,35 @@ sub getIterator {
     }
     $sth->execute(@args);
     $self->debug("Statement $statement finished.");
-    
+
     return $sth;
 }
 
 sub getRow {
     my ($self, $statement, @args) = @_;
-    
+
     my $sth = $self->getIterator($statement, @args) or return;
 
     my @row = $sth->fetchrow_array;
 
     return if !@row;
-    
+
     return wantarray ? @row : $row[0];
 }
 
 sub transaction {
     my ($self, $statement, @args) = @_;
-    
+
     my $sth = $self->execute($statement, @args) or return;
-    
+
     $self->{__dbh}->commit;
-    
+
     return $self;
 }
 
 sub statement {
 	my ($self, $sql, @args) = @_;
-	
+
 	my $dbh = $self->{__dbh};
 
     if (Lingua::Poly::API->new->debugging('db'))	{
@@ -150,11 +150,11 @@ sub statement {
     	$pretty_sql =~ s/  +/ /g;
     	$self->debug("Executing one shot statement:\n$pretty_sql");
     }
-	
+
 	my $sth = $dbh->prepare($sql);
 
     $sth->execute(@args);
-    
+
     return $sth;
 }
 

@@ -1,7 +1,7 @@
 #! /bin/false
 #
 # Lingua-Poly   Language Disassembling Library
-# Copyright (C) 2018 Guido Flohr <guido.flohr@Lingua::Poly::API.com>
+# Copyright (C) 2018-2019 Guido Flohr <guido.flohr@Lingua::Poly::API.com>
 #               All rights reserved
 #
 # This library is free software. It comes without any warranty, to
@@ -27,7 +27,7 @@ sub new {
     my $db = $api->db;
 
     my ($session_id, $uid);
-        
+
     my $footprint = $api->footprint;
     my $config = $api->config;
     if (exists $args{uid}) {
@@ -47,13 +47,13 @@ sub new {
         die "Session has expired.\n" if $age > $config->{session}->{timeout};
         die "You were still logged in from somewhere else.\n"
             if $footprint ne $old_footprint;
-            
+
         $db->transaction(UPDATE_SESSION => $session_id);
     } else {
         require Carp;
         Carp::croak("Sessions have to be created with either a uid or session_id");
     }
-    
+
     $Lingua::Poly::API->response->cookies->{tsid} = {
     	value => $session_id,
     	'max-age' => $config->{session}->{timeout},
@@ -61,10 +61,10 @@ sub new {
     	secure => $config->{session}->{secure},
     	httponly => 1,
     };
-    
+
     $self->{__id} = $session_id;
     $self->{__uid} = $uid;
-    
+
     return $self;
 }
 

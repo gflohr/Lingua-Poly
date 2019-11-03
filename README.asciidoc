@@ -6,7 +6,7 @@
 :sectnums:
 :toc: macro
 :toclevels: 4
-:toc-title: 
+:toc-title:
 
 [[lingua-poly]]
 = Lingua-Poly
@@ -16,7 +16,7 @@ Lingua-Poly is a system for disassembling human languages.
 toc::[]
 
 [[status]]
-== Status 
+== Status
 
 Pre-alpha, incomplete.
 
@@ -200,7 +200,7 @@ and edit it to your needs.
 [[copyright]]
 == Copyright
 
-Copyright (C) 2018 Guido Flohr guido.flohr@cantanea.com, all rights
+Copyright (C) 2018-2019 Guido Flohr guido.flohr@cantanea.com, all rights
 reserved.
 
 This library is free software. It comes without any warranty, to the

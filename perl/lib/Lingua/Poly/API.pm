@@ -1,7 +1,7 @@
 #! /bin/false
 #
 # Lingua-Poly   Language Disassembling Library
-# Copyright (C) 2018 Guido Flohr <guido.flohr@cantanea.com>
+# Copyright (C) 2018-2019 Guido Flohr <guido.flohr@cantanea.com>
 #               All rights reserved
 #
 # This library is free software. It comes without any warranty, to
@@ -37,11 +37,11 @@ my $api;
 
 sub new {
     my ($class) = @_;
-    
+
     return $api if $api;
-    
+
     $api = bless {}, __PACKAGE__;
-    
+
     $api->__initialize;
 }
 
@@ -73,14 +73,14 @@ sub finalizeRequest {
 
 sub footprint {
     my ($self) = @_;
-    
+
     my $request = $self->request;
-    
+
     my $ua = $request->header('User-Agent');
     $ua //= '';
-    
+
     my $ip = $request->address;
-    
+
     return join ':', $ip, $ua;
 }
 
@@ -88,14 +88,14 @@ sub initRequest {
     my ($self, $request) = @_;
 
     $self->{__request} = $request;
-    
+
     my $response = $self->{__response} = $request->new_response(HTTP_OK);
     $response->content_type('application/json');
 
     $self->resultSuccess;
-    
+
     delete $self->{__session};
-    
+
     return $self;
 }
 
@@ -132,28 +132,28 @@ sub run {
         $self->error($@);
         $self->resultError(HTTP_INTERNAL_SERVER_ERROR);
     }
-    
+
     $self->__render;
-    
+
     eval {
         $self->finalizeRequest;
     };
     if ($@) {
         $self->error($@);
     }
-    
+
     return $self;
 }
 
 sub session {
     my ($self, $session_id) = @_;
-    
+
     if ($#_ > 0) {
         my $config = $self->config;
-        
+
         my $path = $config->{prefix};
         $path = '/' if empty $path;
-        
+
         $self->{__session} = Lingua::Poly::API::Session->new(
             session_id => $session_id);
         $session_id = $self->{__session}->id;
@@ -165,7 +165,7 @@ sub session {
             value => $session_id,
         };
     }
-    
+
     return $self->{__session};
 }
 
@@ -176,7 +176,7 @@ sub resultSuccess {
         status => 'success',
         code => LINGUA_POLY_API_OK,
         result => $data,
-    }; 
+    };
 }
 
 sub resultError {
@@ -195,7 +195,7 @@ sub resultError {
 
 sub requestContent {
     my ($self) = @_;
-    
+
     return $self->{__request}->content;
 }
 
@@ -205,9 +205,9 @@ sub __render {
     require JSON;
     my $body = JSON->new->encode($self->{__payload});
     $body .= "\n";
-    
+
     turn_utf_8_off $body;
-    
+
     $self->response->body($body);
 
     return $self;
@@ -258,8 +258,8 @@ sub __controller {
         }
         push @path_info, pop @tries;
     }
-   
-    die "could not resolve controller path for URI " . $request->uri . "\n"; 
+
+    die "could not resolve controller path for URI " . $request->uri . "\n";
 }
 
 sub __initialize {
@@ -286,7 +286,7 @@ sub __initialize {
 
 sub __readConfig {
     my ($self) = @_;
-    
+
     my $base_dir = $self->baseDirectory;
     my $config_file = "$base_dir/api.conf.yaml";
     $self->debug("reading configuration file '$config_file'.");
@@ -296,12 +296,12 @@ sub __readConfig {
     my $config = eval { YAML::Load($yaml) };
     $self->fatal($@) if $@;
 
-    $self->fatal("no database section in '$config_file'.") 
+    $self->fatal("no database section in '$config_file'.")
         unless $config->{database};
-    
+
     # Set default values.
     $config->{session}->{timeout} //= 10 * 60;
-        
+
     return $config;
 }
 

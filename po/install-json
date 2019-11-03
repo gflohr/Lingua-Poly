@@ -1,7 +1,7 @@
 #! /usr/bin/env perl
 #
 # Lingua-Poly   Language Disassembling Library
-# Copyright (C) 2018 Guido Flohr <guido.flohr@cantanea.com>
+# Copyright (C) 2018-2019 Guido Flohr <guido.flohr@cantanea.com>
 #               All rights reserved
 #
 # This library is free software. It comes without any warranty, to
@@ -45,7 +45,7 @@ foreach my $lingua (@linguas) {
         next if !exists $needed{$msgid};
         my $msgstr = $entry->dequote($entry->msgstr);
         next if '""' eq $msgstr;
-        $msgs{$needed{$msgid}} = $msgstr; 
+        $msgs{$needed{$msgid}} = $msgstr;
     }
 
     my $json_file = "../src/assets/i18n/$lingua.json";

@@ -1,5 +1,5 @@
 # Lingua-Poly   Language Disassembling Library
-# Copyright (C) 2018 Guido Flohr <guido.flohr@cantanea.com>
+# Copyright (C) 2018-2019 Guido Flohr <guido.flohr@cantanea.com>
 #               All rights reserved
 #
 # This library is free software. It comes without any warranty, to
@@ -19,7 +19,7 @@ use base qw(Lingua::Poly::FI::Word::Verb);
 
 sub inflect {
     my ($self, $person, $numerus, %options) = @_;
- 
+
     my $stem;
     if ($$self =~ /[hH]..$/) {
         # nähdä or tehdä.
@@ -49,7 +49,7 @@ Lingua::Poly::FI::Word::Verb::Type2;
 
 =head1 COPYRIGHT
 
-Copyright (C) 2018 Guido Flohr  <guido.flohr@cantanea.com>, all rights
+Copyright (C) 2018-2019 Guido Flohr  <guido.flohr@cantanea.com>, all rights
 reserved.
 
 This library is free software. It comes without any warranty, to
