@@ -16,10 +16,10 @@ export class RegisterComponent {
 		email: ['', [Validators.required, Validators.email]],
 		password: ['', Validators.required],
 		password2: ['', Validators.required ]]
-	}, { validator: PasswordValidator.passwordMatch });
+	}, { validators: PasswordValidator.passwordMatch });
 
 	onSubmit() {
-		console.log(this.registerForm.value);
+		console.log(this.registerForm);
 	}
 
 	get password() { return this.registerForm.get('password'); }
