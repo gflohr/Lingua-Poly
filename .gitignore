@@ -1,7 +1,4 @@
 
-# Config files
-/proxy.conf.json
-
 # compiled output
 /dist
 /tmp

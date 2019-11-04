@@ -9,7 +9,7 @@
   "license": "WTFPL",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --open",
+    "start": "ng serve --open --proxy-config=proxy.conf.json",
     "build": "ng build",
     "maildev": "maildev",
     "test": "ng test",
