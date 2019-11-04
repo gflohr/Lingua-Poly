@@ -19,8 +19,6 @@ export class PasswordValidator {
 		const username = fg.get('username').value;
 		const email = fg.get('email').value;
 
-		console.log('username: ' + username);
-		console.log('email: ' + email);
 		const result = zxcvbn(password.value,
 							  [username, email, 'lingua', 'poly',
 							   'lingua-poly']);
@@ -42,8 +40,6 @@ export class PasswordValidator {
 				result.scoreDescription = "very unguessable";
 				break;
 		}
-
-		console.log(result);
 
 		if (fg.get('passwordStrength').value !== result.scoreDescription) {
 			fg.get('passwordStrength').setValue(result.scoreDescription);
