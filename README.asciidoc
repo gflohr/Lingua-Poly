@@ -18,7 +18,8 @@ toc::[]
 [[status]]
 == Status
 
-Pre-alpha, incomplete.
+Pre-alpha, incomplete.  This documentation is mostly for the author at the time
+of this writing.
 
 The first language being implemented is Finnish. Currently, the present
 tense indicative active of Finnish verbs is being implemented.
@@ -30,10 +31,11 @@ tense indicative active of Finnish verbs is being implemented.
 
 https://nodejs.org/[Node.js] is required in order to build or run the front-end.
 
-=== Yarn
+=== Yarn or NPM
 
-You will also need https://yarnpkg.com/[Yarn]. The https://yarnpkg.com/[website]
-has information on how to install it.
+You will also need https://yarnpkg.com/[Yarn].
+
+https://www.npmjs.com[NPM] should work as well.
 
 === Perl
 
@@ -55,54 +57,40 @@ $ sudo cpanm -n .
 [[backend]]
 === Backend
 
-[[database]]
-==== Database
-
-You will need an instance of a https://www.postgresql.org/[PostgreSQL]
-(version 9 or better) database up and running. Create a database
-'linguapoly':
+A regular backend (API) server is started like this:
 
 [source,bash]
 ----
-$ createdb linguapoly
+$ cd /path/to/Lingua-Poly
+$ cd perl
+$ perl -Ilib script/lingua-poly daemon
 ----
 
-This assumes that your PostgreSQL server is running on your local
-machine. Get more information with `man createdb` if that assumption is
-wrong or there is an error.
-
-[[populate-database]]
-==== Populate Database
-
-You can initialize the database like this:
-
-[source,bash]
-----
-$ psql linguapoly <schema.sql
-----
-
-Replace "linguapoly" with the name of the database created above. Run
-the command in the root directory of this project.
+If you have the web server `morby` in your `$PATH` (should be installed as a
+dependency), you can also start a development web server that watches for
+changes and restarts itself.
 
 [[configuration]]
 ==== Configuration
 
-You need a minimal configuration file `api.conf.yaml` in
-http://yaml.org/[YAML] format in the current directory:
+You need a minimal configuration file `lingua-poly.api.yaml` in
+http://yaml.org/[YAML] format in the `perl` directory:
 
 [source,yaml]
 ----
 database:
-    dbname: linguapoly
-    user: nobody
-    pass: mysecretpassword
-session:
-    timeout: 600
-prefix: /api/v1
+  dbname: linguapoly
+  user: nobody
+secrets:
+- SLJao2rSz6GGpWBXcovAVQJfvBFch3kC7AE8QdCeIlt
 ----
 
 Make sure that the configured database user has sufficient privileges to
 read and write all tables in the database.
+
+Instead of "inventing" a secret, you are advised just omit it initially.  The
+server application will fail in that case and a randomly generated secret will
+be shown in the error message.
 
 [[starting-the-backend-server]]
 ==== Starting the Backend Server
@@ -112,10 +100,10 @@ Start the backend server like this:
 [source,bash]
 ----
 $ cd /path/to/Lingua-Poly/perl
-$ PERL5LIB=lib plackup lingua-poly.psgi
+$ perl -Ilib script/lingua-poly
 ----
 
-Other environment variables than 'PERL5LIB':
+Environment variables:
 
 LINGUA_POLY_DEBUG::
 A list of debugging realms separated by commas, spaces, tabs, colons, or
@@ -128,6 +116,8 @@ pipe symbols. The following realms are currently supported:
 
 [[manually-create-passwords]]
 ==== Manually Create Passwords
+
+*TODO!* This is outdated.
 
 You can manually create a password (digest) with this one-liner:
 
@@ -194,8 +184,8 @@ $ ng serve --open
 The application is then available at http://localhost:4200/.
 
 You have to tell the development web server the URI of the backend API
-server. Copy the file 'proxy.conf.json.sample'  to  'proxy.conf.json'
-and edit it to your needs.
+server. The default provided in the file `proxy.conf.json` should actually just
+work if you follow the instructions.
 
 [[copyright]]
 == Copyright
