@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { PasswordValidator } from 'src/app/core/validators/passwordValidator';
+import { UsersService } from 'src/app/core/openapi/lingua-poly';
 
 @Component({
 	selector: 'app-register',
@@ -9,7 +10,8 @@ import { PasswordValidator } from 'src/app/core/validators/passwordValidator';
 })
 export class RegisterComponent {
 
-	constructor(private fb: FormBuilder) { }
+	constructor(private fb: FormBuilder,
+		        private usersService: UsersService) { }
 
 	registerForm = this.fb.group ({
 		username: ['', Validators.required],
@@ -20,6 +22,9 @@ export class RegisterComponent {
 	}, { validators: [ PasswordValidator.passwordMatch, PasswordValidator.passwordStrength ] });
 
 	onSubmit() {
+		this.usersService.usersPost().subscribe(data => {
+			console.log(data);
+		});
 		console.log(this.registerForm);
 	}
 
