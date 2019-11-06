@@ -10,11 +10,9 @@
 # to Public License, Version 2, as published by Sam Hocevar. See
 # http://www.wtfpl.net/ for more details.
 
-package Lingua::Poly::RestAPI;
+package Lingua::Poly::RestAPI::Controller::User;
 
 use strict;
-
-use Mojo::Base 'Mojolicious';
 
 use Time::HiRes qw(gettimeofday);
 use YAML;
@@ -31,18 +29,23 @@ use Lingua::Poly::Util::String qw(empty);
 use Lingua::Poly::API::Session;
 use Lingua::Poly::API::Error;
 
-package Lingua::Poly::RestAPI::Controller::Item;
-
 use Mojo::Base "Lingua::Poly::RestAPI::Controller";
 
-sub realm { "item" }
+sub realm { "user" }
 
-sub list {
+sub create {
 	my $self = shift->openapi->valid_input or return;
 
-	$self->debug("YdFluidAf!");
+	$DB::single = 1;
+	my $userDraft = $self->req->json;
 
-	$self->render(openapi => ['blood', 'sweat', 'tears']);
+	use Data::Dumper;
+	#$self->debug(Dumper $userDraft);
+	warn Dumper $userDraft;
+
+	delete $userDraft->{password};
+
+	$self->render(openapi => $userDraft, status => 201);
 }
 
 1;

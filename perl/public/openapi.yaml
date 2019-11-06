@@ -3,7 +3,7 @@ info:
   title: 'Mojolicious OpenAPI WebApp'
   version:  '1.0'
 servers:
-  - url: http://127.0.0.1:3000/api/lingua-poly/v1
+  - url: http://127.0.0.1:4200/api/lingua-poly/v1
     description: The development server
 components:
   securitySchemes:
@@ -12,6 +12,17 @@ components:
       in: cookie
       name: MOJOSID
   schemas:
+    User:
+      title: User
+      properties:
+        username:
+          type: string
+          minLength: 2
+          example: JohnDoe
+        email:
+          type: string
+          minLength: 3
+          example: john.doe@acme.com
     UserDraft:
       title: UserDraft
       properties:
@@ -49,9 +60,13 @@ paths:
       x-mojo-to: 'user#create'
       operationId: usersPost
       requestBody:
-        $ref: '#/components/requestBodies/CreateUserRequest'
+        $ref: "#/components/requestBodies/CreateUserRequest"
       responses:
         201:
           description: User waiting for confirmation created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
         406:
           description: Invalid input

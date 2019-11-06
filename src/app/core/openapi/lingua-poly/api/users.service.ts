@@ -17,6 +17,7 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
+import { User } from '../model/user';
 import { UserDraft } from '../model/userDraft';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
@@ -28,7 +29,7 @@ import { Configuration }                                     from '../configurat
 })
 export class UsersService {
 
-    protected basePath = 'http://127.0.0.1:3000/api/lingua-poly/v1';
+    protected basePath = 'http://127.0.0.1:4200/api/lingua-poly/v1';
     public defaultHeaders = new HttpHeaders();
     public configuration = new Configuration();
     public encoder: HttpParameterCodec;
@@ -54,15 +55,16 @@ export class UsersService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public usersPost(userDraft?: UserDraft, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public usersPost(userDraft?: UserDraft, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public usersPost(userDraft?: UserDraft, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public usersPost(userDraft?: UserDraft, observe?: 'body', reportProgress?: boolean): Observable<User>;
+    public usersPost(userDraft?: UserDraft, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<User>>;
+    public usersPost(userDraft?: UserDraft, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<User>>;
     public usersPost(userDraft?: UserDraft, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
         let headers = this.defaultHeaders;
 
         // to determine the Accept header
         const httpHeaderAccepts: string[] = [
+            'application/json'
         ];
         const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         if (httpHeaderAcceptSelected !== undefined) {
@@ -79,7 +81,7 @@ export class UsersService {
             headers = headers.set('Content-Type', httpContentTypeSelected);
         }
 
-        return this.httpClient.post<any>(`${this.configuration.basePath}/users`,
+        return this.httpClient.post<User>(`${this.configuration.basePath}/users`,
             userDraft,
             {
                 withCredentials: this.configuration.withCredentials,
