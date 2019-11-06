@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { PasswordValidator } from 'src/app/core/validators/passwordValidator';
-import { UsersService } from 'src/app/core/openapi/lingua-poly';
+import { UsersService, UserDraft } from 'src/app/core/openapi/lingua-poly';
 
 @Component({
 	selector: 'app-register',
@@ -22,7 +22,12 @@ export class RegisterComponent {
 	}, { validators: [ PasswordValidator.passwordMatch, PasswordValidator.passwordStrength ] });
 
 	onSubmit() {
-		this.usersService.usersPost().subscribe(data => {
+		const user = {
+			username: this.registerForm.get('username').value,
+			email: this.registerForm.get('email').value,
+			password: this.registerForm.get('password').value,
+		} as UserDraft;
+		this.usersService.usersPost(user).subscribe(data => {
 			console.log(data);
 		});
 		console.log(this.registerForm);

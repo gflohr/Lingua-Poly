@@ -41,9 +41,8 @@ export class PasswordValidator {
 				break;
 		}
 
-		if (fg.get('passwordStrength').value !== result.scoreDescription) {
-			fg.get('passwordStrength').setValue(result.scoreDescription);
-		}
+		fg.get('passwordStrength').setValue(result.scoreDescription,
+			{ emitEvent: false,  onlySelf: true });
 
 		if (result.score >= 3) return null;
 

@@ -7,6 +7,8 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpClient } from '@angular/common/http';
 import { HttpClientModule } from '@angular/common/http';
 import { PasswordValidator } from './validators/passwordValidator';
+import { ApiModule, BASE_PATH } from './openapi/lingua-poly';
+import { environment } from 'src/environments/environment';
 
 export function HttpLoaderFactory(httpClient: HttpClient) {
   return new TranslateHttpLoader(httpClient, './assets/i18n/', '.json');
@@ -24,6 +26,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
 				useDefaultLang: true
 		}),
 		HttpClientModule,
+		ApiModule
 	],
   	exports: [
 		TranslateModule
@@ -32,7 +35,10 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
 	providers: [
 		HttpClient,
 		TranslateService,
-		PasswordValidator
+		PasswordValidator,
+		{
+			provide: BASE_PATH, useValue: environment.basePath
+		}
 	]
 })
 

@@ -17,6 +17,7 @@ import { CustomHttpUrlEncodingCodec }                        from '../encoder';
 
 import { Observable }                                        from 'rxjs';
 
+import { UserDraft } from '../model/userDraft';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
@@ -57,13 +58,15 @@ export class UsersService {
     /**
      * Create a new user
      * 
+     * @param body 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public usersPost(observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public usersPost(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public usersPost(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-    public usersPost(observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public usersPost(body?: UserDraft, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public usersPost(body?: UserDraft, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public usersPost(body?: UserDraft, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public usersPost(body?: UserDraft, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+
 
         let headers = this.defaultHeaders;
 
@@ -77,10 +80,15 @@ export class UsersService {
 
         // to determine the Content-Type header
         const consumes: string[] = [
+            'application/json'
         ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected != undefined) {
+            headers = headers.set('Content-Type', httpContentTypeSelected);
+        }
 
         return this.httpClient.post<any>(`${this.basePath}/users`,
-            null,
+            body,
             {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,

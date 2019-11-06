@@ -47,6 +47,9 @@ paths:
       - users
       summary: Create a new user
       x-mojo-to: 'user#create'
+      operationId: usersPost
+      requestBody:
+        $ref: '#/components/requestBodies/CreateUserRequest'
       responses:
         201:
           description: User waiting for confirmation created
