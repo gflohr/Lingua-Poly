@@ -15,7 +15,8 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "extract": "node node_modules/ngx-translate-extract/bin/cli.js --input=./src --output=src/assets/i18n/en.po --clean --sort --format=pot --marker=_"
+    "extract": "node node_modules/ngx-translate-extract/bin/cli.js --input=./src --output=src/assets/i18n/en.po --clean --sort --format=pot --marker=_",
+    "generate-openapi": "openapi-generator generate -i perl/public/openapi.yaml -g typescript-angular -o src/app/core/openapi/lingua-poly"
   },
   "private": true,
   "dependencies": {
@@ -31,6 +32,7 @@
     "@ng-bootstrap/ng-bootstrap": "^5.1.2",
     "@ngx-translate/core": "^10.0.2",
     "@ngx-translate/http-loader": "^3.0.1",
+    "@openapitools/openapi-generator-cli": "^1.0.2-4.2.0",
     "@types/zxcvbn": "^4.4.0",
     "bootstrap": "^4.3.1",
     "core-js": "^2.5.4",
