@@ -27,6 +27,7 @@ use Email::Address 1.912;
 use Email::Simple 2.216;
 use Email::Sender::Simple 1.300031 qw(sendmail);
 
+use Lingua::Poly::Util::String qw(empty);
 use Lingua::Poly::RestAPI::Logger;
 use Lingua::Poly::RestAPI::User;
 use Lingua::Poly::RestAPI::Util qw(crypt_password);
@@ -97,21 +98,28 @@ sub create {
 	my $body;
 	my $subject;
 	my $expiry_minutes = $self->config->{session}->{timeout} / 60;
-	if ($renew_request) {
-		# We send a new mail and renew the "session".
-		die "renew not yet implemented";
-	} elsif ($suggest_recover) {
+	if ($suggest_recover) {
 		die "recover not yet implemented";
 	} else {
-		# Create the  user.
-		my $password = crypt_password $userDraft->{password};
+		my $session_id;
+		if ($renew_request) {
+			($session_id) = $db->getRow(SELECT_SESSION_ID_FOR_REGISTRATION
+			                            => $userDraft->{email});
+			die "no session for $userDraft->{email} found" if empty $session_id;
+			$db->execute(UPDATE_SESSION_TIMESTAMP_FOR_REGISTRATION
+			             => $userDraft->{email});
+		} else {
+			# Create the  user.
+			my $password = crypt_password $userDraft->{password};
 
-		$db->execute(INSERT_USER => $userDraft->{email}, $userDraft->{password});
-		my $user_id = $db->lastInsertId('users');
+			$db->execute(INSERT_USER => $userDraft->{email},
+			             $userDraft->{password});
+			my $user_id = $db->lastInsertId('users');
 
-		my $fp = $self->fingerprint;
-		my $session_id = $self->random_string(entropy => 128);
-		$db->execute(INSERT_SESSION => $session_id, $user_id, $fp);
+			$session_id = $self->random_string(entropy => 128);
+			my $fp = $self->fingerprint;
+			$db->execute(INSERT_SESSION => $session_id, $user_id, $fp);
+		}
 
 		my $transport = $self->emailSenderTransport;
 		my $url = $self->siteURL;
@@ -125,18 +133,17 @@ Hello,
 somebody, hopefully you, has registered at the Lingua::Poly website
 ($url).
 
-In order to finish the registration, please follow the following
+If you did not register, please ignore this email!
+
+In order to confirm the registration, please follow the following
 link:
 
      $confirmation_url
 
-If you did not register, somebody has abused your email address.  You can
-just ignore this mail.
-
 There is no need to keep this email.  The above link will expire in
 $expiry_minutes minutes.
 
-This mail was send from an account that is not set up to receive mails.
+This email was send from an account that is not set up to receive mails.
 
 Best regards,
 Your Lingua::Poly team

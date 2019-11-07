@@ -16,6 +16,8 @@ use strict;
 
 use DBI;
 
+use Lingua::Poly::Util::String qw(empty);
+
 use base 'Lingua::Poly::RestAPI::Logger';
 
 use constant STATEMENTS => {
@@ -35,6 +37,16 @@ EOF
 	SELECT_SESSION_INFO => <<EOF,
 SELECT user_id, EXTRACT(EPOCH FROM(NOW() - last_seen)), fingerprint FROM sessions
   WHERE sid = ?
+EOF
+	UPDATE_SESSION_TIMESTAMP_FOR_REGISTRATION => <<EOF,
+UPDATE sessions SET last_seen = NOW()
+  WHERE sessions.user_id = (SELECT id FROM users WHERE email = ? AND NOT confirmed)
+EOF
+	SELECT_SESSION_ID_FOR_REGISTRATION => <<EOF,
+SELECT s.sid FROM sessions s, users u
+  WHERE u.email = ?
+    AND s.user_id = u.id
+	AND NOT u.confirmed
 EOF
 	INSERT_USER => <<EOF,
 INSERT INTO users(email, password) VALUES(?, ?)
