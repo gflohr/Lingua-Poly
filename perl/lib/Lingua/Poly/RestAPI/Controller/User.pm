@@ -47,10 +47,12 @@ sub create {
 	my @errors;
 	push @errors, {
 		message => "Password too weak (score: $score/3)",
-		path => 'body/password'
+		path => '/body/password'
 	} if $score < 3;
 
-	return $self->errorResponse($code, @errors) if @errors;
+	return $self->errorResponse(HTTP_BAD_REQUEST, @errors) if @errors;
+
+	# Create a temporary user
 
 	delete $userDraft->{password};
 

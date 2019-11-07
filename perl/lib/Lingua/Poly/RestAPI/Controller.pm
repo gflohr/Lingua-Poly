@@ -25,11 +25,25 @@ sub errorResponse {
     $code ||= HTTP_BAD_REQUEST;
 	my @errors;
 	foreach my $error (@raw_errors) {
-		$error = { message =>> $error } if !ref $error;
+		$error = { message => $error } if !ref $error;
 		$error->{path} //= '';
+		push @errors, $error;
 	}
 
 	return $self->render(openapi => { errors => \@errors }, status => $code);
 }
 
+sub footprint {
+	my ($self) = @_;
+
+	my $req = $self->req;
+
+	my $ua = $req->header('User-Agent');
+    $ua //= '';
+
+    my $ip = $req->address;
+
+    return join ':', $ip, $ua;
+
+}
 1;
