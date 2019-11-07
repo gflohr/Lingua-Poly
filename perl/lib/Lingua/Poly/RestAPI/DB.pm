@@ -44,10 +44,13 @@ DELETE FROM users u
 	AND EXTRACT(EPOCH FROM(NOW() - s.last_seen)) > ?
 EOF
 	SELECT_USER_BY_ID => <<EOF,
-SELECT email, password FROM users WHERE id = ?
+SELECT id, username, email, password, confirmed FROM users WHERE id = ?
+EOF
+	SELECT_USER_BY_USERNAME => <<EOF,
+SELECT id, username, email, password, confirmed FROM users WHERE username = ?
 EOF
 	SELECT_USER_BY_EMAIL => <<EOF,
-SELECT id, password FROM users WHERE email = ?
+SELECT id, username, email, password, confirmed FROM users WHERE email = ?
 EOF
 	UPDATE_SESSION => <<EOF,
 UPDATE sessions
@@ -92,6 +95,14 @@ sub new {
 
 sub app {
 	shift->{__app};
+}
+
+sub commit {
+	shift->{__dbh}->commit;
+}
+
+sub rollback {
+	shift->{__dbh}->rollback;
 }
 
 sub finalize {

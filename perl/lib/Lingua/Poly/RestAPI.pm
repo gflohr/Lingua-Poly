@@ -77,8 +77,8 @@ EOF
 	$self->app->defaults(db => $db);
 
 	$self->plugin(OpenAPI => {
-			spec => $self->static->file('openapi.yaml')->path,
-			schema => 'v3',
+		spec => $self->static->file('openapi.yaml')->path,
+		schema => 'v3',
 	});
 
 	$self->hook(before_dispatch => sub {
@@ -88,34 +88,12 @@ EOF
 		if ($now != $last_cleanup) {
 			$last_cleanup = $now;
 			$db->transaction(
-				[ DELETE_USER_STALE =>  $config->{session}->{timeout}) ],
+				[ DELETE_USER_STALE => $config->{session}->{timeout} ],
 				[ DELETE_SESSION_STALE => $config->{session}->{timeout} ],
 			);
 		}
 		$c->stash->{session} = Lingua::Poly::RestAPI::Session->new($c);
 	});
-}
-
-sub __initialize {
-    my ($self) = @_;
-
-    my $debug = $ENV{LINGUA_POLY_DEBUG} // '';
-    my %debug = map { lc $_ => 1 } split /[ \t:,\|]/, $debug;
-    $self->{__debug} = \%debug;
-
-    $self->{__base_dir} = Cwd::abs_path(Cwd::getcwd);
-
-    $self->{__config} = $self->__readConfig;
-
-    $self->{__db} = Lingua::Poly::API::DB->new($self->{__config}->{database});
-
-    # Throw away old sessions.
-    $self->{__db}->transaction(DELETE_SESSION_STALE
-                               => 24 * 6 * $self->config->{session}->{timeout});
-
-    $self->{__initialized} = 1;
-
-    return $self;
 }
 
 1;

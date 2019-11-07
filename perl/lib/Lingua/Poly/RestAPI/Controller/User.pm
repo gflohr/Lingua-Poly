@@ -22,9 +22,12 @@ use HTTP::Status qw(:constants);
 use Locale::TextDomain qw(Lingua-Poly);
 use Locale::Messages qw(turn_utf_8_off);
 use CGI::Cookie;
-use Data::Password::zxcvbn qw(password_strength);
+use Data::Password::zxcvbn 1.0.4 qw(password_strength);
+use Email::Address 1.912;
 
 use Lingua::Poly::RestAPI::Logger;
+use Lingua::Poly::RestAPI::User;
+use Lingua::Poly::RestAPI::Util qw(crypt_password);
 
 use Mojo::Base "Lingua::Poly::RestAPI::Controller";
 
@@ -34,26 +37,70 @@ sub create {
 	my $self = shift->openapi->valid_input or return;
 
 	my $userDraft = $self->req->json;
+	my $db = $self->stash->{db};
 
-	# TODO:
-	# - Validate.
-	# - Save request in DB.
-	# - Send email.
+	my @errors;
+
+	# Valid email address?
+	my @addresses = Email::Address->parse($userDraft->{email});
+	if (!@addresses) {
+		delete $userDraft->{email};
+		push @errors, {
+			message => 'Invalid email address specified.',
+			path => '/body/email',
+		};
+	} elsif (@addresses != 1) {
+		delete $userDraft->{email};
+		push @errors, {
+			message => 'More than one email address specified.',
+			path => '/body/email',
+		};
+	} else {
+		$userDraft->{email} = $addresses[0]->address;
+	}
+
+	my $suggest_recover;
+	my $renew_request;
+	if (exists $userDraft->{email}) {
+		# Email already taken?
+		my $existing = Lingua::Poly::RestAPI::User->new(
+			$db, $userDraft->{email}, 1);
+		if ($existing) {
+			if ($existing->confirmed) {
+				# We must never report to the user the email address is already in
+				# our  system, as this would leak personal data.  Instead, we send
+				# a mail but suggest to recover the password instead.
+				$suggest_recover = 1;
+			} else {
+				# Probably something went wrong with the confirmation.  Simply
+				# renew the request.
+				$renew_request = 1;
+			}
+		}
+	}
 
 	# Password strong enough?
-	$DB::single = 1;
 	my $analysis = password_strength $userDraft->{password};
 	my $score = $analysis->{score};
-	my @errors;
 	push @errors, {
-		message => "Password too weak (score: $score/3)",
+		message => "Password too weak (score: $score/3).",
 		path => '/body/password'
 	} if $score < 3;
 
-	return $self->errorResponse(HTTP_BAD_REQUEST, @errors) if @errors;
+	if (@errors) {
+		$db->rollback;
+		return $self->errorResponse(HTTP_BAD_REQUEST, @errors);
+	}
 
-	# Create a temporary user
-
+	if ($renew_request) {
+		# We send a new mail and renew the "session".
+		die "not yet implemented";
+	} elsif ($suggest_recover) {
+		die "not yet implemented";
+	} else {
+		# Create the  user.
+		my $password = crypt_password $userDraft->{password};
+	}
 	delete $userDraft->{password};
 
 	$self->render(openapi => $userDraft, status => HTTP_CREATED);

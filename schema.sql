@@ -1,9 +1,10 @@
 SET client_encoding = 'UTF8';
+CREATE EXTENSION IF NOT EXISTS citext;
 
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
-    email TEXT NOT NULL UNIQUE,
-    username TEXT NOT NULL UNIQUE,
+    email CITEXT NOT NULL UNIQUE,
+    username CITEXT UNIQUE,
     password TEXT NOT NULL,
     confirmed BOOLEAN NOT NULL DEFAULT 'f'
 );
