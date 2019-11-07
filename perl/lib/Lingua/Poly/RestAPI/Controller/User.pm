@@ -24,6 +24,8 @@ use Locale::Messages qw(turn_utf_8_off);
 use CGI::Cookie;
 use Data::Password::zxcvbn 1.0.4 qw(password_strength);
 use Email::Address 1.912;
+use Email::Simple 2.216;
+use Email::Sender::Simple 1.300031 qw(sendmail);
 
 use Lingua::Poly::RestAPI::Logger;
 use Lingua::Poly::RestAPI::User;
@@ -92,16 +94,67 @@ sub create {
 		return $self->errorResponse(HTTP_BAD_REQUEST, @errors);
 	}
 
+	my $body;
+	my $subject;
+	my $expiry_minutes = $self->config->{session}->{timeout} / 60;
 	if ($renew_request) {
 		# We send a new mail and renew the "session".
-		die "not yet implemented";
+		die "renew not yet implemented";
 	} elsif ($suggest_recover) {
-		die "not yet implemented";
+		die "recover not yet implemented";
 	} else {
 		# Create the  user.
 		my $password = crypt_password $userDraft->{password};
-		my $fingerprint = $self->fingerprint;
+
+		$db->execute(INSERT_USER => $userDraft->{email}, $userDraft->{password});
+		my $user_id = $db->lastInsertId('users');
+
+		my $fp = $self->fingerprint;
+		my $session_id = $self->random_string(entropy => 128);
+		$db->execute(INSERT_SESSION => $session_id, $user_id, $fp);
+
+		my $transport = $self->emailSenderTransport;
+		my $url = $self->siteURL;
+		my $confirmation_url = Mojo::URL->new($url);
+		$confirmation_url->path("/register/confirm/$session_id");
+
+		$subject = 'Confirm Lingua::Poly registration';
+		$body = <<EOF;
+Hello,
+
+somebody, hopefully you, has registered at the Lingua::Poly website
+($url).
+
+In order to finish the registration, please follow the following
+link:
+
+     $confirmation_url
+
+If you did not register, somebody has abused your email address.  You can
+just ignore this mail.
+
+There is no need to keep this email.  The above link will expire in
+$expiry_minutes minutes.
+
+This mail was send from an account that is not set up to receive mails.
+
+Best regards,
+Your Lingua::Poly team
+EOF
 	}
+
+	my $email = Email::Simple->create(
+		header => [
+			To => $userDraft->{email},
+			From => $self->config->{smtp}->{sender},
+			Subject => $subject,
+		],
+		body => $body,
+	);
+
+	sendmail $email, { transport => $self->emailSenderTransport };
+
+	$db->commit;
 
 	my %user = (email => $userDraft->{email});
 	$self->render(openapi => \%user, status => HTTP_CREATED);

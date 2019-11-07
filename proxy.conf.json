@@ -1,6 +1,6 @@
 {
-    "/api/linguapoly/v1": {
-        "target": "http://localhost:5000",
+    "/api/lingua-poly/v1": {
+        "target": "http://localhost:3000",
         "secure": "false",
         "xfwd": "true"
     }

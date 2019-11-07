@@ -46,7 +46,7 @@ sub startup {
 	$self->plugin('Util::RandomString');
 	$self->plugin('RemoteAddr');
 
-	my $config = $self->plugin('yaml_config');
+	my $config = $self->plugin('YamlConfig');
 
 	if (!$config->{secrets} || !ref $config->{secrets}
 	    || 'ARRAY' ne ref $config->{secrets}) {
@@ -75,6 +75,19 @@ EOF
 	$config->{smtp} //= {};
 	$config->{smtp}->{host} //= 'localhost';
 	$config->{smtp}->{port} //= 1025;
+
+	if (empty $config->{smtp}->{sender}) {
+		$self->log->fatal(<<'EOF');
+configuration variable "smtp.sender" missing.  Try something like:
+
+smtp:
+  sender: Lingua::Poly <do_not_reply@yourdomain.com>
+
+Replace "yourdomain.com" with a suitable domain name.
+EOF
+
+		exit 1;
+	}
 
 	my $db = Lingua::Poly::RestAPI::DB->new($self->app);
 	$self->app->defaults(db => $db);

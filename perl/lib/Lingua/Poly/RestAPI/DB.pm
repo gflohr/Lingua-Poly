@@ -29,15 +29,15 @@ DELETE FROM sessions
   WHERE EXTRACT(EPOCH FROM(NOW() - last_seen)) > ?
 EOF
 	INSERT_SESSION => <<EOF,
-INSERT INTO sessions(sid, user_id, footprint)
+INSERT INTO sessions(sid, user_id, fingerprint)
   VALUES(?, ?, ?)
 EOF
 	SELECT_SESSION_INFO => <<EOF,
-SELECT user_id, EXTRACT(EPOCH FROM(NOW() - last_seen)), footprint FROM sessions
+SELECT user_id, EXTRACT(EPOCH FROM(NOW() - last_seen)), fingerprint FROM sessions
   WHERE sid = ?
 EOF
 	INSERT_USER => <<EOF,
-INSERT INTO users(email, password) VALUES(??)
+INSERT INTO users(email, password) VALUES(?, ?)
 EOF
 	DELETE_USER_STALE => <<EOF,
 DELETE FROM users u
@@ -106,6 +106,11 @@ sub commit {
 
 sub rollback {
 	shift->{__dbh}->rollback;
+}
+
+sub lastInsertId {
+	my ($self, $table) = @_;
+	shift->{__dbh}->last_insert_id(undef, undef, $table);
 }
 
 sub finalize {

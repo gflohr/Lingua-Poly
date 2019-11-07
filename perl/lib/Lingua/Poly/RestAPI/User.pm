@@ -22,8 +22,8 @@ sub new {
 	my $statement = $name =~ /\@/ ?
 		'SELECT_USER_BY_EMAIL' : 'SELECT_USER_BY_USERNAME';
 
-	my $row = $db->getRow($statement => $name) or return;
-	my ($id, $username, $email, $password, $confirmed) = @$row;
+	my @row = $db->getRow($statement => $name) or return;
+	my ($id, $username, $email, $password, $confirmed) = @row;
 
 	return if !$confirmed && !$unconfirmed;
 

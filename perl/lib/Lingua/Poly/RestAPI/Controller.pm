@@ -15,6 +15,9 @@ package Lingua::Poly::RestAPI::Controller;
 use strict;
 
 use HTTP::Status qw(:constants);
+use Email::Sender::Transport::SMTP 1.300031;
+use Mojo::URL;
+
 use Mojo::Base ('Mojolicious::Controller', 'Lingua::Poly::RestAPI::Logger');
 
 # It would be better to use RFC7807 error responses but that may conflict
@@ -44,6 +47,22 @@ sub fingerprint {
     my $ip = $self->remote_addr;
 
     return join ':', $ip, $ua;
+}
+
+sub emailSenderTransport {
+	return Email::Sender::Transport::SMTP->new(shift->config->{smtp});
+}
+
+sub siteURL {
+	my ($self) = @_;
+
+	my $req_url = $self->req->url->to_abs;
+	my $url = Mojo::URL->new;
+	$url->scheme($req_url->scheme);
+	$url->host($req_url->host);
+	$url->port($req_url->port);
+
+	return $url;
 }
 
 1;

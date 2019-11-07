@@ -30,7 +30,7 @@ sub new {
 
 	my $cookie = $c->cookie('id');
 
-	my $random = $c->random_string(entropy =>  256);
+	my $random = $c->random_string(entropy => 256);
 	$c->cookie(id => $random, {
 		path => $c->config->{path},
 		httponly => 1,
