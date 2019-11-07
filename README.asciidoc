@@ -47,9 +47,35 @@ Install the required Perl modules with 'cpanm':
 ----
 $ cd /path/to/Lingua-Poly
 $ cd perl
+$ cpanm --installdeps .
+$ cpanm -n .
+----
+
+If your current user does not have write permissions for the Perl module
+directory, you have to run `cpanm` with `sudo`:
+
+[source,bash]
+----
+$ cd /path/to/Lingua-Poly
+$ cd perl
 $ sudo cpanm --installdeps .
 $ sudo cpanm -n .
 ----
+
+One of the indirect dependencies is `Authen::Passphrase::Scrypt` which may
+be difficult to compile.  You have to make sure that `libcrypto` from the
+OpenSSL package is installed, and you may have to pass the directoried,
+where the library file `libcrypto.a` and the header `openssl/aes.h` are
+found.
+
+For example on Mac OS X with Mac ports you probably have to do something like:
+
+[source,bash]
+----
+$ LDFLAGS="-L/opt/local/lib -lcrypto" CFLAGS="-I/opt/local/include" cpanm --installdeps .
+----
+
+Your mileage may vary.
 
 [[getting-started]]
 == Getting Started
