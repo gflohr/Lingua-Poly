@@ -100,6 +100,7 @@ sub create {
 	} else {
 		# Create the  user.
 		my $password = crypt_password $userDraft->{password};
+		my $fingerprint = $self->fingerprint;
 	}
 	delete $userDraft->{password};
 

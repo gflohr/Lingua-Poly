@@ -27,9 +27,11 @@ use Locale::TextDomain qw(Lingua-Poly);
 use Locale::Messages qw(turn_utf_8_off);
 use CGI::Cookie;
 
-use Lingua::Poly::Util::String qw(empty);
-use Lingua::Poly::API::Error;
+# Help cpanm to find dependencies.
+use Mojolicious::Plugin::Util::RandomString 0.08;
+use Mojolicious::Plugin::RemoteAddr 0.03;
 
+use Lingua::Poly::Util::String qw(empty);
 use Lingua::Poly::RestAPI::Logger;
 use Lingua::Poly::RestAPI::DB;
 use Lingua::Poly::RestAPI::Session;
@@ -42,6 +44,7 @@ sub startup {
 	$self->moniker('lingua-poly-api');
 
 	$self->plugin('Util::RandomString');
+	$self->plugin('RemoteAddr');
 
 	my $config = $self->plugin('yaml_config');
 

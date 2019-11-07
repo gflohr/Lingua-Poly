@@ -33,17 +33,17 @@ sub errorResponse {
 	return $self->render(openapi => { errors => \@errors }, status => $code);
 }
 
-sub footprint {
+sub fingerprint {
 	my ($self) = @_;
 
 	my $req = $self->req;
 
-	my $ua = $req->header('User-Agent');
+	my $ua = $req->headers->user_agent();
     $ua //= '';
 
-    my $ip = $req->address;
+    my $ip = $self->remote_addr;
 
     return join ':', $ip, $ua;
-
 }
+
 1;

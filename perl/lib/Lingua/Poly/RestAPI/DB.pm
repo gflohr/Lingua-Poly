@@ -36,6 +36,9 @@ EOF
 SELECT user_id, EXTRACT(EPOCH FROM(NOW() - last_seen)), footprint FROM sessions
   WHERE sid = ?
 EOF
+	INSERT_USER => <<EOF,
+INSERT INTO users(email, password) VALUES(??)
+EOF
 	DELETE_USER_STALE => <<EOF,
 DELETE FROM users u
   USING sessions s

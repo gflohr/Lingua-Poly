@@ -36,7 +36,7 @@ CREATE TABLE sessions (
     id SERIAL PRIMARY KEY,
     sid TEXT NOT NULL UNIQUE,
     user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-    footprint TEXT,
+    fingerprint TEXT,
     last_seen TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
