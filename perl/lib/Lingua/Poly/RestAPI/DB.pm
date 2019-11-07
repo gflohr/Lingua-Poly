@@ -36,6 +36,13 @@ EOF
 SELECT user_id, EXTRACT(EPOCH FROM(NOW() - last_seen)), footprint FROM sessions
   WHERE sid = ?
 EOF
+	DELETE_USER_STALE => <<EOF,
+DELETE FROM users u
+  USING sessions s
+  WHERE NOT u.confirmed
+    AND u.id = s.user_id
+	AND EXTRACT(EPOCH FROM(NOW() - s.last_seen)) > ?
+EOF
 	SELECT_USER_BY_ID => <<EOF,
 SELECT email, password FROM users WHERE id = ?
 EOF
@@ -137,9 +144,15 @@ sub getRow {
 }
 
 sub transaction {
-	my ($self, $statement, @args) = @_;
+	my ($self, @statements) = @_;
 
-	my $sth = $self->execute($statement, @args) or return;
+	foreach my $spec (@statements) {
+		my ($statement, @args) = @$spec;
+		if (!$self->execute($statement, @args)) {
+			$self->{__dbh}->rollback;
+			return;
+		}
+	}
 
 	$self->{__dbh}->commit;
 

@@ -34,6 +34,8 @@ use Lingua::Poly::RestAPI::Logger;
 use Lingua::Poly::RestAPI::DB;
 use Lingua::Poly::RestAPI::Session;
 
+my $last_cleanup = 0;
+
 sub startup {
 	my ($self) = @_;
 
@@ -74,8 +76,6 @@ EOF
 	my $db = Lingua::Poly::RestAPI::DB->new($self->app);
 	$self->app->defaults(db => $db);
 
-	$db->transaction(DELETE_SESSION_STALE => $config->{session}->{timeout});
-
 	$self->plugin(OpenAPI => {
 			spec => $self->static->file('openapi.yaml')->path,
 			schema => 'v3',
@@ -84,6 +84,14 @@ EOF
 	$self->hook(before_dispatch => sub {
 		my ($c) = @_;
 
+		my $now = time;
+		if ($now != $last_cleanup) {
+			$last_cleanup = $now;
+			$db->transaction(
+				[ DELETE_USER_STALE =>  $config->{session}->{timeout}) ],
+				[ DELETE_SESSION_STALE => $config->{session}->{timeout} ],
+			);
+		}
 		$c->stash->{session} = Lingua::Poly::RestAPI::Session->new($c);
 	});
 }
