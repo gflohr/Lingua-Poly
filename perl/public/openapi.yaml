@@ -26,10 +26,6 @@ components:
     UserDraft:
       title: UserDraft
       properties:
-        username:
-          type: string
-          minLength: 2
-          example: JohnDoe
         email:
           type: string
           minLength: 3
@@ -39,7 +35,6 @@ components:
           minLength: 1
           example: s3cr3t
       required:
-      - username
       - email
       - password
   requestBodies:

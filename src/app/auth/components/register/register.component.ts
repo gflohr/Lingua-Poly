@@ -14,7 +14,6 @@ export class RegisterComponent {
 		        private usersService: UsersService) { }
 
 	registerForm = this.fb.group ({
-		username: ['', Validators.required],
 		email: ['', [Validators.required, Validators.email]],
 		password: ['', Validators.required],
 		passwordStrength: [ null ],
@@ -23,7 +22,6 @@ export class RegisterComponent {
 
 	onSubmit() {
 		const user = {
-			username: this.registerForm.get('username').value,
 			email: this.registerForm.get('email').value,
 			password: this.registerForm.get('password').value,
 		} as UserDraft;

@@ -12,7 +12,6 @@
 
 
 export interface UserDraft { 
-    username: string;
     email: string;
     password: string;
 }

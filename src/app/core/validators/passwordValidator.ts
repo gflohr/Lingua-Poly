@@ -16,11 +16,10 @@ export class PasswordValidator {
 
 		if (!password.valid) return null;
 
-		const username = fg.get('username').value;
 		const email = fg.get('email').value;
 
 		const result = zxcvbn(password.value,
-							  [username, email, 'lingua', 'poly',
+							  [email, 'lingua', 'poly',
 							   'lingua-poly']);
 
 		switch (result.score) {
