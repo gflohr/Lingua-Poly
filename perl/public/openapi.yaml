@@ -37,6 +37,7 @@ components:
       required:
       - email
       - password
+      additionalProperties: false
   requestBodies:
     CreateUserRequest:
       content:
