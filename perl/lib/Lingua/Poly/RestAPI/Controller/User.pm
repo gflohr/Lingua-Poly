@@ -102,9 +102,9 @@ sub create {
 		my $password = crypt_password $userDraft->{password};
 		my $fingerprint = $self->fingerprint;
 	}
-	delete $userDraft->{password};
 
-	$self->render(openapi => $userDraft, status => HTTP_CREATED);
+	my %user = (email => $userDraft->{email});
+	$self->render(openapi => \%user, status => HTTP_CREATED);
 }
 
 1;
