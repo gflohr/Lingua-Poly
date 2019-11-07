@@ -22,12 +22,9 @@ use HTTP::Status qw(:constants);
 use Locale::TextDomain qw(Lingua-Poly);
 use Locale::Messages qw(turn_utf_8_off);
 use CGI::Cookie;
+use Data::Password::zxcvbn qw(password_strength);
 
-use Lingua::Poly::API::Logger;
-use Lingua::Poly::API::DB;
-use Lingua::Poly::Util::String qw(empty);
-use Lingua::Poly::API::Session;
-use Lingua::Poly::API::Error;
+use Lingua::Poly::RestAPI::Logger;
 
 use Mojo::Base "Lingua::Poly::RestAPI::Controller";
 
@@ -36,16 +33,28 @@ sub realm { "user" }
 sub create {
 	my $self = shift->openapi->valid_input or return;
 
-	$DB::single = 1;
 	my $userDraft = $self->req->json;
 
-	use Data::Dumper;
-	#$self->debug(Dumper $userDraft);
-	warn Dumper $userDraft;
+	# TODO:
+	# - Validate.
+	# - Save request in DB.
+	# - Send email.
+
+	# Password strong enough?
+	$DB::single = 1;
+	my $analysis = password_strength $userDraft->{password};
+	my $score = $analysis->{score};
+	my @errors;
+	push @errors, {
+		message => "Password too weak (score: $score/3)",
+		path => 'body/password'
+	} if $score < 3;
+
+	return $self->errorResponse($code, @errors) if @errors;
 
 	delete $userDraft->{password};
 
-	$self->render(openapi => $userDraft, status => 201);
+	$self->render(openapi => $userDraft, status => HTTP_CREATED);
 }
 
 1;
