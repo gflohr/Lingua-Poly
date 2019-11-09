@@ -29,9 +29,9 @@ help:
 	@echo "  all                       - all of the above"
 
 POTFILES = $(srcdir)/POTFILES \
-	$(shell cat $(srcdir)/POTFILES) 
+	$(shell cat $(srcdir)/POTFILES)
 
-pot: $(TD).pot 
+pot: $(TD).pot
 
 clean:
 	rm -f *~ *.bak *.gmo
@@ -40,6 +40,9 @@ js.pot: ../src/assets/i18n/en.po
 	$(srcdir)/make-js-pot
 
 $(TD).pot: $(POTFILES)
+	node ../node_modules/@biesbjerg/ngx-translate-extract/bin/cli.js \
+		--input=../src --output=../src/assets/i18n/en.po --clean --sort \
+		--format=pot --marker=_ ; \
 	$(XGETTEXT) --output=$(srcdir)/$(TD).pox --from-code=utf-8 \
 		--add-comments=TRANSLATORS: --files-from=$(srcdir)/POTFILES \
 		--copyright-holder="$(COPYRIGHT_HOLDER)" \
@@ -64,7 +67,7 @@ install-mo: $(MO_FILES)
 
 install-json: $(MO_FILES)
 	cd $(srcdir)
-	$(srcdir)/install-json en $(LINGUAS)
+	$(srcdir)/install-json $(LINGUAS)
 
 update-mo: $(MO_FILES)
 
