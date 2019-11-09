@@ -1,37 +1,37 @@
-<h1>{{ 'Register' }}</h1>
-<div class="register-form-container">
+<h1>{{ 'Registration' }}</h1>
+<div class="registration-form-container">
 	<div class="row h-100">
-		<form class="col-12" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+		<form class="col-12" [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
 			<div class="form-group">
 				<label for="email">Email address</label>
 				<input formControlName="email" type="email"
 				       class="form-control" id="email"
 				       placeholder="Enter email">
-				<small *ngIf="registerForm.get('email').touched && registerForm.get('email').errors && registerForm.get('email').errors.email"
+				<small *ngIf="registrationForm.get('email').touched && registrationForm.get('email').errors && registrationForm.get('email').errors.email"
 				       class="form-text alert alert-danger">Invalid or missing email address.</small>
 			</div>
 			<div class="form-group">
 				<label for="password">Password</label>
 				<input formControlName="password" type="password"
 				       class="form-control" id="password" placeholder="Password">
-				<small *ngIf="registerForm.get('password').touched && registerForm.get('password').errors && registerForm.get('password').errors.required"
+				<small *ngIf="registrationForm.get('password').touched && registrationForm.get('password').errors && registrationForm.get('password').errors.required"
 					   class="form-text alert alert-danger">This field is required.</small>
-				<small *ngIf="registerForm.get('passwordStrength').value !== null"
+				<small *ngIf="registrationForm.get('passwordStrength').value !== null"
 				       class="form-text text-muted">
 					Password strength:
-					{{ registerForm.get('passwordStrength').value }}
+					{{ registrationForm.get('passwordStrength').value }}
 				</small>
-				<div *ngIf="registerForm.errors && registerForm.errors.weakPassword">
-					<small *ngIf="registerForm.errors.weakPassword.feedback.warning === ''"
+				<div *ngIf="registrationForm.errors && registrationForm.errors.weakPassword">
+					<small *ngIf="registrationForm.errors.weakPassword.feedback.warning === ''"
 					       class="form-text alert alert-danger">
 						Password too weak!
 					</small>
-					<small *ngIf="registerForm.errors.weakPassword.feedback.warning !== ''"
+					<small *ngIf="registrationForm.errors.weakPassword.feedback.warning !== ''"
 						   class="form-text alert alert-danger">
-						{{ registerForm.errors.weakPassword.feedback.warning }}
+						{{ registrationForm.errors.weakPassword.feedback.warning }}
 					</small>
-					<ul *ngIf="registerForm.errors.weakPassword.feedback.suggestions.length">
-						<li *ngFor="let s of registerForm.errors.weakPassword.feedback.suggestions">
+					<ul *ngIf="registrationForm.errors.weakPassword.feedback.suggestions.length">
+						<li *ngFor="let s of registrationForm.errors.weakPassword.feedback.suggestions">
 							<small class="form-text text-muted">{{ s }}</small>
 						</li>
 					</ul>
@@ -42,13 +42,13 @@
 				<label for="password2">Repeat password</label>
 				<input formControlName="password2" type="password"
 					   class="form-control" id="password2" placeholder="Repeat password">
-				<small *ngIf="registerForm.get('password').touched && registerForm.get('password2').errors && registerForm.get('password2').errors.required"
+				<small *ngIf="registrationForm.get('password').touched && registrationForm.get('password2').errors && registrationForm.get('password2').errors.required"
 				       class="form-text alert alert-danger">This field is required.</small>
-				<small *ngIf="registerForm.errors && registerForm.errors.passwordMismatch"
+				<small *ngIf="registrationForm.errors && registrationForm.errors.passwordMismatch"
 				       class="form-text alert alert-danger">The passwords do not match.</small>
 			</div>
-			<button type="submit" [disabled]="false && !registerForm.valid"
-			        class="btn btn-success btn-block">Register</button>
+			<button type="submit" [disabled]="!registrationForm.valid"
+			        class="btn btn-success btn-block">Registration</button>
 		</form>
 	</div>
 </div>
