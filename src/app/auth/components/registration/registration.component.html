@@ -1,25 +1,26 @@
-<h1>{{ 'Registration' }}</h1>
+<h1 translate>Registration</h1>
 <div class="registration-form-container">
 	<div class="row h-100">
 		<form class="col-12" [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
 			<div class="form-group">
-				<label for="email">Email address</label>
+				<label for="email" translate>Email address</label>
 				<input formControlName="email" type="email"
 				       class="form-control" id="email"
-				       placeholder="Enter email">
+				       placeholder="{{ 'Enter email' | translate }}">
 				<small *ngIf="registrationForm.get('email').touched && registrationForm.get('email').errors && registrationForm.get('email').errors.email"
-				       class="form-text alert alert-danger">Invalid or missing email address.</small>
+					   class="form-text alert alert-danger"
+					   translate>Invalid or missing email address.</small>
 			</div>
 			<div class="form-group">
-				<label for="password">Password</label>
+				<label for="password" translate>Password</label>
 				<input formControlName="password" type="password"
 				       class="form-control" id="password" placeholder="Password">
 				<small *ngIf="registrationForm.get('password').touched && registrationForm.get('password').errors && registrationForm.get('password').errors.required"
-					   class="form-text alert alert-danger">This field is required.</small>
+					   class="form-text alert alert-danger" translate>This field is required.</small>
 				<small *ngIf="registrationForm.get('passwordStrength').value !== null"
-				       class="form-text text-muted">
-					Password strength:
-					{{ registrationForm.get('passwordStrength').value }}
+					   class="form-text text-muted"
+					   translate [translateParams]="{ strength: registrationForm.get('passwordStrength').value }">
+					Password strength: [[strength]]
 				</small>
 				<div *ngIf="registrationForm.errors && registrationForm.errors.weakPassword">
 					<small *ngIf="registrationForm.errors.weakPassword.feedback.warning === ''"

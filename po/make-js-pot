@@ -20,15 +20,14 @@ my $entries = Locale::PO->load_file_asarray($en_po, 'utf-8')
 
 my @po;
 foreach my $entry(@$entries) {
-    my $msgid = $entry->msgid;
-    next if '""' eq $msgid;
-    my $msgstr = $entry->dequote($entry->msgstr);
-    if (!length $msgstr) {
-        warn "$en_po: translation missing for $msgid\n";
-        next;
+    my $msgid = $entry->dequote($entry->msgid);
+    next if '' eq $msgid;
+    push @po, Locale::PO->new;
+    if ($msgid =~ s/\[\[([_a-zA-Z][_a-zA-Z0-9]*)\]\]/{$1}/g) {
+        $po[-1]->add_flag('perl-brace-format');
     }
-    push @po, Locale::PO->new(-msgid => $entry->dequote($msgstr),
-                              -msgstr => '');
+    $po[-1]->msgid($msgid);
+    $po[-1]->msgstr('');
 }
 my $js_pot = 'js.pot';
 Locale::PO->save_file_fromarray($js_pot, \@po, 'utf-8')

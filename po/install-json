@@ -18,7 +18,6 @@ use JSON;
 sub save_json($$);
 
 my @linguas = @ARGV or die "Usage: $0 LINGUAS\n";
-my $default_lingua = shift @linguas;
 
 my $en_po = '../src/assets/i18n/en.po';
 my $entries = Locale::PO->load_file_asarray($en_po, 'utf-8')
@@ -26,13 +25,11 @@ my $entries = Locale::PO->load_file_asarray($en_po, 'utf-8')
 
 my %needed;
 foreach my $entry(@$entries) {
-    my $msgid = $entry->msgid;
-    next if '""' eq $msgid;
-    my $msgstr = $entry->dequote($entry->msgstr);
-    next if !length $msgstr;
-    $needed{$msgstr} = $entry->dequote($msgid);
+    my $msgid = $entry->dequote($entry->msgid);
+    next if '' eq $msgid;
+    $msgid =~ s/\[\[([_a-zA-Z][_a-zA-Z0-9]*)\]\]/{$1}/g;
+    $needed{$msgid} = 1;
 }
-save_json "../src/assets/i18n/$default_lingua.json", {reverse %needed};
 
 foreach my $lingua (@linguas) {
     my %msgs;
@@ -42,16 +39,19 @@ foreach my $lingua (@linguas) {
 
     foreach my $entry (@$entries) {
         my $msgid = $entry->dequote($entry->msgid);
-        next if !exists $needed{$msgid};
+        next if !delete $needed{$msgid};
         my $msgstr = $entry->dequote($entry->msgstr);
-        next if '""' eq $msgstr;
-        $msgs{$needed{$msgid}} = $msgstr;
+        $msgstr = $msgid if '' eq $msgstr;
+        if ($entry->has_flag('perl-brace-format')) {
+            $msgid =~ s/\{([_a-zA-Z][_a-zA-Z0-9]*)\}/[[$1]]/g;
+            $msgstr =~ s/\{([_a-zA-Z][_a-zA-Z0-9]*)\}/{{$1}}/g;
+        }
+        $msgs{$msgid} = $msgstr;
     }
 
     my $json_file = "../src/assets/i18n/$lingua.json";
     save_json $json_file, \%msgs;
 }
-
 
 sub save_json($$) {
     my ($filename, $data) = @_;

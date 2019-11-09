@@ -9,7 +9,6 @@ import { UsersService, UserDraft } from 'src/app/core/openapi/lingua-poly';
 	styleUrls: ['./registration.component.css']
 })
 export class RegistrationComponent {
-
 	constructor(private fb: FormBuilder,
 		        private usersService: UsersService) { }
 
