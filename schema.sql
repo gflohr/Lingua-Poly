@@ -40,11 +40,14 @@ CREATE TABLE sessions (
     last_seen TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
-CREATE TABLE registrations (
+CREATE TYPE token_type
+        AS ENUM('registration', 'passwordReset', 'emailChange');
+CREATE TABLE tokens (
     id SERIAL PRIMARY KEY,
+    purpose token_type NOT NULL,
     token TEXT NOT NULL UNIQUE,
     user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-    created TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+    last_seen TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
 CREATE TABLE pos (
