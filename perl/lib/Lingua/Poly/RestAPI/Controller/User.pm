@@ -28,9 +28,9 @@ use Email::Simple 2.216;
 use Email::Sender::Simple 1.300031 qw(sendmail);
 
 use Lingua::Poly::Util::String qw(empty);
+use Lingua::Poly::Util::System qw(crypt_password);
 use Lingua::Poly::RestAPI::Logger;
 use Lingua::Poly::RestAPI::User;
-use Lingua::Poly::RestAPI::Util qw(crypt_password);
 
 use Mojo::Base "Lingua::Poly::RestAPI::Controller";
 
@@ -113,11 +113,8 @@ sub create {
 			my $password = crypt_password $userDraft->{password};
 
 			$db->execute(INSERT_USER => $userDraft->{email},
-			             $userDraft->{password});
-			# FIXME! No need to retrieve the user id, can be done with a
-			# subselect instead.
+			             crypt_password $userDraft->{password});
 			my $user_id = $db->lastInsertId('users');
-
 			$token = $self->random_string(entropy => 128);
 			$db->execute(INSERT_TOKEN => $token, 'registration', $user_id);
 		}
