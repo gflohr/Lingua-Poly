@@ -30,22 +30,28 @@ EOF
 DELETE FROM sessions
   WHERE EXTRACT(EPOCH FROM(NOW() - last_seen)) > ?
 EOF
-	INSERT_SESSION => <<EOF,
-INSERT INTO sessions(sid, user_id, fingerprint)
-  VALUES(?, ?, ?)
-EOF
 	SELECT_SESSION_INFO => <<EOF,
 SELECT user_id, EXTRACT(EPOCH FROM(NOW() - last_seen)), fingerprint FROM sessions
   WHERE sid = ?
 EOF
-	UPDATE_SESSION_TIMESTAMP_FOR_REGISTRATION => <<EOF,
-UPDATE sessions SET last_seen = NOW()
-  WHERE sessions.user_id = (SELECT id FROM users WHERE email = ? AND NOT confirmed)
+	DELETE_TOKEN_STALE => <<EOF,
+DELETE FROM tokens
+  WHERE EXTRACT(EPOCH FROM(NOW() - created)) > ?
 EOF
-	SELECT_SESSION_ID_FOR_REGISTRATION => <<EOF,
-SELECT s.sid FROM sessions s, users u
-  WHERE u.email = ?
-    AND s.user_id = u.id
+	INSERT_TOKEN => <<EOF,
+INSERT INTO tokens(token, purpose, user_id)
+  VALUES(?, ?, ?)
+EOF
+	UPDATE_TOKEN => <<EOF,
+UPDATE tokens SET created = NOW()
+  WHERE tokens.purpose = ?
+    AND tokens.user_id = (SELECT id FROM users WHERE email = ? AND NOT confirmed)
+EOF
+	SELECT_TOKEN => <<EOF,
+SELECT t.token FROM tokens t, users u
+  WHERE t.purpose = ?
+    AND u.email = ?
+    AND t.user_id = u.id
 	AND NOT u.confirmed
 EOF
 	INSERT_USER => <<EOF,

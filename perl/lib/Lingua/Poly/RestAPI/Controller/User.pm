@@ -101,30 +101,31 @@ sub create {
 	if ($suggest_recover) {
 		die "recover not yet implemented";
 	} else {
-		my $session_id;
+		my $token;
 		if ($renew_request) {
-			($session_id) = $db->getRow(SELECT_SESSION_ID_FOR_REGISTRATION
-			                            => $userDraft->{email});
-			die "no session for $userDraft->{email} found" if empty $session_id;
-			$db->execute(UPDATE_SESSION_TIMESTAMP_FOR_REGISTRATION
-			             => $userDraft->{email});
+			($token) = $db->getRow(SELECT_TOKEN => 'registration',
+			                       $userDraft->{email});
+			die "no registration token for $userDraft->{email} found"
+			    if empty $token;
+			$db->execute(UPDATE_TOKEN => 'registration', $userDraft->{email});
 		} else {
 			# Create the  user.
 			my $password = crypt_password $userDraft->{password};
 
 			$db->execute(INSERT_USER => $userDraft->{email},
 			             $userDraft->{password});
+			# FIXME! No need to retrieve the user id, can be done with a
+			# subselect instead.
 			my $user_id = $db->lastInsertId('users');
 
-			$session_id = $self->random_string(entropy => 128);
-			my $fp = $self->fingerprint;
-			$db->execute(INSERT_SESSION => $session_id, $user_id, $fp);
+			$token = $self->random_string(entropy => 128);
+			$db->execute(INSERT_TOKEN => $token, 'registration', $user_id);
 		}
 
 		my $transport = $self->emailSenderTransport;
 		my $url = $self->siteURL;
 		my $confirmation_url = Mojo::URL->new($url);
-		$confirmation_url->path("/confirm/registration/$session_id");
+		$confirmation_url->path("/confirm/registration/$token");
 
 		$subject = 'Confirm Lingua::Poly registration';
 		$body = <<EOF;

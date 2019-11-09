@@ -106,6 +106,7 @@ EOF
 			$db->transaction(
 				[ DELETE_USER_STALE => $config->{session}->{timeout} ],
 				[ DELETE_SESSION_STALE => $config->{session}->{timeout} ],
+				[ DELETE_TOKEN_STALE => $config->{session}->{timeout} ],
 			);
 		}
 		$c->stash->{session} = Lingua::Poly::RestAPI::Session->new($c);
