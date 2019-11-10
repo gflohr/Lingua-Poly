@@ -14,7 +14,7 @@
 			<div class="form-group">
 				<label for="password" translate>Password</label>
 				<input formControlName="password" type="password"
-				       class="form-control" id="password" placeholder="Password">
+				       class="form-control" id="password" placeholder="{{ 'Password' | translate }}">
 				<small *ngIf="registrationForm.get('password').touched && registrationForm.get('password').errors && registrationForm.get('password').errors.required"
 					   class="form-text alert alert-danger" translate>This field is required.</small>
 				<small *ngIf="registrationForm.get('passwordStrength').value !== null"
@@ -24,7 +24,7 @@
 				</small>
 				<div *ngIf="registrationForm.errors && registrationForm.errors.weakPassword">
 					<small *ngIf="registrationForm.errors.weakPassword.feedback.warning === ''"
-					       class="form-text alert alert-danger">
+					       class="form-text alert alert-danger" translate>
 						Password too weak!
 					</small>
 					<small *ngIf="registrationForm.errors.weakPassword.feedback.warning !== ''"
@@ -40,16 +40,16 @@
 				<input formControlName="passwordStrength" type="hidden" />
 			</div>
 			<div class="form-group">
-				<label for="password2">Repeat password</label>
+				<label for="password2" translate>Repeat password</label>
 				<input formControlName="password2" type="password"
 					   class="form-control" id="password2" placeholder="Repeat password">
 				<small *ngIf="registrationForm.get('password').touched && registrationForm.get('password2').errors && registrationForm.get('password2').errors.required"
-				       class="form-text alert alert-danger">This field is required.</small>
+				       class="form-text alert alert-danger" translate>This field is required.</small>
 				<small *ngIf="registrationForm.errors && registrationForm.errors.passwordMismatch"
-				       class="form-text alert alert-danger">The passwords do not match.</small>
+				       class="form-text alert alert-danger" translate>The passwords do not match.</small>
 			</div>
 			<button type="submit" [disabled]="!registrationForm.valid"
-			        class="btn btn-success btn-block">Registration</button>
+			        class="btn btn-success btn-block" translate>Registration</button>
 		</form>
 	</div>
 </div>
