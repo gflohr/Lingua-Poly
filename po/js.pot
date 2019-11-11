@@ -4,16 +4,20 @@ msgstr ""
 msgid "<h2>Disclaimer</h2>Accountability for content<br/>The contents of our pages have been created with the utmost care. However, we cannot guarantee the contents' accuracy, completeness or topicality. According to statutory provisions, we are furthermore responsible for our own content on these web pages. In this context, please note that we are accordingly not obliged to monitor merely the transmitted or saved information of third parties, or investigate circumstances pointing to illegal activity. Our obligations to remove or block the use of information under generally applicable laws remain unaffected by this as per &sect;&sect; 8 to 10 of the Telemedia Act (TMG).<br/><br/>Accountability for links<br/>Responsibility for the content of external links (to web pages of third parties) lies solely with the operators of the linked pages. No violations were evident to us at the time of linking. Should any legal infringement become known to us, we will remove the respective link immediately.<br/><br/>Copyright<br/> Our web pages and their contents are subject to German copyright law. Unless expressly permitted by law (&sect; 44a et seq. of the copyright law), every form of utilizing, reproducing or processing works subject to copyright protection on our web pages requires the prior consent of the respective owner of the rights. Individual reproductions of a work are allowed only for private use, so must not serve either directly or indirectly for earnings. Unauthorized utilization of copyrighted works is punishable (&sect; 106 of the copyright law).<br/><br/><i>Source: </i><a href=\"http://www.muster-vorlagen.net\" target=\"_blank\">Create legal disclosures online - http://www.muster-vorlagen.net</a><br/><br/>"
 msgstr ""
 
+#, perl-brace-format
 msgid ""
-"An email with further instructions has been sent to the address you have\n"
-"  specified.  Please check your spam folder if the mail does not arrive\n"
-"  the next couple of minutes."
+"An email with further instructions has been sent to {email}.\n"
+"Please check your spam folder if the mail does not arrive in\n"
+"the next couple of minutes."
 msgstr ""
 
 msgid "Analyze text"
 msgstr ""
 
 msgid "Data Privacy Statement"
+msgstr ""
+
+msgid "Disabled"
 msgstr ""
 
 msgid "Disclaimer"
@@ -25,13 +29,37 @@ msgstr ""
 msgid "Enter email"
 msgstr ""
 
+msgid "Features"
+msgstr ""
+
+msgid "Finnish"
+msgstr ""
+
+msgid "Home <span class=\"sr-only\" translate>(current)</span>"
+msgstr ""
+
 msgid "Invalid or missing email address."
+msgstr ""
+
+msgid "Legal"
 msgstr ""
 
 msgid "Legal Disclosure"
 msgstr ""
 
+msgid "Legal Statement"
+msgstr ""
+
+msgid "Lingua::Poly is a system for analyzing texts written in a multitude of languages. Get started by selecting a language on the left."
+msgstr ""
+
+msgid "Link"
+msgstr ""
+
 msgid "Login"
+msgstr ""
+
+msgid "My Lingua::Poly"
 msgstr ""
 
 msgid "Password"
@@ -39,6 +67,9 @@ msgstr ""
 
 #, perl-brace-format
 msgid "Password strength: {strength}"
+msgstr ""
+
+msgid "Password too weak!"
 msgstr ""
 
 msgid "Register"
@@ -50,15 +81,30 @@ msgstr ""
 msgid "Remember me!"
 msgstr ""
 
+msgid "Repeat password"
+msgstr ""
+
+msgid "Report a bug"
+msgstr ""
+
 msgid "Search word"
 msgstr ""
 
 msgid "Sign-in"
 msgstr ""
 
+msgid "Source Code"
+msgstr ""
+
 msgid "Start"
 msgstr ""
 
+msgid "The passwords do not match."
+msgstr ""
+
 msgid "This field is required."
+msgstr ""
+
+msgid "Why register?"
 msgstr ""
 

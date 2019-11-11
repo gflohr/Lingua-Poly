@@ -121,15 +121,18 @@ msgid ""
 msgstr ""
 
 msgid ""
-"An email with further instructions has been sent to the address you have\n"
-"  specified.  Please check your spam folder if the mail does not arrive\n"
-"  the next couple of minutes."
+"An email with further instructions has been sent to [[email]].\n"
+"Please check your spam folder if the mail does not arrive in\n"
+"the next couple of minutes."
 msgstr ""
 
 msgid "Analyze text"
 msgstr "Analyze text"
 
 msgid "Data Privacy Statement"
+msgstr ""
+
+msgid "Disabled"
 msgstr ""
 
 msgid "Disclaimer"
@@ -141,19 +144,48 @@ msgstr ""
 msgid "Enter email"
 msgstr ""
 
+msgid "Features"
+msgstr ""
+
+msgid "Finnish"
+msgstr ""
+
+msgid "Home <span class=\"sr-only\" translate>(current)</span>"
+msgstr ""
+
 msgid "Invalid or missing email address."
+msgstr ""
+
+msgid "Legal"
 msgstr ""
 
 msgid "Legal Disclosure"
 msgstr "Legal Disclosure"
 
+msgid "Legal Statement"
+msgstr ""
+
+msgid ""
+"Lingua::Poly is a system for analyzing texts written in a multitude of "
+"languages. Get started by selecting a language on the left."
+msgstr ""
+
+msgid "Link"
+msgstr ""
+
 msgid "Login"
+msgstr ""
+
+msgid "My Lingua::Poly"
 msgstr ""
 
 msgid "Password"
 msgstr ""
 
 msgid "Password strength: [[strength]]"
+msgstr ""
+
+msgid "Password too weak!"
 msgstr ""
 
 msgid "Register"
@@ -165,14 +197,29 @@ msgstr ""
 msgid "Remember me!"
 msgstr ""
 
+msgid "Repeat password"
+msgstr ""
+
+msgid "Report a bug"
+msgstr ""
+
 msgid "Search word"
 msgstr "Search word"
 
 msgid "Sign-in"
 msgstr ""
 
+msgid "Source Code"
+msgstr ""
+
 msgid "Start"
 msgstr "Start"
 
+msgid "The passwords do not match."
+msgstr ""
+
 msgid "This field is required."
+msgstr ""
+
+msgid "Why register?"
 msgstr ""

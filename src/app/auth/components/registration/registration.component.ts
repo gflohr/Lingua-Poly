@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { PasswordValidator } from 'src/app/core/validators/passwordValidator';
 import { UsersService, UserDraft } from 'src/app/core/openapi/lingua-poly';
+import { Router } from '@angular/router';
 
 @Component({
 	selector: 'app-registration',
@@ -10,7 +11,8 @@ import { UsersService, UserDraft } from 'src/app/core/openapi/lingua-poly';
 })
 export class RegistrationComponent {
 	constructor(private fb: FormBuilder,
-		        private usersService: UsersService) { }
+	            private router: Router,
+	            private usersService: UsersService) { }
 
 	registrationForm = this.fb.group ({
 		email: ['', [Validators.required, Validators.email]],
@@ -25,7 +27,7 @@ export class RegistrationComponent {
 			password: this.registrationForm.get('password').value,
 		} as UserDraft;
 		this.usersService.usersPost(user).subscribe(data => {
-			console.log(data);
+			this.router.navigate(['../registration-received', user.email]);
 		});
 	}
 

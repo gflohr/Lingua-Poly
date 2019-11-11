@@ -11,11 +11,7 @@
  */
 
 
-/**
- * A user object is identified by its username, its email or both.
- */
-export interface User { 
-    email?: string;
-    username?: string;
+export interface UserByUsername { 
+    username: string;
 }
 

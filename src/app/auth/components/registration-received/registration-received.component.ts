@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
 	selector: 'app-registration-received',
@@ -6,9 +7,11 @@ import { Component, OnInit } from '@angular/core';
 	styleUrls: ['./registration-received.component.css']
 })
 export class RegistrationReceivedComponent implements OnInit {
-	constructor() {}
+	email: string;
+	constructor(private route: ActivatedRoute) {}
 
 	ngOnInit() {
+		this.email = this.route.snapshot.paramMap.get('email');
 	}
 
 }

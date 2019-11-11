@@ -14,15 +14,16 @@ components:
   schemas:
     User:
       title: User
+      description: A user object is identified by its username, its email or both.
       properties:
-        username:
-          type: string
-          minLength: 2
-          example: JohnDoe
         email:
           type: string
           minLength: 3
           example: john.doe@acme.com
+        username:
+          type: string
+          minLength: 2
+          example: JohnDoe
     UserDraft:
       title: UserDraft
       properties:
@@ -38,12 +39,26 @@ components:
       - email
       - password
       additionalProperties: false
+    Token:
+      title: Token
+      properties:
+        token:
+          type: string
+          example: abcdef
+      required:
+        - token
+      additionalProperties: false
   requestBodies:
     CreateUserRequest:
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/UserDraft"
+    Token:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Token"
 tags:
   - name: users
     description: User management
@@ -63,6 +78,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/User"
+                $ref: '#/components/schemas/User'
         406:
           description: Invalid input
+  /register:
+    post:
+      tags:
+      - users
+      summary: Confirm a registration
+      x-mojo-to: 'user#confirmRegistration'
+      operationId: register
+      requestBody:
+        $ref: '#/components/requestBodies/Token'
+      responses:
+        200:
+          description: User activated after confirmation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        410:
+          description: Gone
+      
