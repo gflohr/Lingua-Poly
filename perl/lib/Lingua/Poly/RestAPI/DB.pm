@@ -59,10 +59,10 @@ INSERT INTO users(email, password) VALUES(?, ?)
 EOF
 	DELETE_USER_STALE => <<EOF,
 DELETE FROM users u
-  USING sessions s
+  USING tokens t
   WHERE NOT u.confirmed
-    AND u.id = s.user_id
-	AND EXTRACT(EPOCH FROM(NOW() - s.last_seen)) > ?
+    AND u.id = t.user_id
+	AND EXTRACT(EPOCH FROM(NOW() - t.created)) > ?
 EOF
 	SELECT_USER_BY_ID => <<EOF,
 SELECT id, username, email, password, confirmed FROM users WHERE id = ?
