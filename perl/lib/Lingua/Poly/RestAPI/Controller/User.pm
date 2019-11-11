@@ -103,7 +103,7 @@ sub create {
 	} else {
 		my $token;
 		if ($renew_request) {
-			($token) = $db->getRow(SELECT_TOKEN => 'registration',
+			($token) = $db->getRow(SELECT_TOKEN_BY_PURPOSE => 'registration',
 			                       $userDraft->{email});
 			die "no registration token for $userDraft->{email} found"
 			    if empty $token;
@@ -163,6 +163,44 @@ EOF
 
 	my %user = (email => $userDraft->{email});
 	$self->render(openapi => \%user, status => HTTP_CREATED);
+}
+
+sub confirmRegistration {
+	my $self = shift->openapi->valid_input or return;
+
+	my $in = $self->req->json;
+	if (!exists $in->{token}) {
+		return $self->errorResponse(HTTP_BAD_REQUEST, [
+			message => 'no token provided',
+			path => '/'
+		]);
+	}
+	my $token = $in->{token};
+
+	my $db = $self->stash->{db};
+	my ($user_id, $username, $email) = $db->getRow(
+		SELECT_TOKEN => 'registration',
+		$token
+	);
+
+	if (!defined $user_id) {
+		$db->rollback;
+		return $self->errorResponse(HTTP_GONE, [
+			message => 'token not found',
+			path => '/'
+		]);
+	}
+
+	$db->transaction(
+		[UPDATE_USER_ACTIVATE => $user_id],
+		[DELETE_TOKEN => $token]
+	);
+
+	my %user = (email => $email, username => $username);
+	foreach my $prop (keys %user) {
+		delete $user{$prop} if !defined $user{$prop};
+	}
+	$self->render(openapi => \%user, status => HTTP_OK);
 }
 
 1;

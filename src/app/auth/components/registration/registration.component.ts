@@ -27,7 +27,7 @@ export class RegistrationComponent {
 			password: this.registrationForm.get('password').value,
 		} as UserDraft;
 		this.usersService.usersPost(user).subscribe(() =>
-			this.router.navigate(['../registration-received', user.email])
+			this.router.navigate(['../registration/received', user.email])
 		);
 	}
 

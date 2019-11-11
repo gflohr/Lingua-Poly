@@ -47,7 +47,17 @@ UPDATE tokens SET created = NOW()
   WHERE tokens.purpose = ?
     AND tokens.user_id = (SELECT id FROM users WHERE email = ? AND NOT confirmed)
 EOF
+	DELETE_TOKEN => <<EOF,
+DELETE FROM tokens WHERE token = ?
+EOF
 	SELECT_TOKEN => <<EOF,
+SELECT u.id, u.username, u.email FROM tokens t, users u
+  WHERE t.purpose = ?
+    AND t.token = ?
+	AND t.user_id = u.id
+	AND NOT u.confirmed
+EOF
+	SELECT_TOKEN_BY_PURPOSE => <<EOF,
 SELECT t.token FROM tokens t, users u
   WHERE t.purpose = ?
     AND u.email = ?
@@ -72,6 +82,11 @@ SELECT id, username, email, password, confirmed FROM users WHERE username = ?
 EOF
 	SELECT_USER_BY_EMAIL => <<EOF,
 SELECT id, username, email, password, confirmed FROM users WHERE email = ?
+EOF
+	UPDATE_USER_ACTIVATE => <<EOF,
+UPDATE users
+   SET confirmed = 't'
+ WHERE id = ?
 EOF
 	UPDATE_SESSION => <<EOF,
 UPDATE sessions
