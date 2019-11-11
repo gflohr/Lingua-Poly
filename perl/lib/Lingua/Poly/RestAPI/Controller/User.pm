@@ -122,7 +122,7 @@ sub create {
 		my $transport = $self->emailSenderTransport;
 		my $url = $self->siteURL;
 		my $confirmation_url = Mojo::URL->new($url);
-		$confirmation_url->path("/confirm/registration/$token");
+		$confirmation_url->path("/registration/confirmed/$token");
 
 		$subject = 'Confirm Lingua::Poly registration';
 		$body = <<EOF;
