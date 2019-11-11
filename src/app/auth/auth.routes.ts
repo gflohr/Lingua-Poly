@@ -7,11 +7,11 @@ export const authRoutes = [
 	{ path: 'login', component: LoginComponent },
 	{ path: 'registration', component: RegistrationComponent },
 	{
-		path: 'registration-received/:email',
+		path: 'registration/received/:email',
 		component: RegistrationReceivedComponent
 	},
 	{
-		path: 'registration-confirmed/:token',
+		path: 'registration/confirmed/:token',
 		component: RegistrationConfirmedComponent
 	}
 ];

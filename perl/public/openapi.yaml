@@ -1,6 +1,6 @@
 openapi: '3.0.2'
 info:
-  title: 'Mojolicious OpenAPI WebApp'
+  title: 'Lingua::Poly OpenAPI WebApp'
   version:  '1.0'
 servers:
   - url: http://127.0.0.1:4200/api/lingua-poly/v1
@@ -12,6 +12,24 @@ components:
       in: cookie
       name: MOJOSID
   schemas:
+    DefaultResponse:
+      title: DefaultResponse
+      description: Generic default response
+      properties:
+        errors:
+          type: array
+          items:
+            properties:
+              message:
+                type: string
+              path:
+                type: string
+            required:
+            - message
+            - path
+      required:
+      - errors
+      - status
     User:
       title: User
       description: A user object is identified by its username, its email or both.
@@ -79,8 +97,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
-        406:
-          description: Invalid input
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponse'
   /register:
     post:
       tags:
@@ -97,6 +119,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
-        410:
-          description: Gone
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponse'
       

@@ -1,3 +1,9 @@
-<p>
-  registration-confirmed works NOT!
-</p>
+	<div *ngIf="this.pending; then pendingBlock else elseBlock"></div>
+	<ng-template #pendingBlock translate>Confirmation being sent ..., please wait!</ng-template>
+	<ng-template #elseBlock translate>
+		<div *ngIf="this.success; then successBlock else errorBlock"></div>
+		<ng-template #successBlock translate>Registration completed successfully!</ng-template>
+		<ng-template #errorBlock translate>Registration failed!  Most probably
+			the link from the email has expired.  Please try again!
+		</ng-template>
+	</ng-template>
