@@ -9,7 +9,7 @@ CREATE TABLE users (
     confirmed BOOLEAN NOT NULL DEFAULT 'f'
 );
 INSERT INTO users(id, email, username, password) 
-  SELECT 0, 'placeholder@example.com', 'admin', '{SHA512}c7ad44cbad762a5da0a452f9e854fdc1e0e7a52a38015f23f3eab1d80b931dd472634dfac71cd34ebc35d16ab7fb8a90c81f975113d6c7538dc69dd8de9077ec='
+  SELECT 0, 'placeholder@example.com', 'admin', '{ARGON2}$argon2id$v=19$m=32768,t=12,p=1$MTM1QzRDNkEtMDUzOS0xMUVBLUI0NjItM0ZCMDQyNjU0QTBB$tir07b6/y+fWwkvJe9Cw3A'
   WHERE NOT EXISTS (
     SELECT 1 FROM users WHERE id = 0);
 
