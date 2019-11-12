@@ -1,22 +1,29 @@
 <h1>Sign In</h1>
 <div class="login-form-container">
 	<div class="row h-100">
-		<form class="col-12">
+		<form class="col-12" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
 			<div class="form-group">
-				<label for="email" translate>Email address</label>
-				<input type="email" class="form-control" id="email"
-					   aria-describedby="emailHelp"
-					   placeholder="{{ 'Enter email' | translate }}">
+				<label for="id" translate>Email address or username</label>
+				<input type="id" class="form-control" id="id"
+					   formControlName="id"
+					   aria-describedby="idHelp"
+					   placeholder="{{ 'Enter email or username' | translate }}">
+				<small *ngIf="loginForm.get('id').touched && loginForm.get('id').errors"
+					   class="form-text alert alert-danger"
+					   translate>Missing username or email address.</small>
 			</div>
 			<div class="form-group">
 				<label for="password" translate>Password</label>
 				<input type="password" class="form-control" id="password"
 				       placeholder="{{ 'Password' | translate }}" />
+				<small *ngIf="loginForm.get('password').touched && loginForm.get('password').errors"
+					   class="form-text alert alert-danger"
+					   translate>Missing password.</small>
 			</div>
 			<div class="form-check">
-				<input type="checkbox" class="form-check-input" id="exampleCheck1">
+				<input type="checkbox" class="form-check-input" id="persistant">
 				<label class="form-check-label"
-				       for="exampleCheck1" translate>Remember me!</label>
+				       for="persistant" translate>Remember me!</label>
 			</div>
 			<button type="submit" class="btn btn-success btn-block"
 			        translate>Login</button>

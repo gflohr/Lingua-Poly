@@ -17,5 +17,9 @@
 export interface User { 
     email?: string;
     username?: string;
+    /**
+     * Number of seconds before session expires.
+     */
+    expires?: number;
 }
 

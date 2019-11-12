@@ -191,15 +191,29 @@ sub confirmRegistration {
 		]);
 	}
 
+	my %user = (email => $email, username => $username);
+	foreach my $prop (keys %user) {
+		delete $user{$prop} if !defined $user{$prop};
+	}
+
+	# FIXME! Upgrade session cookie!
 	$db->transaction(
 		[UPDATE_USER_ACTIVATE => $user_id],
 		[DELETE_TOKEN => $token]
 	);
 
-	my %user = (email => $email, username => $username);
-	foreach my $prop (keys %user) {
-		delete $user{$prop} if !defined $user{$prop};
-	}
+	$self->render(openapi => \%user, status => HTTP_OK);
+}
+
+sub login {
+	my $self = shift->openapi->valid_input or return;
+
+	my %user = (
+		email => 'guido.flohr@cantanea.com',
+		username => 'guido',
+		# FIXME! This must come from the session!
+		validity => $self->config->{session}->{timeout},
+	);
 	$self->render(openapi => \%user, status => HTTP_OK);
 }
 

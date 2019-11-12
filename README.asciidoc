@@ -149,8 +149,8 @@ You can manually create a password (digest) with this one-liner:
 
 [source,bash]
 ----
-$ perl -MDigest::SHA -le 'print "{SHA512}" . Digest::SHA::sha512_hex("admin") . "="'
-{SHA512}c7ad44cbad762a5da0a452f9e854fdc1e0e7a52a38015f23f3eab1d80b931dd472634dfac71cd34ebc35d16ab7fb8a90c81f975113d6c7538dc69dd8de9077ec=
+$ perl -Iperl/lib -MLingua::Poly::Util::System -e "print Lingua::Poly::Util::System::crypt_password('admin')"
+{ARGON2}$argon2id$v=19$m=32768,t=12,p=1$MTM1QzRDNkEtMDUzOS0xMUVBLUI0NjItM0ZCMDQyNjU0QTBB$tir07b6/y+fWwkvJe9Cw3A
 ----
 
 Replace "admin" with a cleartext password.

@@ -20,22 +20,24 @@ use Mojo::Base 'Lingua::Poly::RestAPI::Logger';
 sub realm { 'session' }
 
 sub new {
-	my ($class, $c) = @_;
+	my ($class, $ctx, $uid) = @_;
 
 	my $self = bless {
-		__ctx => $c,
+		__ctx => $ctx,
 	}, $class;
 
 	$self->debug("initializing");
 
-	my $cookie = $c->cookie('id');
+	my $cookie = $ctx->cookie('id');
 
-	my $random = $c->random_string(entropy => 256);
-	$c->cookie(id => $random, {
-		path => $c->config->{path},
+	my $random = $ctx->random_string(entropy => 256);
+	$ctx->cookie(id => $random, {
+		path => $ctx->config->{path},
 		httponly => 1,
-		secure => $c->req->is_secure,
+		secure => $ctx->req->is_secure,
 	});
+
+	my $db = $ctx->stash->{db};
 
 	return $self;
 }
