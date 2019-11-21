@@ -1,4 +1,5 @@
 import { StoreError } from "./core/models/error";
+import { UserState } from "./user/states/user.state";
 
 export interface StateInterface {
 	get(name: string): any;
@@ -39,4 +40,31 @@ export class ReducerState implements StateInterface {
 			...this.setError(obj)
 		});
 	}
+
+	private setError(obj) {
+		if (obj.hasOwnProperty('error')) {
+			let err = null;
+			if (obj['error'] instanceof StoreError) {
+				err = obj['error'].clone();
+			} else if (obj['error'] instanceof Error) {
+				err = StoreError.of(obj['error']);
+			} else {
+				err = obj['error'];
+			}
+			obj = {
+				...obj,
+				error: err
+			};
+		}
+
+		return obj;
+	}
+}
+
+export function Record(values: { [key: string]: any }): any {
+	return (() => (): ReducerState => new ReducerState(values))();
+}
+
+export interface AppState {
+	user: UserState;
 }
