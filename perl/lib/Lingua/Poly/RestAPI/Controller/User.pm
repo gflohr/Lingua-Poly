@@ -28,7 +28,7 @@ use Email::Simple 2.216;
 use Email::Sender::Simple 1.300031 qw(sendmail);
 
 use Lingua::Poly::Util::String qw(empty);
-use Lingua::Poly::Util::System qw(crypt_password);
+use Lingua::Poly::Util::System qw(crypt_password check_password);
 use Lingua::Poly::RestAPI::Logger;
 use Lingua::Poly::RestAPI::User;
 
@@ -170,10 +170,9 @@ sub confirmRegistration {
 
 	my $in = $self->req->json;
 	if (!exists $in->{token}) {
-		return $self->errorResponse(HTTP_BAD_REQUEST, [
-			message => 'no token provided',
-			path => '/'
-		]);
+		return $self->errorResponse(HTTP_BAD_REQUEST, {
+			message => 'no token provided'
+		});
 	}
 	my $token = $in->{token};
 
@@ -185,10 +184,9 @@ sub confirmRegistration {
 
 	if (!defined $user_id) {
 		$db->rollback;
-		return $self->errorResponse(HTTP_GONE, [
-			message => 'token not found',
-			path => '/'
-		]);
+		return $self->errorResponse(HTTP_GONE, {
+			message => 'token not found'
+		});
 	}
 
 	my %user = (email => $email, username => $username);
@@ -207,6 +205,17 @@ sub confirmRegistration {
 
 sub login {
 	my $self = shift->openapi->valid_input or return;
+
+	my $login_data = $self->req->json;
+	my $db = $self->stash->{db};
+
+	my $user = Lingua::Poly::RestAPI::User->new($db, $login_data->{id});
+	return $self->errorResponse(HTTP_UNAUTHORIZED, {
+		message => 'invalid username or password'
+	}) if !$user;
+	return $self->errorResponse(HTTP_UNAUTHORIZED, {
+		message => 'invalid username or password'
+	}) if !check_password $login_data->{password}, $user->password;
 
 	my %user = (
 		email => 'guido.flohr@cantanea.com',

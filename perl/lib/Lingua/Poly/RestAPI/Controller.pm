@@ -29,7 +29,7 @@ sub errorResponse {
 	my @errors;
 	foreach my $error (@raw_errors) {
 		$error = { message => $error } if !ref $error;
-		$error->{path} //= '';
+		$error->{path} //= '/';
 		push @errors, $error;
 	}
 

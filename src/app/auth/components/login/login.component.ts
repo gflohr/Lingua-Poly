@@ -8,6 +8,7 @@ import { UserLogin, UsersService } from 'src/app/core/openapi/lingua-poly';
 	styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
+	failed: boolean = false;
 
 	constructor(
 		private fb: FormBuilder,
@@ -31,9 +32,12 @@ export class LoginComponent implements OnInit {
 			persistant: this.loginForm.get('persistant').value
 		} as UserLogin;
 
-		this.usersService.userLogin().subscribe((user) =>
-			console.log('User: ', user);
-			// this.router.navigate(['../registration/received', user.email])
+		this.usersService.userLogin(user).subscribe(
+			(user) => {
+				console.log('User: ', user);
+				// this.router.navigate(['../registration/received', user.email])
+			},
+			() => this.failed = true
 		);
 	}
 }
