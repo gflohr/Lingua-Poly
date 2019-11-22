@@ -158,6 +158,25 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DefaultResponse'
+  /profile:
+    get:
+      tags:
+      - users
+      summary: Get user profile
+      x-mojo-to: 'user#profile'
+      responses:
+        200:
+          description: User profile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponse'
   /register:
     post:
       tags:

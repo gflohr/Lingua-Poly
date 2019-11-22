@@ -226,4 +226,14 @@ sub login {
 	$self->render(openapi => \%user, status => HTTP_OK);
 }
 
+sub profile {
+	$DB::single = 1;
+	my $self = shift->openapi->valid_input or return;
+
+	return $self->errorResponse(HTTP_UNAUTHORIZED, {
+		message => 'not authorized',
+		path => '/status'
+	});
+}
+
 1;
