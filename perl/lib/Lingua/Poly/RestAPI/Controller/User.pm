@@ -227,12 +227,10 @@ sub login {
 }
 
 sub profile {
-	$DB::single = 1;
 	my $self = shift->openapi->valid_input or return;
 
 	return $self->errorResponse(HTTP_UNAUTHORIZED, {
-		message => 'not authorized',
-		path => '/status'
+		message => 'You are not logged in.'
 	});
 }
 

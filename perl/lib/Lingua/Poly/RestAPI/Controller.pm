@@ -33,11 +33,6 @@ sub errorResponse {
 		push @errors, $error;
 	}
 
-use Data::Dumper;
-my %args = (
-	openapi => { errors => \@errors }, status => $code
-);
-warn Dumper \%args;
 	return $self->render(openapi => { errors => \@errors }, status => $code);
 }
 
