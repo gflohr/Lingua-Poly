@@ -10,7 +10,7 @@ export class ApiErrorHandlerService {
 	constructor() { }
 
 	handleHttpUnauthorized() {
-		console.log('not autorized');
+		console.log('not authorized');
 	}
 
 	handleError(error: Error, data?: ErrorHandlerDataDTO) {
