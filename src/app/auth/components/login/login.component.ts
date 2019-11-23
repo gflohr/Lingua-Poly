@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { UserLogin, UsersService } from 'src/app/core/openapi/lingua-poly';
+import { AppState } from 'src/app/app.interfaces';
+import { Store } from '@ngrx/store';
+import { Router } from '@angular/router';
 
 @Component({
 	selector: 'app-login',
@@ -12,7 +15,9 @@ export class LoginComponent implements OnInit {
 
 	constructor(
 		private fb: FormBuilder,
-		private usersService: UsersService
+		private usersService: UsersService,
+		private store: Store<AppState>,
+		private router: Router
 	) { }
 
 	loginForm = this.fb.group({
@@ -25,7 +30,6 @@ export class LoginComponent implements OnInit {
 	}
 
 	onSubmit() {
-		console.log('login data: ', this.loginForm);
 		const user = {
 			id: this.loginForm.get('id').value,
 			password: this.loginForm.get('password').value,
@@ -35,7 +39,7 @@ export class LoginComponent implements OnInit {
 		this.usersService.userLogin(user).subscribe(
 			(user) => {
 				console.log('User: ', user);
-				// this.router.navigate(['../registration/received', user.email])
+				this.router.navigate(['/'])
 			},
 			() => this.failed = true
 		);

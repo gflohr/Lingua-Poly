@@ -61,6 +61,14 @@ export class ReducerState implements StateInterface {
 	}
 }
 
+export function NewActionStatus(initDone = false, error = null, inProgress = false): StateInterface {
+	return new ReducerState({
+	  initDone,
+	  error,
+	  inProgress
+	});
+}
+
 export function Record(values: { [key: string]: any }): any {
 	return (() => (): ReducerState => new ReducerState(values))();
 }
