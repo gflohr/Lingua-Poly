@@ -29,7 +29,6 @@ components:
             - path
       required:
       - errors
-      - status
     User:
       title: User
       description: A user object is identified by its username, its email or both.
