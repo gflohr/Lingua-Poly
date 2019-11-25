@@ -1,15 +1,15 @@
-import { StateInterface, Record, ActionStatus, NewActionStatus } from "../../app.interfaces";
+import { StateInterface, Record } from "../../app.interfaces";
 
 export interface UserState extends StateInterface {
-	profile: any;
-	preferences: Map<string, any>;
-	profileStatus: ActionStatus;
-	setUserStatus: ActionStatus;
+	username: string;
+	email: string;
+	validity: number;
+	loggedIn: Date;
 }
 
 export const UserStateRecord = Record({
-	profile: null,
-	preferences: null,
-	profileStatus: NewActionStatus(),
-	setUserStatus: NewActionStatus()
+	username: null,
+	email: null,
+	validity: 0,
+	loggedIn: null
 });
