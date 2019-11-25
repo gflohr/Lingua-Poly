@@ -10,14 +10,21 @@ import { PasswordValidator } from './validators/passwordValidator';
 import { ApiModule, BASE_PATH } from './openapi/lingua-poly';
 import { environment } from 'src/environments/environment';
 import { ApiInterceptorService } from './services/api-interceptor.service';
+import { EffectsModule } from '@ngrx/effects';
+import { UserDomainService } from './services/domain/user.domain.service';
+import { UserActions } from '../user/actions/user.actions';
+import { AuthEffects } from '../auth/auth.effects';
 
 export function HttpLoaderFactory(httpClient: HttpClient) {
-  return new TranslateHttpLoader(httpClient, './assets/i18n/', '.json');
+	return new TranslateHttpLoader(httpClient, './assets/i18n/', '.json');
 }
 
 @NgModule({
 	imports: [
 		CommonModule,
+		EffectsModule.forRoot([
+			AuthEffects
+		]),
 		TranslateModule.forRoot({
 			loader: {
 				provide: TranslateLoader,
@@ -36,6 +43,8 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
 	providers: [
 		HttpClient,
 		TranslateService,
+		UserDomainService,
+		UserActions,
 		PasswordValidator,
 		{
 			provide: BASE_PATH, useValue: environment.basePath

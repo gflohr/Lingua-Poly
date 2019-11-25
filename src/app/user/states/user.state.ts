@@ -8,7 +8,7 @@ export interface UserState extends StateInterface {
 }
 
 export const UserStateRecord = Record({
-	username: 'John Doe',
+	username: null,
 	email: null,
 	validity: 0,
 	loggedIn: null

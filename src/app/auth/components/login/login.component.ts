@@ -4,6 +4,7 @@ import { UserLogin, UsersService } from 'src/app/core/openapi/lingua-poly';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { AppState } from 'src/app/app.interfaces';
+import { LoginPageActions } from '../../actions/login-page.actions';
 
 @Component({
 	selector: 'app-login',
@@ -15,9 +16,7 @@ export class LoginComponent {
 
 	constructor(
 		private fb: FormBuilder,
-		private store: Store<AppState>,
-		private usersService: UsersService,
-		private router: Router
+		private store: Store<AppState>
 	) { }
 
 	loginForm = this.fb.group({
@@ -27,11 +26,7 @@ export class LoginComponent {
 	});
 
 	onSubmit() {
-		const user = {
-			id: this.loginForm.get('id').value,
-			password: this.loginForm.get('password').value,
-			persistant: this.loginForm.get('persistant').value
-		} as UserLogin;
+		/*
 
 		this.usersService.userLogin(user).subscribe(
 			(user) => {
@@ -39,6 +34,14 @@ export class LoginComponent {
 				this.router.navigate(['/'])
 			},
 			() => this.failed = true
-		);
+			);
+			*/
+		const userLogin = {
+			id: this.loginForm.get('id').value,
+			password: this.loginForm.get('password').value,
+			persistant: this.loginForm.get('persistant').value
+		} as UserLogin;
+
+		this.store.dispatch(LoginPageActions.login({ userLogin: userLogin }));
 	}
 }

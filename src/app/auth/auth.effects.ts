@@ -12,9 +12,9 @@ export class AuthEffects {
 		this.actions$.pipe(
 			ofType(LoginPageActions.login),
 			exhaustMap(action =>
-				this.usersService.userLogin(action ).pipe(
-					map(user => AuthApiActions.loginSuccess(user)),
-					catchError(error => of(AuthApiActions.loginFailure(error)))
+				this.usersService.userLogin(action.userLogin).pipe(
+					map(user => AuthApiActions.loginSuccess({ user: user })),
+					catchError(error => of(AuthApiActions.loginFailure({ error: error })))
 				)
 			)
 		)
