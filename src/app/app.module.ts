@@ -9,6 +9,8 @@ import { RouterModule } from '@angular/router';
 import { appRoutes } from './app.routes';
 
 import { AppComponent } from './app.component';
+import { reducers, metaReducers } from './app.reducers';
+import { StoreModule } from '@ngrx/store';
 
 @NgModule({
   declarations: [
@@ -20,7 +22,8 @@ import { AppComponent } from './app.component';
     AuthModule,
     LayoutModule,
     MainModule,
-    RouterModule.forRoot(appRoutes),
+	RouterModule.forRoot(appRoutes),
+	StoreModule.forRoot(reducers, { metaReducers })
   ],
   providers: [],
   bootstrap: [AppComponent]

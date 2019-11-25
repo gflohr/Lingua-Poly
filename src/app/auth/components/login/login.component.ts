@@ -2,17 +2,20 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { UserLogin, UsersService } from 'src/app/core/openapi/lingua-poly';
 import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { AppState } from 'src/app/app.interfaces';
 
 @Component({
 	selector: 'app-login',
 	templateUrl: './login.component.html',
 	styleUrls: ['./login.component.css']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent {
 	failed: boolean = false;
 
 	constructor(
 		private fb: FormBuilder,
+		private store: Store<AppState>,
 		private usersService: UsersService,
 		private router: Router
 	) { }
@@ -22,9 +25,6 @@ export class LoginComponent implements OnInit {
 		password: ['', Validators.required],
 		persistant: [false]
 	});
-
-	ngOnInit() {
-	}
 
 	onSubmit() {
 		const user = {

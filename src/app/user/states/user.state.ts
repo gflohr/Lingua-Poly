@@ -7,7 +7,7 @@ export interface UserState extends StateInterface {
 	setUserStatus: ActionStatus;
 }
 
-export const userStateRecord = Record({
+export const UserStateRecord = Record({
 	profile: null,
 	preferences: null,
 	profileStatus: NewActionStatus(),
