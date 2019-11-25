@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { UserLogin, UsersService } from 'src/app/core/openapi/lingua-poly';
-import { AppState } from 'src/app/app.interfaces';
-import { Store } from '@ngrx/store';
 import { Router } from '@angular/router';
 
 @Component({
@@ -16,7 +14,6 @@ export class LoginComponent implements OnInit {
 	constructor(
 		private fb: FormBuilder,
 		private usersService: UsersService,
-		private store: Store<AppState>,
 		private router: Router
 	) { }
 
