@@ -1,10 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { UserLogin, UsersService } from 'src/app/core/openapi/lingua-poly';
-import { Router } from '@angular/router';
+import { UserLogin } from 'src/app/core/openapi/lingua-poly';
 import { Store } from '@ngrx/store';
 import { AppState } from 'src/app/app.interfaces';
-import { LoginPageActions } from '../../actions/login-page.actions';
 
 @Component({
 	selector: 'app-login',
@@ -12,7 +10,20 @@ import { LoginPageActions } from '../../actions/login-page.actions';
 	styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-	failed: boolean = false;
+	@Input()
+	set pendig(isPending: boolean) {
+		if (isPending) {
+			this.loginForm.disable();
+		} else {
+			this.loginForm.enable();
+		}
+	}
+
+	@Input()
+	errorMessage: string | null;
+
+	@Output()
+	submitted = new EventEmitter<UserLogin>();
 
 	constructor(
 		private fb: FormBuilder,
@@ -25,23 +36,13 @@ export class LoginComponent {
 		persistant: [false]
 	});
 
-	onSubmit() {
-		/*
-
-		this.usersService.userLogin(user).subscribe(
-			(user) => {
-				console.log('User: ', user);
-				this.router.navigate(['/'])
-			},
-			() => this.failed = true
-			);
-			*/
+	submit() {
 		const userLogin = {
 			id: this.loginForm.get('id').value,
 			password: this.loginForm.get('password').value,
 			persistant: this.loginForm.get('persistant').value
 		} as UserLogin;
 
-		this.store.dispatch(LoginPageActions.login({ userLogin: userLogin }));
+		this.submitted.emit(userLogin);
 	}
 }

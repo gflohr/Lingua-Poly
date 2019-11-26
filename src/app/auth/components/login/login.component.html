@@ -1,9 +1,9 @@
 <h1>Sign In</h1>
 <div class="login-form-container">
 	<div class="row h-100">
-		<form class="col-12" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-			<small *ngIf="failed" class="form-text alert alert-danger" translate>
-				Invalid username or password.
+		<form class="col-12" [formGroup]="loginForm" (ngSubmit)="submit()">
+			<small *ngIf="errorMessage" class="form-text alert alert-danger">
+				{{ errorMessage }}
 			</small>
 			<div class="form-group">
 				<label for="id" translate>Email address or username</label>
