@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import * as fromAuth from '../../../auth/reducers';
-import * as fromUser from '../../../user/actions';
+import { UserActions } from '../../../core/actions';
 
 @Component({
 	selector: 'app-header',
@@ -21,6 +21,6 @@ export class HeaderComponent implements OnInit {
 	}
 
 	ngOnInit() {
-		this.authStore.dispatch(fromUser.UserActions.requestProfile());
+		this.authStore.dispatch(UserActions.requestProfile());
 	}
 }

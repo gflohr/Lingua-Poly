@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
-import { fromEvent, merge, timer } from 'rxjs';
-import { createEffect } from '@ngrx/effects';
-import { map, switchMapTo } from 'rxjs/operators';
+import { fromEvent, merge, timer, of } from 'rxjs';
+import { createEffect, Actions, ofType } from '@ngrx/effects';
+import { map, exhaustMap, switchMapTo, catchError } from 'rxjs/operators';
 import { UserActions } from '../actions';
+import { UsersService } from '../openapi/lingua-poly';
+import { UserApiActions } from 'src/app/user/actions';
 
 @Injectable()
 export class UserEffects {
@@ -18,4 +20,19 @@ export class UserEffects {
 			map(() => UserActions.idleTimeout())
 		)
 	);
+
+	getProfile$ = createEffect(() => this.actions$.pipe(
+		ofType(UserActions.requestProfile),
+		exhaustMap(() =>
+			this.usersService.profileGet().pipe(
+				map(user => UserApiActions.profileSuccess({ user })),
+				catchError(error => of(UserApiActions.profileFailure({ error })))
+			)
+		)
+	));
+
+	constructor(
+		private actions$: Actions,
+		private usersService: UsersService
+	) { }
 }
