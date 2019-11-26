@@ -11,7 +11,7 @@ import { appRoutes } from './app.routes';
 import { AppComponent } from './app.component';
 import { StoreModule } from '@ngrx/store';
 import { StoreRouterConnectingModule, RouterState } from '@ngrx/router-store';
-import { ROOT_REDUCERS } from './app.reducers';
+import { ROOT_REDUCERS, metaReducers } from './app.reducers';
 import { EffectsModule } from '@ngrx/effects';
 import { UserEffects, RouterEffects } from './core/effects';
 
@@ -26,7 +26,7 @@ import { UserEffects, RouterEffects } from './core/effects';
     LayoutModule,
     MainModule,
 	RouterModule.forRoot(appRoutes),
-	StoreModule.forRoot(ROOT_REDUCERS),
+	StoreModule.forRoot(ROOT_REDUCERS, { metaReducers }),
 	StoreRouterConnectingModule.forRoot({
 		routerState: RouterState.Minimal
 	}),

@@ -1,8 +1,9 @@
-import { ActionReducerMap, ActionReducer, createFeatureSelector, createSelector, Action } from '@ngrx/store';
+import { ActionReducerMap, ActionReducer, createFeatureSelector, createSelector, Action, MetaReducer } from '@ngrx/store';
 import * as fromRouter from '@ngrx/router-store';
 
 import * as fromLayout from './core/reducers/layout.reducer';
 import { InjectionToken } from '@angular/core';
+import { environment } from 'src/environments/environment';
 
 export interface State {
 	[fromLayout.layoutFeatureKey]: fromLayout.State;
@@ -30,6 +31,10 @@ export function logger(reducer: ActionReducer<State>): ActionReducer<State> {
 		return result;
 	};
 }
+
+export const metaReducers: MetaReducer<State>[] = !environment.production
+	? [logger]
+	: [];
 
 export const selectLayoutState = createFeatureSelector<State, fromLayout.State>(
 	'layout'
