@@ -218,10 +218,10 @@ sub login {
 	}) if !check_password $login_data->{password}, $user->password;
 
 	my %user = (
+		# FIXME!
 		email => 'guido.flohr@cantanea.com',
 		username => 'guido',
-		# FIXME! This must come from the session!
-		validity => $self->config->{session}->{timeout},
+		sessionTTL => $self->config->{session}->{timeout},
 	);
 	$self->render(openapi => \%user, status => HTTP_OK);
 }

@@ -10,7 +10,7 @@ components:
     cookieAuth:
       type: apiKey
       in: cookie
-      name: MOJOSID
+      name: id
   schemas:
     DefaultResponse:
       title: DefaultResponse
@@ -41,7 +41,7 @@ components:
           type: string
           minLength: 2
           example: JohnDoe
-        expires:
+        sessionTTL:
           description: Number of seconds before session expires.
           type: number
           format: int64

@@ -20,6 +20,6 @@ export interface User {
     /**
      * Number of seconds before session expires.
      */
-    expires?: number;
+    sessionTTL?: number;
 }
 
