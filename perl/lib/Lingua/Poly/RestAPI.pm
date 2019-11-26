@@ -67,6 +67,7 @@ EOF
 
 	$config->{session} //= {};
 	$config->{session}->{timeout} ||= 2 * 60 * 60;
+	$config->{session}->{cookieName} //= 'id';
 
 	# FIXME! How can we enforce the prefix?
 	$config->{path} = '/api/v1';
@@ -99,10 +100,7 @@ EOF
 			cookieAuth => sub {
 				my ($c, $definition, $scopes, $cb) = @_;
 
-				$self->log->info('security ...');
-				use Data::Dumper;
-				$self->log->info(Dumper $definition);
-				$self->log->info(Dumper $scopes);
+				# TODO! Check that session exists and has a valid user.
 
 				return $c->$cb;
 			}
@@ -121,6 +119,8 @@ EOF
 				[ DELETE_TOKEN_STALE => $config->{session}->{timeout} ],
 			);
 		}
+
+		# TODO! Make sure to re-use existing sessions!
 		$c->stash->{session} = Lingua::Poly::RestAPI::Session->new($c);
 	});
 }

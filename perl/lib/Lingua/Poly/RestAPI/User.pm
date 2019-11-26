@@ -36,6 +36,12 @@ sub new {
 	}, $class;
 }
 
+sub newBySessionID {
+	my ($class, $session_id) = @_;
+
+
+}
+
 sub id { shift->{__id} }
 
 sub username { shift->{__username} }
