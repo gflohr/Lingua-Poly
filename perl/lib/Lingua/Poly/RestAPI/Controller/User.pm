@@ -229,6 +229,14 @@ sub login {
 sub profile {
 	my $self = shift->openapi->valid_input or return;
 
+	my %user = (
+		email => 'karl.dapp@der.abwaschba.re',
+		username => 'Karl Dapp',
+		sessionTTL => $self->config->{session}->{timeout},
+	);
+
+	return $self->render(openapi => \%user, status => HTTP_OK);
+
 	return $self->errorResponse(HTTP_UNAUTHORIZED, {
 		message => 'You are not logged in.'
 	});

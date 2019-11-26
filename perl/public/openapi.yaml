@@ -163,6 +163,8 @@ paths:
       - users
       summary: Get user profile
       x-mojo-to: 'user#profile'
+      security:
+      - cookieAuth: []
       responses:
         200:
           description: User profile

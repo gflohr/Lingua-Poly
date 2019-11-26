@@ -95,6 +95,18 @@ EOF
 	$self->plugin(OpenAPI => {
 		spec => $self->static->file('openapi.yaml')->path,
 		schema => 'v3',
+		security => {
+			cookieAuth => sub {
+				my ($c, $definition, $scopes, $cb) = @_;
+
+				$self->log->info('security ...');
+				use Data::Dumper;
+				$self->log->info(Dumper $definition);
+				$self->log->info(Dumper $scopes);
+
+				return $c->$cb;
+			}
+		}
 	});
 
 	$self->hook(before_dispatch => sub {
