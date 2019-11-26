@@ -52,7 +52,7 @@ export const selectLoginPagePending = createSelector(
 	fromLoginPage.getPending
 );
 
-export const displayName = createSelector(
+export const selectDisplayName = createSelector(
 	selectUser, user => {
 		if (user) {
 			if (typeof user.username !== undefined) {

@@ -3,6 +3,7 @@ import { UsersService } from 'src/app/core/openapi/lingua-poly';
 import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import * as fromAuth from 'src/app/auth/reducers';
+import { timingSafeEqual } from 'crypto';
 
 @Component({
 	selector: 'app-header',
@@ -11,11 +12,13 @@ import * as fromAuth from 'src/app/auth/reducers';
 })
 export class HeaderComponent implements OnInit {
 	username$: Observable<String>;
+	loggedIn$: Observable<boolean>;
 
 	constructor(
 		private store: Store<fromAuth.State>
 	) {
-		this.username$ = this.store.pipe(select(fromAuth.displayName));
+		this.username$ = this.store.pipe(select(fromAuth.selectDisplayName));
+		this.loggedIn$ = this.store.pipe(select(fromAuth.selectLoggedIn));
 	}
 
 	ngOnInit() {
