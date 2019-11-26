@@ -18,10 +18,13 @@
             </div>
             <div class="bd-toc-item">
               <a class="bd-toc-link" href="#" translate>My Lingua::Poly</a>
-              <ul class="nav bd-sidenav">
+              <ul class="nav bd-sidenav" *ngIf="!(loggedIn$ | async)">
                 <li><a routerLink="/registration" routerLinkActive="active bd-sidenav-active" translate>Register</a></li>
                 <li><a routerLink="/login" routerLinkActive="active bd-sidenav-active" translate>Sign-in</a></li>
-                <li><a href="#" translate>Why register?</a></li>
+              </ul>
+              <ul class="nav bd-sidenav" *ngIf="loggedIn$ | async">
+                <li><a routerLink="#" routerLinkActive="active bd-sidenav-active" translate>Profile</a></li>
+                <li><a routerLink="#" routerLinkActive="active bd-sidenav-active" translate>Preferences</a></li>
               </ul>
             </div>
             <div class="bd-toc-item">

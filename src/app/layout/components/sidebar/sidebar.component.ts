@@ -1,16 +1,21 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
+
+import * as fromAuth from 'src/app/auth/reducers';
+import { Store, select } from '@ngrx/store';
 
 @Component({
-  selector: 'app-sidebar',
-  templateUrl: './sidebar.component.html',
-  styleUrls: ['./sidebar.component.css']
+	selector: 'app-sidebar',
+	templateUrl: './sidebar.component.html',
+	styleUrls: ['./sidebar.component.css']
 })
-export class SidebarComponent implements OnInit {
+export class SidebarComponent {
+	loggedIn$: Observable<boolean>;
 
-  constructor(private router: Router) { }
-
-  ngOnInit() {
-  }
+	constructor(
+		private authStore: Store<fromAuth.State>
+	) {
+		this.loggedIn$ = this.authStore.pipe(select(fromAuth.selectLoggedIn));
+	}
 
 }

@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { UsersService } from 'src/app/core/openapi/lingua-poly';
 import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import * as fromAuth from 'src/app/auth/reducers';
-import { timingSafeEqual } from 'crypto';
 
 @Component({
 	selector: 'app-header',
@@ -15,10 +13,10 @@ export class HeaderComponent implements OnInit {
 	loggedIn$: Observable<boolean>;
 
 	constructor(
-		private store: Store<fromAuth.State>
+		private authStore: Store<fromAuth.State>
 	) {
-		this.username$ = this.store.pipe(select(fromAuth.selectDisplayName));
-		this.loggedIn$ = this.store.pipe(select(fromAuth.selectLoggedIn));
+		this.username$ = this.authStore.pipe(select(fromAuth.selectDisplayName));
+		this.loggedIn$ = this.authStore.pipe(select(fromAuth.selectLoggedIn));
 	}
 
 	ngOnInit() {
