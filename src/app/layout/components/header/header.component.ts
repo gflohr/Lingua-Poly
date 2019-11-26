@@ -10,7 +10,7 @@ import * as fromAuth from 'src/app/auth/reducers/auth.reducer';
 	styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit {
-	username$: Observable<String> = this.store.select(state => state.user.username);
+	//username$: Observable<String> = this.store.select(state => state.user.username);
 
 	constructor(
 		private usersService: UsersService,

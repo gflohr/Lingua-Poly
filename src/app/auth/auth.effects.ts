@@ -3,8 +3,9 @@ import { createEffect, Actions, ofType } from '@ngrx/effects';
 import { exhaustMap, map, catchError, tap } from 'rxjs/operators';
 import { UsersService } from '../core/openapi/lingua-poly';
 import { of } from 'rxjs';
-import { LoginPageActions, AuthApiActions } from './actions';
+import { LoginPageActions, AuthApiActions, AuthActions } from './actions';
 import { Router } from '@angular/router';
+import { UserActions } from '../core/actions';
 
 @Injectable()
 export class AuthEffects {
@@ -23,6 +24,13 @@ export class AuthEffects {
 		ofType(AuthApiActions.loginSuccess),
 		tap(() => this.router.navigate(['/']))
 	), { dispatch: false });
+
+	// logoutConfirmation$ = TODO
+
+	logoutIdleUser$ = createEffect(() => this.actions$.pipe(
+		ofType(UserActions.idleTimeout),
+		map(() => AuthActions.logout())
+	));
 
 	constructor(
 		private actions$: Actions,
