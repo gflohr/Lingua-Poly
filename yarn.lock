@@ -278,6 +278,13 @@
     lodash "^4.17.13"
     to-fast-properties "^2.0.0"
 
+"@biesbjerg/ngx-translate-extract-marker@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@biesbjerg/ngx-translate-extract-marker/-/ngx-translate-extract-marker-1.0.0.tgz#3c50b5305fb2ffe4826c1473e25e6f746bb31916"
+  integrity sha512-GlCBQKmFE+b+qfIO0aGvuRc4LJVSfK27K2QQFXZLP55/w28iiq/q2CnBS8ya+4l+hapm7U3QPtFoZu9lmbUuew==
+  dependencies:
+    tslib "^1.9.0"
+
 "@biesbjerg/ngx-translate-extract@^4.2.0":
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/@biesbjerg/ngx-translate-extract/-/ngx-translate-extract-4.2.0.tgz#9b55bfc91a20a0da5c177c44e0473a5d20439338"

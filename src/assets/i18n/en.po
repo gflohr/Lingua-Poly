@@ -5,6 +5,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 msgid ""
+"<div *ngIf=\"this.success; then successBlock else errorBlock\"></div>\n"
+"\t\t<ng-template #successBlock translate>Registration completed "
+"successfully!</ng-template>\n"
+"\t\t<ng-template #errorBlock translate>Registration failed!  Most probably\n"
+"\t\t\tthe link from the email has expired.  Please try again!\n"
+"\t\t</ng-template>"
+msgstr ""
+
+msgid ""
 "<h1>Privacy Statement</h1><h2>General</h2>Your personal data (e.g. title, "
 "name, house address, e-mail address, phone number, bank details, credit "
 "card number) are processed by us only in accordance with the provisions of "
@@ -120,6 +129,9 @@ msgid ""
 "disclosures online - http://www.muster-vorlagen.net</a><br/><br/>"
 msgstr ""
 
+msgid "<p>Are you sure to logout?</p>"
+msgstr ""
+
 msgid ""
 "An email with further instructions has been sent to [[email]].\n"
 "Please check your spam folder if the mail does not arrive in\n"
@@ -129,10 +141,13 @@ msgstr ""
 msgid "Analyze text"
 msgstr "Analyze text"
 
-msgid "Data Privacy Statement"
+msgid "Confirmation being sent ..., please wait!"
 msgstr ""
 
-msgid "Disabled"
+msgid "Data Privacy"
+msgstr ""
+
+msgid "Data Privacy Statement"
 msgstr ""
 
 msgid "Disclaimer"
@@ -141,7 +156,13 @@ msgstr ""
 msgid "Email address"
 msgstr ""
 
+msgid "Email address or username"
+msgstr ""
+
 msgid "Enter email"
+msgstr ""
+
+msgid "Enter email or username"
 msgstr ""
 
 msgid "Features"
@@ -150,10 +171,10 @@ msgstr ""
 msgid "Finnish"
 msgstr ""
 
-msgid "Home <span class=\"sr-only\" translate>(current)</span>"
+msgid "Invalid or missing email address."
 msgstr ""
 
-msgid "Invalid or missing email address."
+msgid "Invalid username or password!"
 msgstr ""
 
 msgid "Legal"
@@ -170,10 +191,16 @@ msgid ""
 "languages. Get started by selecting a language on the left."
 msgstr ""
 
-msgid "Link"
+msgid "Login"
 msgstr ""
 
-msgid "Login"
+msgid "Logout"
+msgstr ""
+
+msgid "Missing password."
+msgstr ""
+
+msgid "Missing username or email address."
 msgstr ""
 
 msgid "My Lingua::Poly"
@@ -192,6 +219,9 @@ msgid "Register"
 msgstr ""
 
 msgid "Registration"
+msgstr ""
+
+msgid "Registration Confirmed"
 msgstr ""
 
 msgid "Remember me!"
@@ -215,6 +245,9 @@ msgstr ""
 msgid "Start"
 msgstr "Start"
 
+msgid "Test"
+msgstr ""
+
 msgid "The passwords do not match."
 msgstr ""
 
@@ -222,4 +255,7 @@ msgid "This field is required."
 msgstr ""
 
 msgid "Why register?"
+msgstr ""
+
+msgid "{{ username$ | async }}"
 msgstr ""
