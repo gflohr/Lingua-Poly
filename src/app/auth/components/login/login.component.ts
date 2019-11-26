@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { UserLogin } from 'src/app/core/openapi/lingua-poly';
+import { UserLogin } from '../../../../app/core/openapi/lingua-poly';
 import { Store, select } from '@ngrx/store';
 import * as fromAuth from '../../reducers';
 import { LoginPageActions } from '../../actions';
@@ -31,7 +31,7 @@ export class LoginComponent {
 
 	constructor(
 		private fb: FormBuilder,
-		private store: Store<fromAuth.State>
+		private authStore: Store<fromAuth.State>
 	) {
 	}
 
@@ -49,6 +49,6 @@ export class LoginComponent {
 		} as UserLogin;
 
 		this.submitted.emit(userLogin);
-		this.store.dispatch(LoginPageActions.login({ credentials: userLogin }));
+		this.authStore.dispatch(LoginPageActions.login({ credentials: userLogin }));
 	}
 }
