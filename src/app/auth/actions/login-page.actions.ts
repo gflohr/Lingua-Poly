@@ -3,7 +3,7 @@ import { UserLogin } from '../../core/openapi/lingua-poly';
 
 export class LoginPageActions {
 	static login = createAction(
-		'[Login page] login',
-		props<{ userLogin: UserLogin }>()
+		'[Login page] Login',
+		props<{ credentials: UserLogin }>()
 	);
 }
