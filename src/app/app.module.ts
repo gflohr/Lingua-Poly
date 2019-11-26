@@ -12,6 +12,8 @@ import { AppComponent } from './app.component';
 import { StoreModule } from '@ngrx/store';
 import { StoreRouterConnectingModule, RouterState } from '@ngrx/router-store';
 import { ROOT_REDUCERS } from './app.reducers';
+import { EffectsModule } from '@ngrx/effects';
+import { UserEffects, RouterEffects } from './core/effects';
 
 @NgModule({
   declarations: [
@@ -27,7 +29,8 @@ import { ROOT_REDUCERS } from './app.reducers';
 	StoreModule.forRoot(ROOT_REDUCERS),
 	StoreRouterConnectingModule.forRoot({
 		routerState: RouterState.Minimal
-	})
+	}),
+	EffectsModule.forRoot([UserEffects, RouterEffects]),
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -3,6 +3,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { UserLogin } from 'src/app/core/openapi/lingua-poly';
 import { Store, select } from '@ngrx/store';
 import * as fromAuth from '../../reducers';
+import { LoginPageActions } from '../../actions';
 
 @Component({
 	selector: 'app-login',
@@ -47,5 +48,6 @@ export class LoginComponent {
 		} as UserLogin;
 
 		this.submitted.emit(userLogin);
+		this.store.dispatch(LoginPageActions.login({ credentials: userLogin }));
 	}
 }
