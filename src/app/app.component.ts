@@ -3,35 +3,37 @@ import { TranslateService } from '@ngx-translate/core';
 import { Router, ActivatedRoute, Event, NavigationEnd } from '@angular/router';
 import { applicationConfig } from './app.config';
 
-import { filter } from 'rxjs/operators';
+import * as fromAuth from './auth/reducers';
+import * as fromRoot from './app.reducers';
+import { Store, select } from '@ngrx/store';
+import { Observable } from 'rxjs';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+	selector: 'app-root',
+	templateUrl: './app.component.html',
+	styleUrls: ['./app.component.css']
 })
 
 export class AppComponent implements OnInit, OnDestroy {
-  title = 'app';
-  private sub: any;
+	showSidenav$: Observable<boolean>;
+	loggedIn$: Observable<boolean>;
 
-  constructor(private translate: TranslateService, private router: Router,
-              private route: ActivatedRoute) {
-    translate.setDefaultLang(applicationConfig.defaultLocale);
-    translate.use(applicationConfig.defaultLocale);
+	constructor(
+		private translate: TranslateService,
+		private router: Router,
+		private route: ActivatedRoute,
+		private store: Store<fromRoot.State & fromAuth.State>
+	) {
+		this.translate.setDefaultLang(applicationConfig.defaultLocale);
+		this.translate.use(applicationConfig.defaultLocale);
 
-    this.router.events.pipe(
-      filter((event:Event) => event instanceof NavigationEnd)
-    ).subscribe(x => console.log(x));
-  };
+		this.showSidenav$ = this.store.pipe(select(fromRoot.selecthowSidenav));
+		this.loggedIn$ = this.store.pipe(select(fromAuth.selectLoggedIn));
+	};
 
-  ngOnInit() {
-    this.sub = this.route.params.subscribe(params => {
-       console.log(params);
-    });
-  }
+	ngOnInit() {
+	}
 
-  ngOnDestroy() {
-    this.sub.unsubscribe();
-  }
+	ngOnDestroy() {
+	}
 }

@@ -35,7 +35,7 @@ export const selectLayoutState = createFeatureSelector<State, fromLayout.State>(
 	'layout'
 );
 
-export const selectShowSidenav = createSelector(
+export const selecthowSidenav = createSelector(
 	selectLayoutState,
 	fromLayout.selectShowSidenav
 );

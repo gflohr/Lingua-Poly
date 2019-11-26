@@ -15,6 +15,7 @@ export class RouterEffects {
 				return route;
 			}),
 			mergeMap(route => route.data),
+			// FIXME! We have to get that from somewhere else.
 			map(data => `LinguaPoly - ${data['title']}`),
 			tap(title => this.titleService.setTitle(title))
 		),
