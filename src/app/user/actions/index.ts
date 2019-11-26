@@ -1,3 +1,3 @@
-import { createAction } from "@ngrx/store";
+import * as UserActions from './user.actions';
 
-export const requestProfile = createAction('[Header] Request Profile');
+export { UserActions };

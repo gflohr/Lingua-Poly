@@ -11,8 +11,8 @@ import { LoginPageActions } from '../../actions';
 	styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-	pending$ = this.store.pipe(select(fromAuth.selectLoginPagePending));
-	error$ = this.store.pipe(select(fromAuth.selectLoginPageError));
+	pending$ = this.authStore.pipe(select(fromAuth.selectLoginPagePending));
+	error$ = this.authStore.pipe(select(fromAuth.selectLoginPageError));
 
 	@Input()
 	set pending(isPending: boolean) {
