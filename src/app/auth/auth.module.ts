@@ -8,6 +8,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RegistrationReceivedComponent } from './components/registration-received/registration-received.component';
 import { CoreModule } from '../core/core.module';
 import { RegistrationConfirmedComponent } from './components/registration-confirmed/registration-confirmed.component';
+import { LogoutConfirmationComponent } from './components/logout-confirmation/logout-confirmation.component';
 
 @NgModule({
 	imports: [
@@ -17,6 +18,6 @@ import { RegistrationConfirmedComponent } from './components/registration-confir
 		FormsModule,
 		ReactiveFormsModule
 	],
-	declarations: [LoginComponent, RegistrationComponent, RegistrationReceivedComponent, RegistrationConfirmedComponent]
+	declarations: [LoginComponent, RegistrationComponent, RegistrationReceivedComponent, RegistrationConfirmedComponent, LogoutConfirmationComponent]
 })
 export class AuthModule { }
