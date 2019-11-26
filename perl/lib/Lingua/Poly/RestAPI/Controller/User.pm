@@ -218,11 +218,11 @@ sub login {
 	}) if !check_password $login_data->{password}, $user->password;
 
 	my %user = (
-		# FIXME!
-		email => 'guido.flohr@cantanea.com',
-		username => 'guido',
 		sessionTTL => $self->config->{session}->{timeout},
 	);
+	$user{email} = $user->email if defined $user->email;
+	$user{username} = $user->username if defined $user->username;
+
 	$self->render(openapi => \%user, status => HTTP_OK);
 }
 
