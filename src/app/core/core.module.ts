@@ -12,7 +12,6 @@ import { environment } from 'src/environments/environment';
 import { ApiInterceptorService } from './services/api-interceptor.service';
 import { EffectsModule } from '@ngrx/effects';
 import { UserDomainService } from './services/domain/user.domain.service';
-import { UserActions } from '../user/actions/user.actions';
 import { AuthEffects } from '../auth/auth.effects';
 
 export function HttpLoaderFactory(httpClient: HttpClient) {
@@ -44,7 +43,6 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
 		HttpClient,
 		TranslateService,
 		UserDomainService,
-		UserActions,
 		PasswordValidator,
 		{
 			provide: BASE_PATH, useValue: environment.basePath

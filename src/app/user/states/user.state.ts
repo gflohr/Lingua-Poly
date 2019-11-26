@@ -3,13 +3,13 @@ import { StateInterface, Record } from "../../app.interfaces";
 export interface UserState extends StateInterface {
 	username: string;
 	email: string;
-	validity: number;
-	loggedIn: Date;
+	sessionTTL: number;
+	lastActivity: Date;
 }
 
 export const UserStateRecord = Record({
 	username: null,
 	email: null,
-	validity: 0,
-	loggedIn: null
+	sessionTTL: 0,
+	lastActivity: null
 });

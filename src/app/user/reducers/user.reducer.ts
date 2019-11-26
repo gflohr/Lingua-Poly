@@ -1,6 +1,4 @@
 import { UserStateRecord, UserState } from "../states/user.state";
-import { ReduxAction } from "src/app/core/actions/redux.action";
-import { UserActions } from "../actions/user.actions";
 
 export const initialState = new UserStateRecord();
 
