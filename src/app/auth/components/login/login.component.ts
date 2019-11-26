@@ -15,7 +15,7 @@ export class LoginComponent {
 	error$ = this.store.pipe(select(fromAuth.selectLoginPageError));
 
 	@Input()
-	set pendig(isPending: boolean) {
+	set pending(isPending: boolean) {
 		if (isPending) {
 			this.loginForm.disable();
 		} else {
@@ -24,7 +24,7 @@ export class LoginComponent {
 	}
 
 	@Input()
-	errorMessage: string | null;
+	errorMessage: null;
 
 	@Output()
 	submitted = new EventEmitter<UserLogin>();
@@ -32,7 +32,8 @@ export class LoginComponent {
 	constructor(
 		private fb: FormBuilder,
 		private store: Store<fromAuth.State>
-	) { }
+	) {
+	}
 
 	loginForm = this.fb.group({
 		id: ['', Validators.required],

@@ -9,6 +9,11 @@ import { RegistrationReceivedComponent } from './components/registration-receive
 import { CoreModule } from '../core/core.module';
 import { RegistrationConfirmedComponent } from './components/registration-confirmed/registration-confirmed.component';
 import { LogoutConfirmationComponent } from './components/logout-confirmation/logout-confirmation.component';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+import { AuthEffects } from './auth.effects';
+
+import * as fromAuth from './reducers';
 
 @NgModule({
 	imports: [
@@ -16,7 +21,9 @@ import { LogoutConfirmationComponent } from './components/logout-confirmation/lo
 		RouterModule.forChild(authRoutes),
 		CoreModule,
 		FormsModule,
-		ReactiveFormsModule
+		ReactiveFormsModule,
+		StoreModule.forFeature(fromAuth.authFeatureKey, fromAuth.reducers),
+		EffectsModule.forFeature([AuthEffects])
 	],
 	declarations: [LoginComponent, RegistrationComponent, RegistrationReceivedComponent, RegistrationConfirmedComponent, LogoutConfirmationComponent]
 })

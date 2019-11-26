@@ -4,7 +4,7 @@ import { RegistrationReceivedComponent } from './components/registration-receive
 import { RegistrationConfirmedComponent } from './components/registration-confirmed/registration-confirmed.component';
 
 export const authRoutes = [
-	{ path: 'login', component: LoginComponent },
+	{ path: 'login', component: LoginComponent, data: { title: 'Login' } },
 	{ path: 'registration', component: RegistrationComponent },
 	{
 		path: 'registration/received/:email',

@@ -10,7 +10,7 @@ export class ApiErrorHandlerService {
 	constructor() { }
 
 	handleHttpUnauthorized() {
-		console.log('not authorized');
+		// FIXME! Dispatch logout action.
 	}
 
 	handleError(error: Error, data?: ErrorHandlerDataDTO) {
@@ -21,7 +21,6 @@ export class ApiErrorHandlerService {
 				case 401:
 					return this.handleHttpUnauthorized();
 				default:
-					console.log('Error: ', error);
 					break;
 			}
 		}
