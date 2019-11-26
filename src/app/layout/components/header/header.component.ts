@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { UsersService } from 'src/app/core/openapi/lingua-poly';
 import { Store } from '@ngrx/store';
-import { AppState } from 'src/app/app.interfaces';
 import { Observable } from 'rxjs';
+import * as fromAuth from 'src/app/auth/reducers/auth.reducer';
 
 @Component({
 	selector: 'app-header',
@@ -14,7 +14,7 @@ export class HeaderComponent implements OnInit {
 
 	constructor(
 		private usersService: UsersService,
-		private store: Store<AppState>
+		private store: Store<fromAuth.State>
 	) { }
 
 	ngOnInit() {

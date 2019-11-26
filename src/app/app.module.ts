@@ -10,6 +10,8 @@ import { appRoutes } from './app.routes';
 
 import { AppComponent } from './app.component';
 import { StoreModule } from '@ngrx/store';
+import { StoreRouterConnectingModule, RouterState } from '@ngrx/router-store';
+import { ROOT_REDUCERS } from './app.reducers';
 
 @NgModule({
   declarations: [
@@ -21,7 +23,11 @@ import { StoreModule } from '@ngrx/store';
     AuthModule,
     LayoutModule,
     MainModule,
-	RouterModule.forRoot(appRoutes)
+	RouterModule.forRoot(appRoutes),
+	StoreModule.forRoot(ROOT_REDUCERS),
+	StoreRouterConnectingModule.forRoot({
+		routerState: RouterState.Minimal
+	})
   ],
   providers: [],
   bootstrap: [AppComponent]

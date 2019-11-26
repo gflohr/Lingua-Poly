@@ -33,3 +33,7 @@ export const reducer = createReducer(
 		pending: false,
 	}))
 );
+
+export const getError = (state: State) => state.error;
+export const getPending = (state: State) => state.pending;
+

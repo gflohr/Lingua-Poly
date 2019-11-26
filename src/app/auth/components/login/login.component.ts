@@ -1,8 +1,8 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { UserLogin } from 'src/app/core/openapi/lingua-poly';
-import { Store } from '@ngrx/store';
-import { AppState } from 'src/app/app.interfaces';
+import { Store, select } from '@ngrx/store';
+import * as fromAuth from '../../reducers';
 
 @Component({
 	selector: 'app-login',
@@ -10,6 +10,9 @@ import { AppState } from 'src/app/app.interfaces';
 	styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
+	pending$ = this.store.pipe(select(fromAuth.selectLoginPagePending));
+	error$ = this.store.pipe(select(fromAuth.selectLoginPageError));
+
 	@Input()
 	set pendig(isPending: boolean) {
 		if (isPending) {
@@ -27,7 +30,7 @@ export class LoginComponent {
 
 	constructor(
 		private fb: FormBuilder,
-		private store: Store<AppState>
+		private store: Store<fromAuth.State>
 	) { }
 
 	loginForm = this.fb.group({
