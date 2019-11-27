@@ -31,7 +31,7 @@ use CGI::Cookie;
 use Mojolicious::Plugin::Util::RandomString 0.08;
 use Mojolicious::Plugin::RemoteAddr 0.03;
 
-use Lingua::Poly::Util::String qw(empty);
+use Lingua::Poly::RestAPI::Util qw(empty);
 use Lingua::Poly::RestAPI::Logger;
 use Lingua::Poly::RestAPI::DB;
 use Lingua::Poly::RestAPI::Session;

@@ -16,7 +16,7 @@ use strict;
 
 use DBI;
 
-use Lingua::Poly::Util::String qw(empty);
+use Lingua::Poly::RestAPI::Util qw(empty);
 
 use base 'Lingua::Poly::RestAPI::Logger';
 

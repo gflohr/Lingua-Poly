@@ -17,7 +17,7 @@ use strict;
 use Mojolicious;
 use Mojo::Base 'Lingua::Poly::RestAPI::Logger';
 
-use Lingua::Poly::Util::String qw(empty);
+use Lingua::Poly::RestAPI::Util qw(empty);
 
 sub realm { 'session' }
 

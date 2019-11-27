@@ -27,8 +27,7 @@ use Email::Address 1.912;
 use Email::Simple 2.216;
 use Email::Sender::Simple 1.300031 qw(sendmail);
 
-use Lingua::Poly::Util::String qw(empty);
-use Lingua::Poly::Util::System qw(crypt_password check_password);
+use Lingua::Poly::RestAPI::Util qw(empty crypt_password check_password);
 use Lingua::Poly::RestAPI::Logger;
 use Lingua::Poly::RestAPI::User;
 
