@@ -32,7 +32,7 @@ import { Configuration }                                     from '../configurat
 })
 export class UsersService {
 
-    protected basePath = 'http://127.0.0.1:4200/api/lingua-poly/v1';
+    protected basePath = 'http://127.0.0.1:4200/api/lingua-poly-um/v1';
     public defaultHeaders = new HttpHeaders();
     public configuration = new Configuration();
     public encoder: HttpParameterCodec;
@@ -64,6 +64,7 @@ export class UsersService {
 
         let headers = this.defaultHeaders;
 
+        // authentication (cookieAuth) required
         // to determine the Accept header
         const httpHeaderAccepts: string[] = [
             'application/json'
