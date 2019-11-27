@@ -34,12 +34,16 @@ use Moose;
 
 has 'configuration' => (is => 'ro');
 has 'database' => (is => 'ro');
-has 'logger' => (is => 'ro');
+has 'logger' => (is => 'rw');
 
 my $last_cleanup = 0;
 
+sub realm { 'core' };
+
 sub startup {
 	my ($self) = @_;
+
+	$self->logger($self->log->context($self->logContext));
 
 	$self->moniker('lingua-poly-service-um');
 

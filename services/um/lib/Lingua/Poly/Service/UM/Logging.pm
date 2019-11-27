@@ -16,6 +16,11 @@ use strict;
 
 sub realm { 'general' }
 
+sub logContext {
+	my $realm = shift->realm;
+	return "[$realm]";
+}
+
 sub logger {
 	shift->{_logger};
 }
@@ -23,7 +28,7 @@ sub logger {
 sub debug {
 	my ($self, @messages) = @_;
 
-	$self->logger->debug(@messages);
+	$self->logger->debug($self->realm,  @messages);
 }
 
 sub info {

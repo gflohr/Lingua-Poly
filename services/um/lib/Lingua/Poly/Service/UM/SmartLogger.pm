@@ -17,7 +17,7 @@ use strict;
 use Mojo::Base qw(Mojo::Log);
 
 sub debug {
-	my ($self, @args) = @_;
+	my ($self, $realm, @args) = @_;
 
 	my $level = $self->level;
 
@@ -25,11 +25,10 @@ sub debug {
 
 	my $debug = $ENV{LINGUA_POLY_DEBUG} // 'all';
 	my %debug = map { lc $_ => 1 } split /[ \t:,\|]/, $debug;
-	my $realm = $self->realm;
 
-	return $self if !($debug{all} || $debug{realm});
+	return $self if !($debug{all} || $debug{$realm});
 
-	return $self->debug(@args);
+	return $self->SUPER::debug(@args);
 }
 
 1;

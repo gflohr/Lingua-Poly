@@ -103,6 +103,8 @@ sub new {
 	}, $class;
 
 	my $config = $args{configuration}->{database};
+use Data::Dumper;
+warn Dumper $config;
 
 	my $dbname = $config->{dbname};
 	$self->debug("connecting to database '$dbname' as user '$config->{user}'.");

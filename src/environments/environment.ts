@@ -1,5 +1,5 @@
 export const environment = {
-  basePath:  '/api/lingua-poly/v1',
+  basePath:  '/api/lingua-poly-um/v1',
   production: false,
   APP_VERSION: require('../../package.json').version
 };

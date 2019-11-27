@@ -43,7 +43,7 @@ EOF
 
 	$self->{database} //= {};
 	$self->{database}->{dbname} //= 'lingua-poly-um';
-	$self->{database}->{username} //= '';
+	$self->{database}->{user} //= '';
 
 	$self->{session} //= {};
 	$self->{session}->{timeout} ||= 2 * 60 * 60;

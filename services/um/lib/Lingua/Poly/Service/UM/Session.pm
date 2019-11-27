@@ -21,6 +21,8 @@ use Lingua::Poly::Service::UM::Util qw(empty);
 
 my $logger;
 
+sub realm { 'session' };
+
 sub new {
 	my ($class, %args) = @_;
 
@@ -36,16 +38,12 @@ sub new {
 	$self->debug("initializing");
 
 	my $config = $ctx->config;
-	my $db = $ctx->stash->{db};
+	my $db = $ctx->app->database;
 
 	my $cookie_name = $config->{session}->{cookieName};
 
 	# Check if cookie exists.
 	my $session_id = $ctx->cookie($cookie_name);
-	my $user;
-	if (!empty $session_id) {
-
-	}
 
 	my $random = $ctx->random_string(entropy => 256);
 	$ctx->cookie(id => $random, {

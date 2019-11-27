@@ -36,14 +36,18 @@ sub errorResponse {
 	return $self->render(openapi => { errors => \@errors }, status => $code);
 }
 
+sub realm {
+	my $realm = __PACKAGE__;
+	$realm =~ s/::([^:]+::Controller::.*)/$1/;
+}
+
 sub logger {
 	my ($self) = @_;
 
 	return $self->{_logger} if exists $self->{_logger};
 	my $app = $self->{_ctx}->app;
-	my $realm = __PACKAGE__;
-	$realm =~ s/::([^:]+::Controller::.*)/$1/;
-	return $self->{_logger} = $app->log->context("[$realm]");
+
+	return $self->{_logger} = $app->log->context($self->logContext);
 }
 
 sub fingerprint {
