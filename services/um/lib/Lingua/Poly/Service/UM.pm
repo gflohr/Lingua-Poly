@@ -28,6 +28,7 @@ use Mojolicious::Plugin::Util::RandomString 0.08;
 use Mojolicious::Plugin::RemoteAddr 0.03;
 
 use Lingua::Poly::Service::UM::Util qw(empty);
+use Lingua::Poly::Service::UM::Session;
 
 use Moose;
 
@@ -76,7 +77,7 @@ sub startup {
 		}
 
 		# TODO! Make sure to re-use existing sessions!
-		$c->stash->{session} = Lingua::Poly::RestAPI::Session->new($c);
+		$c->stash->{session} = Lingua::Poly::Service::UM::Session->new($c);
 	});
 
 }

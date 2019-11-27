@@ -102,7 +102,7 @@ sub new {
 		_logger => $args{logger}->context('[db]'),
 	}, $class;
 
-	my $config = $args{configuration};
+	my $config = $args{configuration}->{database};
 
 	my $dbname = $config->{dbname};
 	$self->debug("connecting to database '$dbname' as user '$config->{user}'.");
