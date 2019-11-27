@@ -19,11 +19,18 @@ use Mojo::Base 'Lingua::Poly::Service::UM::Logging';
 
 use Lingua::Poly::Service::UM::Util qw(empty);
 
-sub new {
-	my ($class, $ctx) = @_;
+my $logger;
 
+sub new {
+	my ($class, %args) = @_;
+
+	$logger = $args{context}->app->logger->context('[session]')
+	    if !defined $logger;
+
+	my $ctx = $args{context};
 	my $self = bless {
 		_ctx => $ctx,
+		_logger => $logger,
 	}, $class;
 
 	$self->debug("initializing");

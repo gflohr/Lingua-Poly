@@ -39,6 +39,7 @@ sub errorResponse {
 sub logger {
 	my ($self) = @_;
 
+$DB::single = 1;
 	return $self->{_logger} if exists $self->{_logger};
 	my $app = $self->{_ctx}->app;
 	my $realm = __PACKAGE__;
