@@ -10,22 +10,20 @@
 # to Public License, Version 2, as published by Sam Hocevar. See
 # http://www.wtfpl.net/ for more details.
 
-package Lingua::Poly::RestAPI::Session;
+package Lingua::Poly::Service::UM::Session;
 
 use strict;
 
 use Mojolicious;
-use Mojo::Base 'Lingua::Poly::RestAPI::Logger';
+use Mojo::Base 'Lingua::Poly::Service::UM::Logging';
 
-use Lingua::Poly::RestAPI::Util qw(empty);
-
-sub realm { 'session' }
+use Lingua::Poly::Service::UM::Util qw(empty);
 
 sub new {
 	my ($class, $ctx) = @_;
 
 	my $self = bless {
-		__ctx => $ctx,
+		_ctx => $ctx,
 	}, $class;
 
 	$self->debug("initializing");
@@ -55,6 +53,6 @@ sub new {
 sub app {
 	my ($self) = @_;
 
-	return $self->{__ctx}->app;
+	return $self->{_ctx}->app;
 }
 1;

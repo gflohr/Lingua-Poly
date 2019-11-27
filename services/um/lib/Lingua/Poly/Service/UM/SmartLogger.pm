@@ -10,19 +10,16 @@
 # to Public License, Version 2, as published by Sam Hocevar. See
 # http://www.wtfpl.net/ for more details.
 
-package Lingua::Poly::RestAPI::Logger;
+package Lingua::Poly::Service::UM::SmartLogger;
 
 use strict;
 
-use Mojolicious;
-use Mojo::Base 'Mojo::Log';
-
-sub realm { 'general' }
+use Mojo::Base qw(Mojo::Log);
 
 sub debug {
 	my ($self, @args) = @_;
 
-	my $level = $self->app->log->level;
+	my $level = $self->level;
 
 	return $self if $level ne 'debug';
 
@@ -30,27 +27,9 @@ sub debug {
 	my %debug = map { lc $_ => 1 } split /[ \t:,\|]/, $debug;
 	my $realm = $self->realm;
 
-	if ($debug{all} || $debug{$realm}) {
-		foreach my $arg (@args) {
-			$arg = "[$realm] $arg";
-		}
-	} else {
-		return $self;
-	}
+	return $self if !($debug{all} || $debug{realm});
 
-	return $self->app->log->debug(@args);
-}
-
-sub info {
-	my ($self, @args) = @_;
-
-	return $self->app->log->info(@args);
-}
-
-sub fatal {
-	my ($self, @args) = @_;
-
-	return $self->app->log->fatal(@args);
+	return $self->debug(@args);
 }
 
 1;

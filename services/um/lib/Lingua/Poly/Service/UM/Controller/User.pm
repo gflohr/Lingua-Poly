@@ -10,7 +10,7 @@
 # to Public License, Version 2, as published by Sam Hocevar. See
 # http://www.wtfpl.net/ for more details.
 
-package Lingua::Poly::RestAPI::Controller::User;
+package Lingua::Poly::Service::UM::Controller::User;
 
 use strict;
 
@@ -27,19 +27,16 @@ use Email::Address 1.912;
 use Email::Simple 2.216;
 use Email::Sender::Simple 1.300031 qw(sendmail);
 
-use Lingua::Poly::RestAPI::Util qw(empty crypt_password check_password);
-use Lingua::Poly::RestAPI::Logger;
-use Lingua::Poly::RestAPI::User;
+use Lingua::Poly::Service::UM::Util qw(empty crypt_password check_password);
+use Lingua::Poly::Service::UM::User;
 
 use Mojo::Base "Lingua::Poly::RestAPI::Controller";
-
-sub realm { "user" }
 
 sub create {
 	my $self = shift->openapi->valid_input or return;
 
 	my $userDraft = $self->req->json;
-	my $db = $self->stash->{db};
+	my $db = $self->app->database;
 
 	my @errors;
 

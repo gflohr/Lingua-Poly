@@ -10,11 +10,9 @@
 # to Public License, Version 2, as published by Sam Hocevar. See
 # http://www.wtfpl.net/ for more details.
 
-package Lingua::Poly::RestAPI::User;
+package Lingua::Poly::Service::UM::User;
 
 use strict;
-
-use Lingua::Poly::RestAPI::DB;
 
 sub new {
 	my ($class, $db, $name, $unconfirmed) = @_;

@@ -1,0 +1,87 @@
+#! /usr/bin/env perl
+#
+# Lingua-Poly   Language Disassembling Library
+# Copyright (C) 2018-2019 Guido Flohr <guido.flohr@cantanea.com>
+#               All rights reserved
+#
+# This library is free software. It comes without any warranty, to
+# the extent permitted by applicable law. You can redistribute it
+# and/or modify it under the terms of the Do What the Fuck You Want
+# to Public License, Version 2, as published by Sam Hocevar. See
+# http://www.wtfpl.net/ for more details.
+
+use  strict;
+
+use Mojo::File 'curfile';
+use lib curfile->dirname->sibling('lib')->to_string;
+
+use Bread::Board;
+
+use Lingua::Poly::Service::UM::Util qw(empty);
+
+#use Mojolicious::Commands;
+#Mojolicious::Commands->start_app('Lingua::Poly::Service::UM');
+
+my $basedir = curfile->dirname->dirname;
+
+my $dev = container 'Dev' => as {
+};
+
+my $prod = container 'Prod' => as {
+};
+
+my $c = container 'App' => ['Env'] => as {
+	service 'WebApp' => (
+		class => 'Lingua::Poly::Service::UM',
+		lifecycle => 'Singleton',
+		dependencies => {
+			database => '/Storage/database',
+			configuration => 'Configuration/provider',
+			logger => '/Logging/logger'
+		},
+	);
+
+	container 'Storage' => as {
+		service 'database' => (
+			class => 'Lingua::Poly::Service::UM::DB',
+			lifecycle => 'Singleton',
+			dependencies => {
+				configuration => '/Configuration/provider',
+				logger => '/Logging/logger'
+			}
+		);
+	};
+
+	container 'Configuration' => as {
+		service 'config_file' => $basedir . '/lingua-poly-service-um.yaml';
+		service 'api_prefix' => '/api/lingua-poly/um/v1';
+		service 'provider' => (
+			class => 'Lingua::Poly::Service::UM::Config',
+			lifecycle => 'Singleton',
+			dependencies => {
+				filename => 'config_file',
+				apiPrefix => 'api_prefix',
+			}
+		);
+	};
+
+	container 'Logging' => as {
+		service 'logger' => (
+			class => 'Lingua::Poly::Service::UM::SmartLogger',
+		);
+	}
+};
+
+my $env = do {
+	if (empty $ARGV[0] || $ARGV[0] eq 'dev') {
+		$dev;
+	} elsif ($ARGV[0] eq 'prod') {
+		$prod;
+	} else {
+		die "Unknown environment '$ARGV[0]'";
+	}
+};
+
+my $parametrized_component = $c->create(Env => $env);
+my $app = $parametrized_component->resolve(service => 'WebApp');
+$app->start;

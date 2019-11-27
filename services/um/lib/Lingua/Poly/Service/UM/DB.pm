@@ -10,15 +10,15 @@
 # to Public License, Version 2, as published by Sam Hocevar. See
 # http://www.wtfpl.net/ for more details.
 
-package Lingua::Poly::RestAPI::DB;
+package Lingua::Poly::Service::UM::DB;
 
 use strict;
 
+use Mojo::Base qw(Lingua::Poly::Service::UM::Logging);
+
 use DBI;
 
-use Lingua::Poly::RestAPI::Util qw(empty);
-
-use base 'Lingua::Poly::RestAPI::Logger';
+use Lingua::Poly::Service::UM::Util qw(empty);
 
 use constant STATEMENTS => {
 
@@ -95,17 +95,14 @@ UPDATE sessions
 EOF
 };
 
-sub realm { 'db' };
-
 sub new {
-	my ($class, $app) = @_;
+	my ($class, %args) = @_;
 
-	my $self = {
-		__app => $app
-	};
-	bless $self, $class;
+	my $self = bless {
+		_logger => $args{logger}->context('[db]'),
+	}, $class;
 
-	my $config = $app->config->{database};
+	my $config = $args{configuration};
 
 	my $dbname = $config->{dbname};
 	$self->debug("connecting to database '$dbname' as user '$config->{user}'.");
