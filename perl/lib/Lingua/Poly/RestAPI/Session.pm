@@ -17,10 +17,12 @@ use strict;
 use Mojolicious;
 use Mojo::Base 'Lingua::Poly::RestAPI::Logger';
 
+use Lingua::Poly::Util::String qw(empty);
+
 sub realm { 'session' }
 
 sub new {
-	my ($class, $ctx, $uid) = @_;
+	my ($class, $ctx) = @_;
 
 	my $self = bless {
 		__ctx => $ctx,
@@ -28,7 +30,17 @@ sub new {
 
 	$self->debug("initializing");
 
-	my $cookie = $ctx->cookie('id');
+	my $config = $ctx->config;
+	my $db = $ctx->stash->{db};
+
+	my $cookie_name = $config->{session}->{cookieName};
+
+	# Check if cookie exists.
+	my $session_id = $ctx->cookie($cookie_name);
+	my $user;
+	if (!empty $session_id) {
+
+	}
 
 	my $random = $ctx->random_string(entropy => 256);
 	$ctx->cookie(id => $random, {
@@ -36,8 +48,6 @@ sub new {
 		httponly => 1,
 		secure => $ctx->req->is_secure,
 	});
-
-	my $db = $ctx->stash->{db};
 
 	return $self;
 }
