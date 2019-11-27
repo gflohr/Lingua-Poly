@@ -23,7 +23,7 @@ sub logger {
 sub debug {
 	my ($self, @messages) = @_;
 
-	$self->logger->info(@messages);
+	$self->logger->debug(@messages);
 }
 
 sub info {
