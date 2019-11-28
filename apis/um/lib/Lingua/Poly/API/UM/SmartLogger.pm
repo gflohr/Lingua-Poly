@@ -10,31 +10,25 @@
 # to Public License, Version 2, as published by Sam Hocevar. See
 # http://www.wtfpl.net/ for more details.
 
-package Lingua::Poly::Service::UM::Util;
+package Lingua::Poly::API::UM::SmartLogger;
 
 use strict;
 
-use Password::OWASP::Argon2;
+use Mojo::Base qw(Mojo::Log);
 
-use base qw(Exporter);
+sub debug {
+	my ($self, $realm, @args) = @_;
 
-our @EXPORT_OK = qw(empty crypt_password check_password);
+	my $level = $self->level;
 
-sub empty($) {
-    return if defined $_[0] && length $_[0];
+	return $self if $level ne 'debug';
 
-    return 1;
-}
+	my $debug = $ENV{LINGUA_POLY_DEBUG} // 'all';
+	my %debug = map { lc $_ => 1 } split /[ \t:,\|]/, $debug;
 
-sub crypt_password($) {
-	return Password::OWASP::Argon2->new->crypt_password(shift);
-}
+	return $self if !($debug{all} || $debug{$realm});
 
-sub check_password($$) {
-	my ($cleartext, $digest) = @_;
-
-	return Password::OWASP::Argon2->new->check_password($cleartext, $digest);
+	return $self->SUPER::debug(@args);
 }
 
 1;
-

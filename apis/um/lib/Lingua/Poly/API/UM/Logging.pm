@@ -10,7 +10,7 @@
 # to Public License, Version 2, as published by Sam Hocevar. See
 # http://www.wtfpl.net/ for more details.
 
-package Lingua::Poly::Service::UM::Logging;
+package Lingua::Poly::API::UM::Logging;
 
 use strict;
 

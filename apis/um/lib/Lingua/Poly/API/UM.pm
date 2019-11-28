@@ -10,16 +10,16 @@
 # to Public License, Version 2, as published by Sam Hocevar. See
 # http://www.wtfpl.net/ for more details.
 
-package Lingua::Poly::Service::UM;
+package Lingua::Poly::API::UM;
 
 use strict;
 
-use Mojo::Base ('Mojolicious', 'Lingua::Poly::Service::UM::Logging');
+use Mojo::Base ('Mojolicious', 'Lingua::Poly::API::UM::Logging');
 
 use Time::HiRes qw(gettimeofday);
 use YAML;
 use HTTP::Status qw(:constants);
-use Locale::TextDomain qw(Lingua-Poly-Service-UM);
+use Locale::TextDomain qw(Lingua-Poly-API-UM);
 use Locale::Messages qw(turn_utf_8_off);
 use CGI::Cookie;
 
@@ -27,8 +27,8 @@ use CGI::Cookie;
 use Mojolicious::Plugin::Util::RandomString 0.08;
 use Mojolicious::Plugin::RemoteAddr 0.03;
 
-use Lingua::Poly::Service::UM::Util qw(empty);
-use Lingua::Poly::Service::UM::Session;
+use Lingua::Poly::API::UM::Util qw(empty);
+use Lingua::Poly::API::UM::Session;
 
 use Moose;
 
@@ -81,7 +81,7 @@ sub startup {
 		}
 
 		# TODO! Make sure to re-use existing sessions!
-		$c->stash->{session} = Lingua::Poly::Service::UM::Session->new(context => $c);
+		$c->stash->{session} = Lingua::Poly::API::UM::Session->new(context => $c);
 	});
 
 }

@@ -10,15 +10,15 @@
 # to Public License, Version 2, as published by Sam Hocevar. See
 # http://www.wtfpl.net/ for more details.
 
-package Lingua::Poly::Service::UM::DB;
+package Lingua::Poly::API::UM::DB;
 
 use strict;
 
-use Mojo::Base qw(Lingua::Poly::Service::UM::Logging);
+use Mojo::Base qw(Lingua::Poly::API::UM::Logging);
 
 use DBI;
 
-use Lingua::Poly::Service::UM::Util qw(empty);
+use Lingua::Poly::API::UM::Util qw(empty);
 
 use constant STATEMENTS => {
 

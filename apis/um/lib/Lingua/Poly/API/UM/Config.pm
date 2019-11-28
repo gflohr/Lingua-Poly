@@ -10,14 +10,14 @@
 # to Public License, Version 2, as published by Sam Hocevar. See
 # http://www.wtfpl.net/ for more details.
 
-package Lingua::Poly::Service::UM::Config;
+package Lingua::Poly::API::UM::Config;
 
 use strict;
 
 use YAML::XS;
 use Session::Token 1.503;
 
-use Lingua::Poly::Service::UM::Util qw(empty);
+use Lingua::Poly::API::UM::Util qw(empty);
 
 sub new {
 	my ($class, %args) = @_;
@@ -55,7 +55,7 @@ EOF
 		my @prefix;
 		while (@all) {
 			my $curr = pop @all;
-			last if 'service' eq lc $curr;
+			last if 'api' eq lc $curr;
 			unshift @prefix, lc $curr;
 		}
 		$self->{prefix} = join '/', '', 'api', 'lingua-poly', @prefix, 'v1';

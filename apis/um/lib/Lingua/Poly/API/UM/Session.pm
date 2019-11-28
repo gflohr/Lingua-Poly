@@ -10,14 +10,14 @@
 # to Public License, Version 2, as published by Sam Hocevar. See
 # http://www.wtfpl.net/ for more details.
 
-package Lingua::Poly::Service::UM::Session;
+package Lingua::Poly::API::UM::Session;
 
 use strict;
 
 use Mojolicious;
-use Mojo::Base 'Lingua::Poly::Service::UM::Logging';
+use Mojo::Base 'Lingua::Poly::API::UM::Logging';
 
-use Lingua::Poly::Service::UM::Util qw(empty);
+use Lingua::Poly::API::UM::Util qw(empty);
 
 my $logger;
 

@@ -17,10 +17,10 @@ use lib curfile->dirname->sibling('lib')->to_string;
 
 use Bread::Board;
 
-use Lingua::Poly::Service::UM::Util qw(empty);
+use Lingua::Poly::API::UM::Util qw(empty);
 
 #use Mojolicious::Commands;
-#Mojolicious::Commands->start_app('Lingua::Poly::Service::UM');
+#Mojolicious::Commands->start_app('Lingua::Poly::API::UM');
 
 my $basedir = curfile->dirname->dirname;
 
@@ -32,7 +32,7 @@ my $prod = container 'Prod' => as {
 
 my $c = container 'App' => ['Env'] => as {
 	service 'WebApp' => (
-		class => 'Lingua::Poly::Service::UM',
+		class => 'Lingua::Poly::API::UM',
 		lifecycle => 'Singleton',
 		dependencies => {
 			database => '/Storage/database',
@@ -43,7 +43,7 @@ my $c = container 'App' => ['Env'] => as {
 
 	container 'Storage' => as {
 		service 'database' => (
-			class => 'Lingua::Poly::Service::UM::DB',
+			class => 'Lingua::Poly::API::UM::DB',
 			lifecycle => 'Singleton',
 			dependencies => {
 				configuration => '/Configuration/provider',
@@ -56,7 +56,7 @@ my $c = container 'App' => ['Env'] => as {
 		service 'config_file' => $basedir . '/lingua-poly-service-um.yaml';
 		service 'api_prefix' => '/api/lingua-poly/um/v1';
 		service 'provider' => (
-			class => 'Lingua::Poly::Service::UM::Config',
+			class => 'Lingua::Poly::API::UM::Config',
 			lifecycle => 'Singleton',
 			dependencies => {
 				filename => 'config_file',
@@ -67,7 +67,7 @@ my $c = container 'App' => ['Env'] => as {
 
 	container 'Logging' => as {
 		service 'logger' => (
-			class => 'Lingua::Poly::Service::UM::SmartLogger',
+			class => 'Lingua::Poly::API::UM::SmartLogger',
 		);
 	}
 };
