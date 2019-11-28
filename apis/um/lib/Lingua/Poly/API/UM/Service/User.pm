@@ -16,59 +16,11 @@ use strict;
 
 use base qw(Lingua::Poly::API::UM::Logging);
 
-sub new {
-	my ($class, %args) = @_;
+use Moose;
 
-warn "CONSTRUCTOR!!!!!!!!!!!!!!!!!!!!!!!!!";
-	bless {
-		_logger => $args{logger},
-		__database => $args{database}
-	}, $class;
-}
+has 'logger' => (is => 'ro');
+has 'database' => (is => 'ro');
 
-sub doSomething {
-	return "YskrA";
-}
+__PACKAGE__->meta->make_immutable;
 
 1;
-
-__END__
-
-sub new {
-	my ($class, %args) = @_;
-
-	my $statement = $name =~ /\@/ ?
-		'SELECT_USER_BY_EMAIL' : 'SELECT_USER_BY_USERNAME';
-
-	my @row = $db->getRow($statement => $name) or return;
-	my ($id, $username, $email, $password, $confirmed) = @row;
-
-	return if !$confirmed && !$unconfirmed;
-
-	bless {
-		__id => $id,
-		__username => $username,
-		__email => $email,
-		__password => $password,
-		__confirmed => $confirmed,
-	}, $class;
-}
-
-sub newBySessionID {
-	my ($class, $session_id) = @_;
-
-
-}
-
-sub id { shift->{__id} }
-
-sub username { shift->{__username} }
-
-sub email { shift->{__email} }
-
-sub password { shift->{__password} }
-
-sub confirmed { shift->{__confirmed} }
-
-1;
-

@@ -81,6 +81,8 @@ sub startup {
 			);
 		}
 
+		$self->userService->doSomething;
+
 		# TODO! Make sure to re-use existing sessions!
 		$c->stash->{session} = Lingua::Poly::API::UM::Session->new(context => $c);
 	});
