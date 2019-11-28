@@ -28,7 +28,7 @@ use Email::Simple 2.216;
 use Email::Sender::Simple 1.300031 qw(sendmail);
 
 use Lingua::Poly::API::UM::Util qw(empty crypt_password check_password);
-use Lingua::Poly::API::UM::User;
+use Lingua::Poly::API::UM::Model::User;
 
 use Mojo::Base qw(Lingua::Poly::API::UM::Controller);
 
@@ -62,7 +62,7 @@ sub create {
 	my $renew_request;
 	if (exists $userDraft->{email}) {
 		# Email already taken?
-		my $existing = Lingua::Poly::API::UM::User->new(
+		my $existing = Lingua::Poly::API::UM::Model::User->new(
 			$db, $userDraft->{email}, 1);
 		if ($existing) {
 			if ($existing->confirmed) {
@@ -205,7 +205,7 @@ sub login {
 	my $login_data = $self->req->json;
 	my $db = $self->stash->{db};
 
-	my $user = Lingua::Poly::API::UM::User->new($db, $login_data->{id});
+	my $user = Lingua::Poly::API::UM::Model::User->new($db, $login_data->{id});
 	return $self->errorResponse(HTTP_UNAUTHORIZED, {
 		message => 'invalid username or password'
 	}) if !$user;
