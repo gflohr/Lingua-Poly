@@ -14,9 +14,10 @@ package Lingua::Poly::API::UM::Service::User;
 
 use strict;
 
-use base qw(Lingua::Poly::API::UM::Logging);
-
 use Moose;
+use namespace::autoclean;
+
+use base qw(Lingua::Poly::API::UM::Logging);
 
 has logger => (is => 'ro');
 has database => (is => 'ro');
