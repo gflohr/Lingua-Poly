@@ -203,7 +203,7 @@ sub login {
 	my $self = shift->openapi->valid_input or return;
 
 	my $login_data = $self->req->json;
-	my $db = $self->stash->{db};
+	my $db = $self->app->database;
 
 	my $user = Lingua::Poly::API::UM::Model::User->new($db, $login_data->{id});
 	return $self->errorResponse(HTTP_UNAUTHORIZED, {

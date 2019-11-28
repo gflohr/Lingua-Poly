@@ -35,6 +35,7 @@ use Moose;
 has 'configuration' => (is => 'ro');
 has 'database' => (is => 'ro');
 has 'logger' => (is => 'rw');
+has 'userService' => (is => 'ro');
 
 my $last_cleanup = 0;
 

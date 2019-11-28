@@ -37,7 +37,8 @@ my $c = container 'App' => ['Env'] => as {
 		dependencies => {
 			database => '/Storage/database',
 			configuration => 'Configuration/provider',
-			logger => '/Logging/logger'
+			logger => '/Logging/logger',
+			userService => '/Service/user',
 		},
 	);
 
@@ -61,6 +62,17 @@ my $c = container 'App' => ['Env'] => as {
 			dependencies => {
 				filename => 'config_file',
 				apiPrefix => 'api_prefix',
+			}
+		);
+	};
+
+	container 'Service' => as {
+		service 'user' => (
+			class => 'Lingua::Poly::API::UM::Service::User',
+			lifecycle => 'Singleton',
+			dependencies => {
+				database  => '/Storage/database',
+				logger => '/Logging/logger',
 			}
 		);
 	};
