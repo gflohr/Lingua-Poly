@@ -19,9 +19,6 @@ use Bread::Board;
 
 use Lingua::Poly::API::UM::Util qw(empty);
 
-#use Mojolicious::Commands;
-#Mojolicious::Commands->start_app('Lingua::Poly::API::UM');
-
 my $basedir = curfile->dirname->dirname;
 
 my $dev = container 'Dev' => as {
@@ -30,8 +27,8 @@ my $dev = container 'Dev' => as {
 my $prod = container 'Prod' => as {
 };
 
-my $c = container 'App' => ['Env'] => as {
-	service 'WebApp' => (
+my $c = container App => ['Env'] => as {
+	service WebApp => (
 		class => 'Lingua::Poly::API::UM',
 		lifecycle => 'Singleton',
 		dependencies => {
@@ -43,8 +40,8 @@ my $c = container 'App' => ['Env'] => as {
 		},
 	);
 
-	container 'Storage' => as {
-		service 'database' => (
+	container Storage => as {
+		service database => (
 			class => 'Lingua::Poly::API::UM::DB',
 			lifecycle => 'Singleton',
 			dependencies => {
@@ -54,10 +51,11 @@ my $c = container 'App' => ['Env'] => as {
 		);
 	};
 
-	container 'Configuration' => as {
-		service 'config_file' => $basedir . '/lingua-poly-service-um.yaml';
-		service 'api_prefix' => '/api/lingua-poly/um/v1';
-		service 'provider' => (
+	# FIXME! This should be a regular service.
+	container Configuration => as {
+		service config_file => $basedir . '/lingua-poly-service-um.yaml';
+		service api_prefix => '/api/lingua-poly/um/v1';
+		service provider => (
 			class => 'Lingua::Poly::API::UM::Config',
 			lifecycle => 'Singleton',
 			dependencies => {
@@ -67,8 +65,8 @@ my $c = container 'App' => ['Env'] => as {
 		);
 	};
 
-	container 'Service' => as {
-		service 'user' => (
+	container Service => as {
+		service user => (
 			class => 'Lingua::Poly::API::UM::Service::User',
 			lifecycle => 'Singleton',
 			dependencies => {
@@ -76,7 +74,7 @@ my $c = container 'App' => ['Env'] => as {
 				logger => '/Logging/logger',
 			}
 		);
-		service 'session' => (
+		service session => (
 			class => 'Lingua::Poly::API::UM::Service::Session',
 			lifecycle => 'Singleton',
 			dependencies => {
@@ -87,7 +85,7 @@ my $c = container 'App' => ['Env'] => as {
 		);
 	};
 
-	container 'Logging' => as {
+	container Logging => as {
 		service 'logger' => (
 			class => 'Lingua::Poly::API::UM::SmartLogger',
 		);

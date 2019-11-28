@@ -18,8 +18,8 @@ use base qw(Lingua::Poly::API::UM::Logging);
 
 use Moose;
 
-has 'logger' => (is => 'ro');
-has 'database' => (is => 'ro');
+has logger => (is => 'ro');
+has database => (is => 'ro');
 
 __PACKAGE__->meta->make_immutable;
 

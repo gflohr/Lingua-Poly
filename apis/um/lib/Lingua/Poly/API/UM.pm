@@ -32,11 +32,11 @@ use Lingua::Poly::API::UM::Session;
 
 use Moose;
 
-has 'configuration' => (is => 'ro');
-has 'database' => (is => 'ro');
-has 'logger' => (is => 'rw');
-has 'userService' => (is => 'ro');
-has 'sessionService' => (is => 'ro');
+has configuration => (is => 'ro');
+has database => (is => 'ro');
+has logger => (is => 'rw');
+has userService => (is => 'ro');
+has sessionService => (is => 'ro');
 
 my $last_cleanup = 0;
 
@@ -81,8 +81,6 @@ sub startup {
 				[ DELETE_TOKEN_STALE => $config->{session}->{timeout} ],
 			);
 		}
-
-		$self->userService->doSomething;
 
 		# TODO! Make sure to re-use existing sessions!
 		$c->stash->{session} = Lingua::Poly::API::UM::Session->new(context => $c);
