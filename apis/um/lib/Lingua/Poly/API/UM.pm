@@ -36,6 +36,7 @@ has 'configuration' => (is => 'ro');
 has 'database' => (is => 'ro');
 has 'logger' => (is => 'rw');
 has 'userService' => (is => 'ro');
+has 'sessionService' => (is => 'ro');
 
 my $last_cleanup = 0;
 

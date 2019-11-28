@@ -39,6 +39,7 @@ my $c = container 'App' => ['Env'] => as {
 			configuration => 'Configuration/provider',
 			logger => '/Logging/logger',
 			userService => '/Service/user',
+			sessionService => '/Service/session',
 		},
 	);
 
@@ -71,6 +72,15 @@ my $c = container 'App' => ['Env'] => as {
 			class => 'Lingua::Poly::API::UM::Service::User',
 			lifecycle => 'Singleton',
 			dependencies => {
+				database  => '/Storage/database',
+				logger => '/Logging/logger',
+			}
+		);
+		service 'session' => (
+			class => 'Lingua::Poly::API::UM::Service::Session',
+			lifecycle => 'Singleton',
+			dependencies => {
+				userService => 'user',
 				database  => '/Storage/database',
 				logger => '/Logging/logger',
 			}
