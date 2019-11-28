@@ -55,10 +55,4 @@ sub new {
 	return $self;
 }
 
-sub app {
-	my ($self) = @_;
-
-	return $self->{_ctx}->app;
-}
-
 1;
