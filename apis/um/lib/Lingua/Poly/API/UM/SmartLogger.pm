@@ -16,11 +16,14 @@ use strict;
 
 use base qw(Mojo::Log);
 
+use Lingua::Poly::API::UM::Util qw(empty);
+
 sub new {
 	my ($class, %args) = @_;
 
 	return $class if ref $class;
 
+	# FIXME! Set log level!
 	my $self = Mojo::Log->new->context("[$args{realm}]");
 
 	bless $self, $class;
@@ -35,7 +38,9 @@ sub debug {
 
 	# FIXME! The default should be derived from the debugging level but not
 	# hard-coded.
-	my $debug = $ENV{LINGUA_POLY_DEBUG} // 'all';
+	my $debug = $ENV{LINGUA_POLY_UM_DEBUG};
+	return $self if empty $debug;
+
 	my %debug = map { lc $_ => 1 } split /[ \t:,\|]/, $debug;
 
 	if (!($debug{all})) {

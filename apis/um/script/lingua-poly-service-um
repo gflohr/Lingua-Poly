@@ -99,6 +99,7 @@ my $c = container App => ['Env'] => as {
 my $env = do {
 	if (empty $ARGV[0] || $ARGV[0] eq 'dev') {
 		$dev;
+		$ENV{LINGUA_POLY_UM_DEBUG} //= 'all';
 	} elsif ($ARGV[0] eq 'prod') {
 		$prod;
 	} else {
