@@ -35,14 +35,14 @@ my $c = container App => ['Env'] => as {
 			database => '/Storage/database',
 			configuration => 'Configuration/provider',
 			logger => { '/Logging/logger' => { realm => 'core' } },
-			userService => '/Service/user',
-			sessionService => '/Service/session',
+			userService => '/User/user',
+			sessionService => '/User/session',
 		},
 	);
 
 	container Storage => as {
 		service database => (
-			class => 'Lingua::Poly::API::UM::DB',
+			class => 'Lingua::Poly::API::UM::Service::Database',
 			lifecycle => 'Singleton',
 			dependencies => {
 				configuration => '/Configuration/provider',
@@ -65,7 +65,7 @@ my $c = container App => ['Env'] => as {
 		);
 	};
 
-	container Service => as {
+	container User => as {
 		service user => (
 			class => 'Lingua::Poly::API::UM::Service::User',
 			lifecycle => 'Singleton',
@@ -98,8 +98,8 @@ my $c = container App => ['Env'] => as {
 
 my $env = do {
 	if (empty $ARGV[0] || $ARGV[0] eq 'dev') {
+		$ENV{LINGUA_POLY_UM_DEBUG} = 'all' if !exists $ENV{LINGUA_POLY_UM_DEBUG};
 		$dev;
-		$ENV{LINGUA_POLY_UM_DEBUG} //= 'all';
 	} elsif ($ARGV[0] eq 'prod') {
 		$prod;
 	} else {
