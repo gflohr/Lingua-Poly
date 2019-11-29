@@ -21,6 +21,29 @@ use base qw(Lingua::Poly::API::UM::Logging);
 
 has logger => (is => 'ro');
 has database => (is => 'ro');
+has configuration => (is => 'ro');
+has userService => (is => 'ro');
+
+my $last_cleanup = 0;
+
+sub maintain {
+	my ($self) = @_;
+
+	# Clean-up at most once per second.
+	my $now = time;
+	return $self if $now <= $last_cleanup;
+
+	my $config = $self->configuration;
+
+	$last_cleanup = $now;
+	$self->database->transaction(
+		[ DELETE_USER_STALE => $config->{session}->{timeout} ],
+		[ DELETE_SESSION_STALE => $config->{session}->{timeout} ],
+		[ DELETE_TOKEN_STALE => $config->{session}->{timeout} ],
+	);
+
+	return $self;
+}
 
 __PACKAGE__->meta->make_immutable;
 

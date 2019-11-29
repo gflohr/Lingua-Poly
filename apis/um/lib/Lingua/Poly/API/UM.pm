@@ -38,8 +38,6 @@ has logger => (is => 'rw');
 has userService => (is => 'ro');
 has sessionService => (is => 'ro');
 
-my $last_cleanup = 0;
-
 sub realm { 'core' };
 
 sub startup {
@@ -72,15 +70,7 @@ sub startup {
 	$self->hook(before_dispatch => sub {
 		my ($c) = @_;
 
-		my $now = time;
-		if ($now != $last_cleanup) {
-			$last_cleanup = $now;
-			$self->database->transaction(
-				[ DELETE_USER_STALE => $config->{session}->{timeout} ],
-				[ DELETE_SESSION_STALE => $config->{session}->{timeout} ],
-				[ DELETE_TOKEN_STALE => $config->{session}->{timeout} ],
-			);
-		}
+		$self->sessionService->maintain;
 
 		# TODO! Make sure to re-use existing sessions!
 		$c->stash->{session} = Lingua::Poly::API::UM::Session->new(context => $c);

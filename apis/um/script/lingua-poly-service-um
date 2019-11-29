@@ -81,6 +81,7 @@ my $c = container App => ['Env'] => as {
 				userService => 'user',
 				database  => '/Storage/database',
 				logger => '/Logging/logger',
+				configuration => '/Configuration/provider',
 			}
 		);
 	};
