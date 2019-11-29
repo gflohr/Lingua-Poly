@@ -14,11 +14,14 @@ package Lingua::Poly::API::UM::Service::Database;
 
 use strict;
 
-use Mojo::Base qw(Lingua::Poly::API::UM::Logging);
+use Moose;
+use namespace::autoclean;
 
 use DBI;
 
 use Lingua::Poly::API::UM::Util qw(empty);
+
+use base qw(Lingua::Poly::API::UM::Logging);
 
 use constant STATEMENTS => {
 
@@ -95,14 +98,13 @@ UPDATE sessions
 EOF
 };
 
-sub new {
-	my ($class, %args) = @_;
+has configuration => (is => 'ro');
+has logger => (is => 'ro');
+has _dbh => (is => 'rw', init_arg => undef);
 
-	my $self = bless {
-		_logger => $args{logger}->context('[db]'),
-	}, $class;
-
-	my $config = $args{configuration}->{database};
+sub BUILD {
+	my ($self) = @_;
+	my $config = $self->configuration->{database};
 
 	my $dbname = $config->{dbname};
 	$self->debug("connecting to database '$dbname' as user '$config->{user}'.");
@@ -116,38 +118,35 @@ sub new {
 	};
 	$self->fatal($@) if $@;
 
+	$self->_dbh($dbh);
+
+	$self->{__sth} = {};
 	while(my ($name, $sql) =  each %{STATEMENTS()}) {
 		$self->debug("Preparing statement $name.");
 		$self->{__sth}->{$name} = $dbh->prepare($sql);
 	}
 
-	$self->{__dbh} = $dbh;
-
 	return $self;
 }
 
-sub app {
-	shift->{__app};
-}
-
 sub commit {
-	shift->{__dbh}->commit;
+	shift->_dbh->commit;
 }
 
 sub rollback {
-	shift->{__dbh}->rollback;
+	shift->_dbh->rollback;
 }
 
 sub lastInsertId {
 	my ($self, $table) = @_;
-	shift->{__dbh}->last_insert_id(undef, undef, $table);
+	shift->_dbh->last_insert_id(undef, undef, $table);
 }
 
 sub finalize {
 	my ($self) = @_;
 
-	if ($self->{__dbh}->{ActiveKids}) {
-		$self->{__dbh}->rollback;
+	if ($self->_dbh->{ActiveKids}) {
+		$self->_dbh->rollback;
 	}
 
 	return $self;
@@ -171,7 +170,7 @@ sub getIterator {
 	if (1) {
 		my $sql = STATEMENTS()->{$statement};
 		my @params = @args;
-		$sql =~ s/\?/$self->{__dbh}->quote(shift @params)/ge;
+		$sql =~ s/\?/$self->_dbh->quote(shift @params)/ge;
 		$self->debug("Execute $statement:\n" . $sql);
 	}
 	$sth->execute(@args);
@@ -198,12 +197,12 @@ sub transaction {
 	foreach my $spec (@statements) {
 		my ($statement, @args) = @$spec;
 		if (!$self->execute($statement, @args)) {
-			$self->{__dbh}->rollback;
+			$self->_dbh->rollback;
 			return;
 		}
 	}
 
-	$self->{__dbh}->commit;
+	$self->_dbh->commit;
 
 	return $self;
 }
@@ -211,7 +210,7 @@ sub transaction {
 sub statement {
 	my ($self, $sql, @args) = @_;
 
-	my $dbh = $self->{__dbh};
+	my $dbh = $self->_dbh;
 
 	if (1) {
 		my @quoted_args = map { $dbh->quote($_) } @args;
@@ -228,6 +227,8 @@ sub statement {
 
 	return $sth;
 }
+
+__PACKAGE__->meta->make_immutable;
 
 1;
 
