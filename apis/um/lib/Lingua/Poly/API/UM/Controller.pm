@@ -36,6 +36,7 @@ sub errorResponse {
 	return $self->render(openapi => { errors => \@errors }, status => $code);
 }
 
+# FIXME! Inline where needed!
 sub realm {
 	my $realm = __PACKAGE__;
 	$realm =~ s/::([^:]+::Controller::.*)/$1/;
@@ -47,7 +48,8 @@ sub logger {
 	return $self->{_logger} if exists $self->{_logger};
 	my $app = $self->{_ctx}->app;
 
-	return $self->{_logger} = $app->log->context($self->logContext);
+	# FIXME! Can we use the SmartLogger constructor here?
+	return $self->{_logger} = $app->log->context('[FIXME! Controller base class!]');
 }
 
 sub fingerprint {

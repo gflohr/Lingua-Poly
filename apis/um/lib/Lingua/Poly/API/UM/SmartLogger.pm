@@ -14,19 +14,35 @@ package Lingua::Poly::API::UM::SmartLogger;
 
 use strict;
 
-use Mojo::Base qw(Mojo::Log);
+use base qw(Mojo::Log);
+
+sub new {
+	my ($class, %args) = @_;
+
+	return $class if ref $class;
+
+	my $self = Mojo::Log->new->context("[$args{realm}]");
+
+	bless $self, $class;
+}
 
 sub debug {
-	my ($self, $realm, @args) = @_;
+	my ($self, @args) = @_;
 
 	my $level = $self->level;
 
 	return $self if $level ne 'debug';
 
+	# FIXME! The default should be derived from the debugging level but not
+	# hard-coded.
 	my $debug = $ENV{LINGUA_POLY_DEBUG} // 'all';
 	my %debug = map { lc $_ => 1 } split /[ \t:,\|]/, $debug;
 
-	return $self if !($debug{all} || $debug{$realm});
+	if (!($debug{all})) {
+		my $realm = $self->context;
+		$realm =~ s/.(.*).$/$1/;
+		return $self if !$debug{$realm};
+	}
 
 	return $self->SUPER::debug(@args);
 }

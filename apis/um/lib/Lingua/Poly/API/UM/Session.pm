@@ -21,8 +21,6 @@ use Lingua::Poly::API::UM::Util qw(empty);
 
 my $logger;
 
-sub realm { 'session' };
-
 sub new {
 	my ($class, %args) = @_;
 

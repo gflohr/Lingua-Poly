@@ -38,12 +38,8 @@ has logger => (is => 'rw');
 has userService => (is => 'ro');
 has sessionService => (is => 'ro');
 
-sub realm { 'core' };
-
 sub startup {
 	my ($self) = @_;
-
-	$self->logger($self->log->context($self->logContext));
 
 	$self->moniker('lingua-poly-service-um');
 

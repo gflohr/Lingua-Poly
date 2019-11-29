@@ -26,12 +26,16 @@ has userService => (is => 'ro');
 
 my $last_cleanup = 0;
 
+sub realm { 'session' }
+
 sub maintain {
 	my ($self) = @_;
 
 	# Clean-up at most once per second.
 	my $now = time;
 	return $self if $now <= $last_cleanup;
+
+	$self->info('doing maintainance');
 
 	my $config = $self->configuration;
 
@@ -43,6 +47,12 @@ sub maintain {
 	);
 
 	return $self;
+}
+
+sub lookup {
+	my ($self, $id) = @_;
+
+
 }
 
 __PACKAGE__->meta->make_immutable;

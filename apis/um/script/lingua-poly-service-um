@@ -34,7 +34,7 @@ my $c = container App => ['Env'] => as {
 		dependencies => {
 			database => '/Storage/database',
 			configuration => 'Configuration/provider',
-			logger => '/Logging/logger',
+			logger => { '/Logging/logger' => { realm => 'core' } },
 			userService => '/Service/user',
 			sessionService => '/Service/session',
 		},
@@ -46,7 +46,7 @@ my $c = container App => ['Env'] => as {
 			lifecycle => 'Singleton',
 			dependencies => {
 				configuration => '/Configuration/provider',
-				logger => '/Logging/logger'
+				logger => { '/Logging/logger' => { realm => 'database' } },
 			}
 		);
 	};
@@ -71,7 +71,7 @@ my $c = container App => ['Env'] => as {
 			lifecycle => 'Singleton',
 			dependencies => {
 				database  => '/Storage/database',
-				logger => '/Logging/logger',
+				llogger => { '/Logging/logger' => { realm => 'user' } },
 			}
 		);
 		service session => (
@@ -80,7 +80,7 @@ my $c = container App => ['Env'] => as {
 			dependencies => {
 				userService => 'user',
 				database  => '/Storage/database',
-				logger => '/Logging/logger',
+				logger => { '/Logging/logger' => { realm => 'session' } },
 				configuration => '/Configuration/provider',
 			}
 		);
@@ -89,6 +89,9 @@ my $c = container App => ['Env'] => as {
 	container Logging => as {
 		service 'logger' => (
 			class => 'Lingua::Poly::API::UM::SmartLogger',
+			parameters => {
+				realm => { isa => 'Str' }
+			}
 		);
 	}
 };
