@@ -47,8 +47,22 @@ my $c = container App => ['Env'] => as {
 			dependencies => {
 				configuration => '/Configuration/provider',
 				logger => { '/Logging/logger' => { realm => 'database' } },
+				preparer => 'preparer'
 			}
 		);
+		service preparer => (
+			class => 'Lingua::Poly::API::UM::Service::Database::Preparer',
+			lifecycle => 'Singleton',
+			dependencies => {
+				statements => 'statements',
+				database => 'database',
+				logger => { '/Logging/logger' => { realm => 'database' } },
+			},
+		);
+		service statements =>  (
+			class => 'Lingua::Poly::API::UM::Service::Database::Statements',
+			lifecycle => 'Singleton',
+		)
 	};
 
 	# FIXME! This should be a regular service.

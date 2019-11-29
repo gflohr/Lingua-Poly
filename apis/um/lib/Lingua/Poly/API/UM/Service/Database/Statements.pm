@@ -14,101 +14,82 @@ package Lingua::Poly::API::UM::Service::Database::Statements;
 
 use strict;
 
-use DBI;
 
-use Moose;
-use namespace::autoclean;
-
-use base qw(Lingua::Poly::API::UM::Logging);
-
-has logger => (is => 'ro');
-has statements => (isa => 'HashRef', is => 'rw', default => sub {{}});
-has database => (is => 'ro');
-
-use constant STATEMENTS => {
-	DELETE_SESSION => <<EOF,
+sub new {
+	bless {
+		DELETE_SESSION => <<EOF,
 DELETE FROM sessions
   WHERE sid = ?
 EOF
-	DELETE_SESSION_STALE => <<EOF,
+		DELETE_SESSION_STALE => <<EOF,
 DELETE FROM sessions
   WHERE EXTRACT(EPOCH FROM(NOW() - last_seen)) > ?
 EOF
-	SELECT_SESSION_INFO => <<EOF,
+		SELECT_SESSION_INFO => <<EOF,
 SELECT user_id, EXTRACT(EPOCH FROM(NOW() - last_seen)), fingerprint FROM sessions
   WHERE sid = ?
 EOF
-	DELETE_TOKEN_STALE => <<EOF,
+		DELETE_TOKEN_STALE => <<EOF,
 DELETE FROM tokens
   WHERE EXTRACT(EPOCH FROM(NOW() - created)) > ?
 EOF
-	INSERT_TOKEN => <<EOF,
+		INSERT_TOKEN => <<EOF,
 INSERT INTO tokens(token, purpose, user_id)
   VALUES(?, ?, ?)
 EOF
-	UPDATE_TOKEN => <<EOF,
+		UPDATE_TOKEN => <<EOF,
 UPDATE tokens SET created = NOW()
   WHERE tokens.purpose = ?
     AND tokens.user_id = (SELECT id FROM users WHERE email = ? AND NOT confirmed)
 EOF
-	DELETE_TOKEN => <<EOF,
+		DELETE_TOKEN => <<EOF,
 DELETE FROM tokens WHERE token = ?
 EOF
-	SELECT_TOKEN => <<EOF,
+		SELECT_TOKEN => <<EOF,
 SELECT u.id, u.username, u.email FROM tokens t, users u
   WHERE t.purpose = ?
     AND t.token = ?
 	AND t.user_id = u.id
 	AND NOT u.confirmed
 EOF
-	SELECT_TOKEN_BY_PURPOSE => <<EOF,
+		SELECT_TOKEN_BY_PURPOSE => <<EOF,
 SELECT t.token FROM tokens t, users u
   WHERE t.purpose = ?
     AND u.email = ?
     AND t.user_id = u.id
 	AND NOT u.confirmed
 EOF
-	INSERT_USER => <<EOF,
+		INSERT_USER => <<EOF,
 INSERT INTO users(email, password) VALUES(?, ?)
 EOF
-	DELETE_USER_STALE => <<EOF,
+		DELETE_USER_STALE => <<EOF,
 DELETE FROM users u
   USING tokens t
   WHERE NOT u.confirmed
     AND u.id = t.user_id
 	AND EXTRACT(EPOCH FROM(NOW() - t.created)) > ?
 EOF
-	SELECT_USER_BY_ID => <<EOF,
+		SELECT_USER_BY_ID => <<EOF,
 SELECT id, username, email, password, confirmed FROM users WHERE id = ?
 EOF
-	SELECT_USER_BY_USERNAME => <<EOF,
+		SELECT_USER_BY_USERNAME => <<EOF,
 SELECT id, username, email, password, confirmed FROM users WHERE username = ?
 EOF
-	SELECT_USER_BY_EMAIL => <<EOF,
+		SELECT_USER_BY_EMAIL => <<EOF,
 SELECT id, username, email, password, confirmed FROM users WHERE email = ?
 EOF
-	UPDATE_USER_ACTIVATE => <<EOF,
+		UPDATE_USER_ACTIVATE => <<EOF,
 UPDATE users
    SET confirmed = 't'
  WHERE id = ?
 EOF
-	UPDATE_SESSION => <<EOF,
+		UPDATE_SESSION => <<EOF,
 UPDATE sessions
    SET last_seen = NOW()
  WHERE sid = ?
 EOF
+	}, shift;
 };
-
-sub get {
-	my ($self, $name) = @_;
-
-	my $statements = $self->statements;
-	return $statements->{$name} if exists $statements->{$name};
-
-	die $self->database;
-}
-
-__PACKAGE__->meta->make_immutable;
 
 1;
 

@@ -23,84 +23,10 @@ use Lingua::Poly::API::UM::Util qw(empty);
 
 use base qw(Lingua::Poly::API::UM::Logging);
 
-use constant STATEMENTS => {
-
-	DELETE_SESSION => <<EOF,
-DELETE FROM sessions
-  WHERE sid = ?
-EOF
-	DELETE_SESSION_STALE => <<EOF,
-DELETE FROM sessions
-  WHERE EXTRACT(EPOCH FROM(NOW() - last_seen)) > ?
-EOF
-	SELECT_SESSION_INFO => <<EOF,
-SELECT user_id, EXTRACT(EPOCH FROM(NOW() - last_seen)), fingerprint FROM sessions
-  WHERE sid = ?
-EOF
-	DELETE_TOKEN_STALE => <<EOF,
-DELETE FROM tokens
-  WHERE EXTRACT(EPOCH FROM(NOW() - created)) > ?
-EOF
-	INSERT_TOKEN => <<EOF,
-INSERT INTO tokens(token, purpose, user_id)
-  VALUES(?, ?, ?)
-EOF
-	UPDATE_TOKEN => <<EOF,
-UPDATE tokens SET created = NOW()
-  WHERE tokens.purpose = ?
-    AND tokens.user_id = (SELECT id FROM users WHERE email = ? AND NOT confirmed)
-EOF
-	DELETE_TOKEN => <<EOF,
-DELETE FROM tokens WHERE token = ?
-EOF
-	SELECT_TOKEN => <<EOF,
-SELECT u.id, u.username, u.email FROM tokens t, users u
-  WHERE t.purpose = ?
-    AND t.token = ?
-	AND t.user_id = u.id
-	AND NOT u.confirmed
-EOF
-	SELECT_TOKEN_BY_PURPOSE => <<EOF,
-SELECT t.token FROM tokens t, users u
-  WHERE t.purpose = ?
-    AND u.email = ?
-    AND t.user_id = u.id
-	AND NOT u.confirmed
-EOF
-	INSERT_USER => <<EOF,
-INSERT INTO users(email, password) VALUES(?, ?)
-EOF
-	DELETE_USER_STALE => <<EOF,
-DELETE FROM users u
-  USING tokens t
-  WHERE NOT u.confirmed
-    AND u.id = t.user_id
-	AND EXTRACT(EPOCH FROM(NOW() - t.created)) > ?
-EOF
-	SELECT_USER_BY_ID => <<EOF,
-SELECT id, username, email, password, confirmed FROM users WHERE id = ?
-EOF
-	SELECT_USER_BY_USERNAME => <<EOF,
-SELECT id, username, email, password, confirmed FROM users WHERE username = ?
-EOF
-	SELECT_USER_BY_EMAIL => <<EOF,
-SELECT id, username, email, password, confirmed FROM users WHERE email = ?
-EOF
-	UPDATE_USER_ACTIVATE => <<EOF,
-UPDATE users
-   SET confirmed = 't'
- WHERE id = ?
-EOF
-	UPDATE_SESSION => <<EOF,
-UPDATE sessions
-   SET last_seen = NOW()
- WHERE sid = ?
-EOF
-};
-
 has configuration => (is => 'ro');
 has logger => (is => 'ro');
-has _dbh => (is => 'rw', init_arg => undef);
+has preparer => (is => 'ro');
+has dbh => (is => 'rw', init_arg => undef);
 
 sub BUILD {
 	my ($self) = @_;
@@ -118,35 +44,29 @@ sub BUILD {
 	};
 	$self->fatal($@) if $@;
 
-	$self->_dbh($dbh);
-
-	$self->{__sth} = {};
-	while(my ($name, $sql) =  each %{STATEMENTS()}) {
-		$self->debug("Preparing statement $name.");
-		$self->{__sth}->{$name} = $dbh->prepare($sql);
-	}
+	$self->dbh($dbh);
 
 	return $self;
 }
 
 sub commit {
-	shift->_dbh->commit;
+	shift->dbh->commit;
 }
 
 sub rollback {
-	shift->_dbh->rollback;
+	shift->dbh->rollback;
 }
 
 sub lastInsertId {
 	my ($self, $table) = @_;
-	shift->_dbh->last_insert_id(undef, undef, $table);
+	shift->dbh->last_insert_id(undef, undef, $table);
 }
 
 sub finalize {
 	my ($self) = @_;
 
-	if ($self->_dbh->{ActiveKids}) {
-		$self->_dbh->rollback;
+	if ($self->dbh->{ActiveKids}) {
+		$self->dbh->rollback;
 	}
 
 	return $self;
@@ -164,13 +84,11 @@ sub execute {
 sub getIterator {
 	my ($self, $statement, @args) = @_;
 
-	my $sth = $self->{__sth}->{$statement}
-		or $self->fatal("Undefined SQL statement '$statement'.");
+	my ($sql, $sth) = $self->preparer->get($statement);
 
 	if (1) {
-		my $sql = STATEMENTS()->{$statement};
 		my @params = @args;
-		$sql =~ s/\?/$self->_dbh->quote(shift @params)/ge;
+		$sql =~ s/\?/$self->dbh->quote(shift @params)/ge;
 		$self->debug("Execute $statement:\n" . $sql);
 	}
 	$sth->execute(@args);
@@ -197,35 +115,14 @@ sub transaction {
 	foreach my $spec (@statements) {
 		my ($statement, @args) = @$spec;
 		if (!$self->execute($statement, @args)) {
-			$self->_dbh->rollback;
+			$self->dbh->rollback;
 			return;
 		}
 	}
 
-	$self->_dbh->commit;
+	$self->dbh->commit;
 
 	return $self;
-}
-
-sub statement {
-	my ($self, $sql, @args) = @_;
-
-	my $dbh = $self->_dbh;
-
-	if (1) {
-		my @quoted_args = map { $dbh->quote($_) } @args;
-		my $pretty_sql = $sql;
-		$pretty_sql =~ s/\?/shift @quoted_args/ge;
-		$pretty_sql =~ s/\n/ /g;
-		$pretty_sql =~ s/  +/ /g;
-		$self->debug("Executing one shot statement:\n$pretty_sql");
-	}
-
-	my $sth = $dbh->prepare($sql);
-
-	$sth->execute(@args);
-
-	return $sth;
 }
 
 __PACKAGE__->meta->make_immutable;
