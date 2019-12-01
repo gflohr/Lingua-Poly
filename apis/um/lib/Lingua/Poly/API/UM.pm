@@ -27,7 +27,12 @@ use CGI::Cookie;
 use Mojolicious::Plugin::Util::RandomString 0.08;
 use Mojolicious::Plugin::RemoteAddr 0.03;
 
-use Lingua::Poly::API::UM::Util qw(empty format_headers format_request_line);
+use Lingua::Poly::API::UM::Util qw(
+	empty
+	format_headers
+	format_request_line
+	format_response_line
+);
 
 use Moose;
 
@@ -92,7 +97,10 @@ sub __afterDispatch {
 		if $session;
 
 	# This must come last in the after_dispatch hook.
+	$self->debug(format_response_line '>>>', $ctx->res);
 	$self->debug(format_headers '>>>', $ctx->res->headers);
+
+	$DB::single = 1;
 }
 
 1;
