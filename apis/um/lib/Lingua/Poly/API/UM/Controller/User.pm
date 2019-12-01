@@ -220,11 +220,7 @@ sub login {
 	);
 	$user{email} = $user->email if defined $user->email;
 	$user{username} = $user->username if defined $user->username;
-	$self->cookie(id => $session->sid, {
-		path => $self->config->{prefix},
-		httponly => 1,
-		secure => $self->req->is_secure,
-	});
+	$self->app->requestContextService->sessionCookie($self, $session);
 
 	$self->render(openapi => \%user, status => HTTP_OK);
 }

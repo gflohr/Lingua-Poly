@@ -33,12 +33,29 @@ sub fingerprint {
 	return join ':', $ip, $ua;
 }
 
-sub sessionID  {
+sub sessionID {
 	my ($self, $ctx) = @_;
 
 	my $cookie_name = $self->configuration->{session}->{cookieName};
 
 	return $ctx->cookie($cookie_name);
+}
+
+sub sessionCookie {
+	my ($self, $ctx, $session) = @_;
+
+	my $cookie_name = $self->configuration->{session}->{cookieName};
+	if ($session) {
+		$ctx->cookie($cookie_name => $session->sid, {
+			path => $ctx->config->{prefix},
+			httponly => 1,
+			secure => $ctx->req->is_secure,
+		});
+	} else {
+		$ctx->cookie($cookie_name => '', { expires => 0 });
+	}
+
+	return $self;
 }
 
 __PACKAGE__->meta->make_immutable;
