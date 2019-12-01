@@ -65,25 +65,28 @@ sub startup {
 	});
 
 	my $config = $self->config;
-	$self->hook(before_dispatch => sub {
-		my ($ctx) = @_;
+	$self->hook(before_dispatch => sub { $self->__beforeDispatch(@_) });
+	$self->hook(after_dispatch => sub { $self->__afterDispatch(@_) });
+}
 
-		$self->sessionService->maintain;
+sub __beforeDispatch {
+	my ($self, $ctx) = @_;
 
-		my $fingerprint = $self->requestContextService->fingerprint($ctx);
-		my $session_id = $self->requestContextService->sessionID($ctx);
+	$self->sessionService->maintain;
 
-		$ctx->stash->{session}
-			= $self->sessionService->refreshOrCreate($session_id, $fingerprint);
-	});
+	my $fingerprint = $self->requestContextService->fingerprint($ctx);
+	my $session_id = $self->requestContextService->sessionID($ctx);
 
-	$self->hook(after_dispatch => sub {
-		my ($ctx) = @_;
+	$ctx->stash->{session}
+		= $self->sessionService->refreshOrCreate($session_id, $fingerprint);
+}
 
-		my $session = $ctx->stash->{session};
-		$self->requestContextService->sessionCookie($ctx, $session)
-			if $session;
-	});
+sub __afterDispatch {
+	my ($self, $ctx) = @_;
+
+	my $session = $ctx->stash->{session};
+	$self->requestContextService->sessionCookie($ctx, $session)
+		if $session;
 }
 
 1;
