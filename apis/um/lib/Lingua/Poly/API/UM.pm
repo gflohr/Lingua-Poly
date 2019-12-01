@@ -58,6 +58,7 @@ sub startup {
 				my ($c, $definition, $scopes, $cb) = @_;
 
 				my $session = $c->stash->{session};
+				return $c->$cb('You are not logged in.') if !$session->user;
 
 				return $c->$cb;
 			}
