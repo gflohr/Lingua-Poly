@@ -37,6 +37,8 @@ has logger => (is => 'rw');
 has userService => (is => 'ro');
 has sessionService => (is => 'ro');
 has requestContextService => (is => 'ro');
+has tokenService => (isa => 'Lingua::Poly::API::UM::Service::Token',
+                     is => 'ro');
 
 sub startup {
 	my ($self) = @_;

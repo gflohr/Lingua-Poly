@@ -28,7 +28,6 @@ sub createUser {
 	my $self = shift->openapi->valid_input or return;
 
 	my $userDraft = $self->req->json;
-	my $db = $self->app->database;
 
 	my @errors;
 
@@ -54,7 +53,7 @@ sub createUser {
 	my $renew_request;
 	if (exists $userDraft->{email}) {
 		# Email already taken?
-		my $existing = Lingua::Poly::API::UM::Model::User->new(
+		my $existing = $self->app->userService->userByUsernameOrEmail(
 			$db, $userDraft->{email}, 1);
 		if ($existing) {
 			if ($existing->confirmed) {
@@ -146,8 +145,6 @@ EOF
 	);
 
 	sendmail $email, { transport => $self->emailSenderTransport };
-
-	$db->commit;
 
 	my %user = (email => $userDraft->{email});
 	$self->render(openapi => \%user, status => HTTP_CREATED);
