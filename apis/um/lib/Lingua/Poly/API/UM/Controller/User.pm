@@ -212,11 +212,19 @@ sub login {
 		message => 'invalid username or password'
 	}) if !check_password $login_data->{password}, $user->password;
 
+	my $session = $self->stash->{session};
+	$self->app->sessionService->renew($session);
+
 	my %user = (
 		sessionTTL => $self->config->{session}->{timeout},
 	);
 	$user{email} = $user->email if defined $user->email;
 	$user{username} = $user->username if defined $user->username;
+	$self->cookie(id => $session->sid, {
+		path => $self->config->{prefix},
+		httponly => 1,
+		secure => $self->req->is_secure,
+	});
 
 	$self->render(openapi => \%user, status => HTTP_OK);
 }

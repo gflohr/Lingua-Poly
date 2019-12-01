@@ -55,7 +55,9 @@ sub startup {
 			cookieAuth => sub {
 				my ($c, $definition, $scopes, $cb) = @_;
 
-				# TODO! Check that session exists and has a valid user.
+				my $session = $c->stash->{session};
+				use Data::Dumper;
+				$self->info(Dumper $session);
 
 				return $c->$cb;
 			}

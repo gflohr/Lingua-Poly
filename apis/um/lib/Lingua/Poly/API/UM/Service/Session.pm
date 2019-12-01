@@ -95,6 +95,16 @@ sub refreshOrCreate {
 	return Lingua::Poly::API::UM::Model::Session->new(%args);
 }
 
+sub renew {
+	my ($self, $session) = @_;
+
+	my $sid = Session::Token->new(entropy => 256)->get;
+	$self->database->transaction([UPDATE_SESSION_SID => $sid, $session->sid]);
+	$session->sid($sid);
+
+	return $self;
+}
+
 __PACKAGE__->meta->make_immutable;
 
 1;

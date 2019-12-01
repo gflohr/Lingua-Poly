@@ -46,7 +46,7 @@ sub logger {
 	my ($self) = @_;
 
 	return $self->{_logger} if exists $self->{_logger};
-	my $app = $self->{_ctx}->app;
+	my $app = $self->app;
 
 	# FIXME! Can we use the SmartLogger constructor here?
 	return $self->{_logger} = $app->log->context('[FIXME! Controller base class!]');

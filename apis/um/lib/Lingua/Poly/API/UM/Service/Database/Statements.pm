@@ -39,6 +39,11 @@ UPDATE sessions
    SET last_seen = NOW()
  WHERE sid = ?
 EOF
+		UPDATE_SESSION_SID => <<EOF,
+UPDATE sessions
+   SET sid = ?, last_seen = NOW()
+ WHERE sid = ?
+EOF
 		DELETE_TOKEN_STALE => <<EOF,
 DELETE FROM tokens
   WHERE EXTRACT(EPOCH FROM(NOW() - created)) > ?

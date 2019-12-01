@@ -17,8 +17,8 @@ use strict;
 use Moose;
 use namespace::autoclean;
 
-has sid => (isa => 'Str', is => 'ro');
-has user => (isa => 'Lingua::Poly::API::UM::Model::User', is => 'ro');
+has sid => (isa => 'Str', is => 'rw');
+has user => (isa => 'Lingua::Poly::API::UM::Model::User', is => 'rw');
 
 __PACKAGE__->meta->make_immutable;
 
