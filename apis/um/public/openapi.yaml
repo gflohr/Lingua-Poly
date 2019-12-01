@@ -140,7 +140,7 @@ paths:
       tags:
       - users
       summary: Create a new user
-      x-mojo-to: 'user#create'
+      x-mojo-to: 'registration#createUser'
       operationId: usersPost
       requestBody:
         $ref: "#/components/requestBodies/CreateUserRequest"
@@ -183,7 +183,7 @@ paths:
       tags:
       - users
       summary: Confirm a registration
-      x-mojo-to: 'user#confirmRegistration'
+      x-mojo-to: 'registration#confirm'
       operationId: register
       requestBody:
         $ref: '#/components/requestBodies/Token'
