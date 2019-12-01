@@ -41,7 +41,7 @@ sub format_headers($$) {
 
 	my @headers;
 	foreach my $name (sort @{$headers->names}) {
-		push @headers, "[$prefix] $name: " . $headers->header($name);
+		push @headers, "$prefix $name: " . $headers->header($name);
 	}
 
 	return @headers

@@ -79,7 +79,6 @@ sub __beforeDispatch {
 
 	my $fingerprint = $self->requestContextService->fingerprint($ctx);
 	my $session_id = $self->requestContextService->sessionID($ctx);
-
 	$ctx->stash->{session}
 		= $self->sessionService->refreshOrCreate($session_id, $fingerprint);
 }

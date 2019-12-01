@@ -23,6 +23,18 @@ has email => (isa => 'Maybe[Str]', is => 'ro');
 has password => (isa => 'Str', is => 'ro');
 has confirmed => (isa => 'Bool', is => 'ro');
 
+use Lingua::Poly::API::UM::Util qw(empty);
+
+sub toResponse {
+	my ($self) = @_;
+
+	my %user;
+	$user{username} = $self->username if !empty $self->username;
+	$user{email} = $self->email if !empty $self->email;
+
+	return %user;
+}
+
 __PACKAGE__->meta->make_immutable;
 
 1;
