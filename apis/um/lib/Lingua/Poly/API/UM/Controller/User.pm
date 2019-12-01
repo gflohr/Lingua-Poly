@@ -36,6 +36,7 @@ sub login {
 
 	my $session = $self->stash->{session};
 	$self->app->sessionService->renew($session);
+	$self->app->database->commit;
 
 	my %user = (
 		sessionTTL => $self->config->{session}->{timeout},

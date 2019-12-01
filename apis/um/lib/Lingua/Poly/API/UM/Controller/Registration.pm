@@ -27,6 +27,7 @@ use Mojo::Base qw(Lingua::Poly::API::UM::Controller);
 sub createUser {
 	my $self = shift->openapi->valid_input or return;
 
+$DB::single = 1;
 	my $userDraft = $self->req->json;
 
 	my @errors;
@@ -54,7 +55,7 @@ sub createUser {
 	if (exists $userDraft->{email}) {
 		# Email already taken?
 		my $existing = $self->app->userService->userByUsernameOrEmail(
-			$db, $userDraft->{email}, 1);
+			$userDraft->{email});
 		if ($existing) {
 			if ($existing->confirmed) {
 				# We must never report to the user the email address is already in
@@ -78,7 +79,7 @@ sub createUser {
 	} if $score < 3;
 
 	if (@errors) {
-		$db->rollback;
+		$self->app->database->rollback;
 		return $self->errorResponse(HTTP_BAD_REQUEST, @errors);
 	}
 
@@ -89,21 +90,21 @@ sub createUser {
 		die "recover not yet implemented";
 	} else {
 		my $token;
+		my $tokenService = $self->app->tokenService;
 		if ($renew_request) {
-			($token) = $db->getRow(SELECT_TOKEN_BY_PURPOSE => 'registration',
-			                       $userDraft->{email});
-			die "no registration token for $userDraft->{email} found"
-			    if empty $token;
-			$db->execute(UPDATE_TOKEN => 'registration', $userDraft->{email});
+			($token) = $tokenService->byPurpose(
+				registration => $userDraft->{email});
+			if (empty $token) {
+				die "no registration token for $userDraft->{email} found";
+				$self->app->database->rollback;
+			}
+			$tokenService->update(registration => $userDraft->{email});
 		} else {
 			# Create the  user.
-			my $password = crypt_password $userDraft->{password};
-
-			$db->execute(INSERT_USER => $userDraft->{email},
-			             crypt_password $userDraft->{password});
-			my $user_id = $db->lastInsertId('users');
-			$token = $self->random_string(entropy => 128);
-			$db->execute(INSERT_TOKEN => $token, 'registration', $user_id);
+			$self->app->userService->create(
+				$userDraft->{email},
+				$userDraft->{password});
+			$token = $tokenService->create(registration => $userDraft->{email});
 		}
 
 		my $transport = $self->emailSenderTransport;
@@ -135,6 +136,8 @@ Your Lingua::Poly team
 EOF
 	}
 
+	$self->app->database->commit;
+
 	my $email = Email::Simple->create(
 		header => [
 			To => $userDraft->{email},
@@ -161,29 +164,23 @@ sub confirm {
 	}
 	my $token = $in->{token};
 
-	my $db = $self->stash->{db};
-	my ($user_id, $username, $email) = $db->getRow(
-		SELECT_TOKEN => 'registration',
-		$token
-	);
-
-	if (!defined $user_id) {
-		$db->rollback;
+	my $user = $self->app->userService->byToken(registration => $token);
+	if (!$user) {
+		$self->app->database->rollback;
 		return $self->errorResponse(HTTP_GONE, {
 			message => 'token not found'
 		});
 	}
 
-	my %user = (email => $email, username => $username);
+	my %user = (email => $user->email, username => $user->username);
 	foreach my $prop (keys %user) {
 		delete $user{$prop} if !defined $user{$prop};
 	}
 
-	# FIXME! Upgrade session cookie!
-	$db->transaction(
-		[UPDATE_USER_ACTIVATE => $user_id],
-		[DELETE_TOKEN => $token]
-	);
+	$self->app->userService->activate($user);
+	$self->app->tokenService->delete($token);
+	$self->app->sessionService->renew($self->stash->{session});
+	$self->app->database->commit;
 
 	$self->render(openapi => \%user, status => HTTP_OK);
 }

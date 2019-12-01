@@ -46,7 +46,7 @@ CREATE TABLE tokens (
     id SERIAL PRIMARY KEY,
     purpose token_type NOT NULL,
     token TEXT NOT NULL UNIQUE,
-    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     created TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 

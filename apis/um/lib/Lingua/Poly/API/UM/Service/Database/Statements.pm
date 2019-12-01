@@ -50,22 +50,21 @@ DELETE FROM tokens
 EOF
 		INSERT_TOKEN => <<EOF,
 INSERT INTO tokens(token, purpose, user_id)
-  VALUES(?, ?, ?)
+  VALUES(?, ?, (SELECT id FROM users WHERE email = ?))
 EOF
 		UPDATE_TOKEN => <<EOF,
 UPDATE tokens SET created = NOW()
   WHERE tokens.purpose = ?
-    AND tokens.user_id = (SELECT id FROM users WHERE email = ? AND NOT confirmed)
+    AND tokens.user_id = (SELECT id FROM users WHERE email = ?)
 EOF
 		DELETE_TOKEN => <<EOF,
 DELETE FROM tokens WHERE token = ?
 EOF
 		SELECT_TOKEN => <<EOF,
-SELECT u.id, u.username, u.email FROM tokens t, users u
+SELECT u.id, u.username, u.email, u.password, u.confirmed FROM tokens t, users u
   WHERE t.purpose = ?
     AND t.token = ?
 	AND t.user_id = u.id
-	AND NOT u.confirmed
 EOF
 		SELECT_TOKEN_BY_PURPOSE => <<EOF,
 SELECT t.token FROM tokens t, users u

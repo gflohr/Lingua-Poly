@@ -38,6 +38,7 @@ my $c = container App => ['Env'] => as {
 			userService => '/User/user',
 			sessionService => '/User/session',
 			requestContextService => 'RequestContext',
+			tokenService => 'Token',
 		},
 	);
 
@@ -50,12 +51,13 @@ my $c = container App => ['Env'] => as {
 		}
 	);
 
-	service token => (
+	service Token => (
 		class => 'Lingua::Poly::API::UM::Service::Token',
 		lifecycle => 'Singleton',
 		dependencies => {
 			configuration => '/Configuration/provider',
 			logger => { '/Logging/logger' => { realm => 'request' }},
+			database => '/Storage/database',
 		}
 	);
 

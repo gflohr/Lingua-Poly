@@ -18,8 +18,8 @@ use Moose;
 use namespace::autoclean;
 
 has id => (isa => 'Int', is => 'ro');
-has username => (isa => 'Str', is => 'ro');
-has email => (isa => 'Str', is => 'ro');
+has username => (isa => 'Maybe[Str]', is => 'ro');
+has email => (isa => 'Maybe[Str]', is => 'ro');
 has password => (isa => 'Str', is => 'ro');
 has confirmed => (isa => 'Bool', is => 'ro');
 
