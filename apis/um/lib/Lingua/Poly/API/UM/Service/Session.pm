@@ -60,8 +60,7 @@ sub refreshOrCreate {
 	my ($user_id, $username, $email, $confirmed);
 	my $database = $self->database;
 
-	if (defined $sid
-	    && (($sid, $user_id) = $database->getRow(
+	if (defined $sid && (($user_id) = $database->getRow(
 			SELECT_SESSION => $sid, $fingerprint
 		))) {
 		$self->debug('updating session');
@@ -85,19 +84,15 @@ sub refreshOrCreate {
 
 	$database->commit;
 
-	my $user;
+	my %args = (sid => $sid);
 	if (defined $user_id) {
-		$user = Lingua::Poly::API::UM::Model::User->new(
+		$args{user} = Lingua::Poly::API::UM::Model::User->new(
 			id => $user_id,
 			username => $username,
 			email => $email,
 		);
 	}
-
-	return Lingua::Poly::API::UM::Model::Session->new(
-		sid => $sid,
-		user => $user,
-	)
+	return Lingua::Poly::API::UM::Model::Session->new(%args);
 }
 
 __PACKAGE__->meta->make_immutable;

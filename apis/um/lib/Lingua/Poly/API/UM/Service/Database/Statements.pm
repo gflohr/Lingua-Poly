@@ -30,7 +30,7 @@ DELETE FROM sessions
   WHERE EXTRACT(EPOCH FROM(NOW() - last_seen)) > ?
 EOF
 		SELECT_SESSION => <<EOF,
-SELECT id, user_id FROM sessions
+SELECT user_id FROM sessions
   WHERE sid = ?
     AND fingerprint = ?
 EOF

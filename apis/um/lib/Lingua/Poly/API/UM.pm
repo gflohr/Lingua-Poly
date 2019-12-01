@@ -28,7 +28,6 @@ use Mojolicious::Plugin::Util::RandomString 0.08;
 use Mojolicious::Plugin::RemoteAddr 0.03;
 
 use Lingua::Poly::API::UM::Util qw(empty);
-use Lingua::Poly::API::UM::Session;
 
 use Moose;
 
@@ -74,7 +73,7 @@ sub startup {
 
 		# TODO! Make sure to re-use existing sessions!
 		my $session = $ctx->stash->{session}
-			= $self->sessionService->refreshOrCreate($fingerprint, $session_id);
+			= $self->sessionService->refreshOrCreate($session_id, $fingerprint);
 		$ctx->cookie(id => $session->sid, {
 			path => $ctx->config->{path},
 			httponly => 1,
