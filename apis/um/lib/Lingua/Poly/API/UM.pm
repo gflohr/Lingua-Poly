@@ -23,11 +23,11 @@ use Locale::TextDomain qw(Lingua-Poly-API-UM);
 use Locale::Messages qw(turn_utf_8_off);
 use CGI::Cookie;
 
-# Help cpanm to find dependencies.
+# FIXME! RandomString no longer needed?
 use Mojolicious::Plugin::Util::RandomString 0.08;
 use Mojolicious::Plugin::RemoteAddr 0.03;
 
-use Lingua::Poly::API::UM::Util qw(empty);
+use Lingua::Poly::API::UM::Util qw(empty format_headers);
 
 use Moose;
 
@@ -72,6 +72,8 @@ sub startup {
 sub __beforeDispatch {
 	my ($self, $ctx) = @_;
 
+	$self->debug(format_headers '<<<', $ctx->req->headers);
+
 	$self->sessionService->maintain;
 
 	my $fingerprint = $self->requestContextService->fingerprint($ctx);
@@ -87,6 +89,9 @@ sub __afterDispatch {
 	my $session = $ctx->stash->{session};
 	$self->requestContextService->sessionCookie($ctx, $session)
 		if $session;
+
+	# This must come last in the after_dispatch hook.
+	$self->debug(format_headers '>>>', $ctx->res->headers);
 }
 
 1;

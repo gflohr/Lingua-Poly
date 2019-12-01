@@ -18,7 +18,7 @@ use Password::OWASP::Argon2;
 
 use base qw(Exporter);
 
-our @EXPORT_OK = qw(empty crypt_password check_password);
+our @EXPORT_OK = qw(empty crypt_password check_password format_headers);
 
 sub empty($) {
     return if defined $_[0] && length $_[0];
@@ -34,6 +34,17 @@ sub check_password($$) {
 	my ($cleartext, $digest) = @_;
 
 	return Password::OWASP::Argon2->new->check_password($cleartext, $digest);
+}
+
+sub format_headers($$) {
+	my ($prefix, $headers) = @_;
+
+	my @headers;
+	foreach my $name (sort @{$headers->names}) {
+		push @headers, "[$prefix] $name: " . $headers->header($name);
+	}
+
+	return @headers
 }
 
 1;

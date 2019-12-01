@@ -30,7 +30,7 @@ sub new {
 }
 
 sub debug {
-	my ($self, @args) = @_;
+	my ($self, @lines) = @_;
 
 	my $level = $self->level;
 
@@ -49,7 +49,13 @@ sub debug {
 		return $self if !$debug{$realm};
 	}
 
-	return $self->SUPER::debug(@args);
+	# Performance tweak. We allow logging multiple at once, so that we can
+	# exit early if the debugging level is not sufficient.
+	foreach my $line (@lines) {
+		$self->SUPER::debug($line);
+	}
+
+	return $self;
 }
 
 1;
