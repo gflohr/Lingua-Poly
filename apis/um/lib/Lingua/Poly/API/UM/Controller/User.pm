@@ -34,7 +34,9 @@ sub login {
 		message => 'invalid username or password'
 	}) if !check_password $login_data->{password}, $user->password;
 
+	# Upgrade the session with a valid user.
 	my $session = $self->stash->{session};
+	$session->user($user);
 	$self->app->sessionService->renew($session);
 	$self->app->database->commit;
 
