@@ -8,8 +8,8 @@ CREATE TABLE users (
     password TEXT NOT NULL,
     confirmed BOOLEAN NOT NULL DEFAULT 'f'
 );
-INSERT INTO users(id, email, username, password) 
-  SELECT 0, 'placeholder@example.com', 'admin', '{ARGON2}$argon2id$v=19$m=32768,t=12,p=1$MTM1QzRDNkEtMDUzOS0xMUVBLUI0NjItM0ZCMDQyNjU0QTBB$tir07b6/y+fWwkvJe9Cw3A'
+INSERT INTO users(id, email, username, password, confirmed) 
+  SELECT 0, 'placeholder@example.com', 'admin', '{ARGON2}$argon2id$v=19$m=32768,t=12,p=1$MTM1QzRDNkEtMDUzOS0xMUVBLUI0NjItM0ZCMDQyNjU0QTBB$tir07b6/y+fWwkvJe9Cw3A', 't'
   WHERE NOT EXISTS (
     SELECT 1 FROM users WHERE id = 0);
 
