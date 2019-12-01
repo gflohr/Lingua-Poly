@@ -17,6 +17,10 @@ use strict;
 
 sub new {
 	bless {
+		INSERT_SESSION => <<EOF,
+INSERT INTO sessions(sid, fingerprint)
+  VALUES(?, ?)
+EOF
 		DELETE_SESSION => <<EOF,
 DELETE FROM sessions
   WHERE sid = ?
@@ -25,9 +29,15 @@ EOF
 DELETE FROM sessions
   WHERE EXTRACT(EPOCH FROM(NOW() - last_seen)) > ?
 EOF
-		SELECT_SESSION_INFO => <<EOF,
-SELECT user_id, EXTRACT(EPOCH FROM(NOW() - last_seen)), fingerprint FROM sessions
+		SELECT_SESSION => <<EOF,
+SELECT id, user_id FROM sessions
   WHERE sid = ?
+    AND fingerprint = ?
+EOF
+		UPDATE_SESSION => <<EOF,
+UPDATE sessions
+   SET last_seen = NOW()
+ WHERE sid = ?
 EOF
 		DELETE_TOKEN_STALE => <<EOF,
 DELETE FROM tokens
@@ -70,7 +80,7 @@ DELETE FROM users u
 	AND EXTRACT(EPOCH FROM(NOW() - t.created)) > ?
 EOF
 		SELECT_USER_BY_ID => <<EOF,
-SELECT id, username, email, password, confirmed FROM users WHERE id = ?
+SELECT username, email, confirmed FROM users WHERE id = ?
 EOF
 		SELECT_USER_BY_USERNAME => <<EOF,
 SELECT id, username, email, password, confirmed FROM users WHERE username = ?
@@ -82,11 +92,6 @@ EOF
 UPDATE users
    SET confirmed = 't'
  WHERE id = ?
-EOF
-		UPDATE_SESSION => <<EOF,
-UPDATE sessions
-   SET last_seen = NOW()
- WHERE sid = ?
 EOF
 	}, shift;
 };

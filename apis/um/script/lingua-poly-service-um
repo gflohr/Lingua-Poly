@@ -37,7 +37,17 @@ my $c = container App => ['Env'] => as {
 			logger => { '/Logging/logger' => { realm => 'core' } },
 			userService => '/User/user',
 			sessionService => '/User/session',
+			requestContextService => 'RequestContext',
 		},
+	);
+
+	service RequestContext => (
+		class => 'Lingua::Poly::API::UM::Service::RequestContext',
+		lifecycle => 'Singleton',
+		dependencies => {
+			configuration => '/Configuration/provider',
+			logger => { '/Logging/logger' => { realm => 'request' }},
+		}
 	);
 
 	container Storage => as {

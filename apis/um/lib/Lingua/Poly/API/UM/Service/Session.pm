@@ -17,6 +17,11 @@ use strict;
 use Moose;
 use namespace::autoclean;
 
+use Session::Token;
+
+use Lingua::Poly::API::UM::Model::User;
+use Lingua::Poly::API::UM::Model::Session;
+
 use base qw(Lingua::Poly::API::UM::Logging);
 
 has logger => (is => 'ro');
@@ -49,10 +54,50 @@ sub maintain {
 	return $self;
 }
 
-sub lookup {
-	my ($self, $id) = @_;
+sub refreshOrCreate {
+	my ($self, $sid, $fingerprint) = @_;
 
+	my ($user_id, $username, $email, $confirmed);
+	my $database = $self->database;
 
+	if (defined $sid
+	    && (($sid, $user_id) = $database->getRow(
+			SELECT_SESSION => $sid, $fingerprint
+		))) {
+		$self->debug('updating session');
+		$database->execute(UPDATE_SESSION => $sid);
+		if (defined $user_id) {
+			($username, $email, $confirmed) = $database->getRow(
+				SELECT_USER_BY_ID => $user_id
+			);
+			if (!(defined $username && !defined $email) || !$confirmed) {
+				$self->debug("updating anonymous session");
+				undef $user_id;
+			} else {
+				$self->debug("updating session for user id '$user_id'");
+			}
+		}
+	} else {
+		$self->debug('creating fresh session');
+		$sid = Session::Token->new(entropy => 256)->get;
+		$database->execute(INSERT_SESSION => $sid, $fingerprint)
+	}
+
+	$database->commit;
+
+	my $user;
+	if (defined $user_id) {
+		$user = Lingua::Poly::API::UM::Model::User->new(
+			id => $user_id,
+			username => $username,
+			email => $email,
+		);
+	}
+
+	return Lingua::Poly::API::UM::Model::Session->new(
+		sid => $sid,
+		user => $user,
+	)
 }
 
 __PACKAGE__->meta->make_immutable;

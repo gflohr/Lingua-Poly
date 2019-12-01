@@ -10,16 +10,15 @@
 # to Public License, Version 2, as published by Sam Hocevar. See
 # http://www.wtfpl.net/ for more details.
 
-package Lingua::Poly::API::UM::Model::User;
+package Lingua::Poly::API::UM::Model::Session;
 
 use strict;
 
 use Moose;
 use namespace::autoclean;
 
-has id => (isa => 'Int', is => 'ro');
-has username => (isa => 'Str', is => 'ro');
-has email => (isa => 'Str', is => 'ro');
+has sid => (isa => 'Str', is => 'ro');
+has user => (is => 'ro');
 
 __PACKAGE__->meta->make_immutable;
 

@@ -55,14 +55,6 @@ sub logger {
 sub fingerprint {
 	my ($self) = @_;
 
-	my $req = $self->req;
-
-	my $ua = $req->headers->user_agent();
-    $ua //= '';
-
-    my $ip = $self->remote_addr;
-
-    return join ':', $ip, $ua;
 }
 
 sub emailSenderTransport {

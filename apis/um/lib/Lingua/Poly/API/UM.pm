@@ -37,6 +37,7 @@ has database => (is => 'ro');
 has logger => (is => 'rw');
 has userService => (is => 'ro');
 has sessionService => (is => 'ro');
+has requestContextService => (is => 'ro');
 
 sub startup {
 	my ($self) = @_;
@@ -64,14 +65,22 @@ sub startup {
 
 	my $config = $self->config;
 	$self->hook(before_dispatch => sub {
-		my ($c) = @_;
+		my ($ctx) = @_;
 
 		$self->sessionService->maintain;
 
-		# TODO! Make sure to re-use existing sessions!
-		$c->stash->{session} = Lingua::Poly::API::UM::Session->new(context => $c);
-	});
+		my $fingerprint = $self->requestContextService->fingerprint($ctx);
+		my $session_id = $self->requestContextService->sessionID($ctx);
 
+		# TODO! Make sure to re-use existing sessions!
+		my $session = $ctx->stash->{session}
+			= $self->sessionService->refreshOrCreate($fingerprint, $session_id);
+		$ctx->cookie(id => $session->sid, {
+			path => $ctx->config->{path},
+			httponly => 1,
+			secure => $ctx->req->is_secure,
+		});
+	});
 }
 
 1;

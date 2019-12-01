@@ -10,18 +10,37 @@
 # to Public License, Version 2, as published by Sam Hocevar. See
 # http://www.wtfpl.net/ for more details.
 
-package Lingua::Poly::API::UM::Model::User;
+package Lingua::Poly::API::UM::Service::RequestContext;
 
 use strict;
 
 use Moose;
 use namespace::autoclean;
 
-has id => (isa => 'Int', is => 'ro');
-has username => (isa => 'Str', is => 'ro');
-has email => (isa => 'Str', is => 'ro');
+use base qw(Lingua::Poly::API::UM::Logging);
+
+has logger => (is => 'ro');
+has configuration => (is => 'ro');
+
+sub fingerprint {
+	my ($self, $ctx) = @_;
+
+	my $ua = $ctx->req->headers->user_agent();
+	$ua //= '';
+
+	my $ip = $ctx->remote_addr;
+
+	return join ':', $ip, $ua;
+}
+
+sub sessionID  {
+	my ($self, $ctx) = @_;
+
+	my $cookie_name = $self->configuration->{session}->{cookieName};
+
+	return $ctx->cookie($cookie_name);
+}
 
 __PACKAGE__->meta->make_immutable;
 
 1;
-
