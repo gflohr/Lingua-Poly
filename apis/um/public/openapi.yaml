@@ -3,7 +3,7 @@ info:
   title: 'Lingua::Poly OpenAPI WebApp'
   version:  '1.0'
 servers:
-  - url: http://127.0.0.1:4200/api/lingua-poly-um/v1
+  - url: http://localhost:4200/api/lingua-poly/um/v1
     description: The development server
 components:
   securitySchemes:

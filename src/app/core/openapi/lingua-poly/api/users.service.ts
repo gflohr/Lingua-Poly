@@ -32,7 +32,7 @@ import { Configuration }                                     from '../configurat
 })
 export class UsersService {
 
-    protected basePath = 'http://127.0.0.1:4200/api/lingua-poly-um/v1';
+    protected basePath = 'http://localhost:4200/api/lingua-poly/um/v1';
     public defaultHeaders = new HttpHeaders();
     public configuration = new Configuration();
     public encoder: HttpParameterCodec;

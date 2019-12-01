@@ -1,5 +1,5 @@
 {
-    "/api/lingua-poly-um/v1": {
+    "/api/lingua-poly/um/v1": {
         "target": "http://localhost:3000",
         "secure": "false",
         "xfwd": "true"
