@@ -42,7 +42,7 @@ EOF
 	}
 
 	$self->{database} //= {};
-	$self->{database}->{dbname} //= 'lingua-poly-um';
+	$self->{database}->{dbname} //= 'linguapoly';
 	$self->{database}->{user} //= '';
 
 	$self->{session} //= {};
