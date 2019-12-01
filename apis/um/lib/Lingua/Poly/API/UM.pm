@@ -75,7 +75,7 @@ sub startup {
 		my $session = $ctx->stash->{session}
 			= $self->sessionService->refreshOrCreate($session_id, $fingerprint);
 		$ctx->cookie(id => $session->sid, {
-			path => $ctx->config->{path},
+			path => $ctx->config->{prefix},
 			httponly => 1,
 			secure => $ctx->req->is_secure,
 		});

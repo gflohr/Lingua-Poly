@@ -49,7 +49,7 @@ EOF
 	$self->{session}->{timeout} ||= 2 * 60 * 60;
 	$self->{session}->{cookieName} //= 'id';
 
-	if (empty $self->{path}) {
+	if (empty $self->{prefix}) {
 		my @all = split /::/, __PACKAGE__;
 		pop @all;
 		my @prefix;
