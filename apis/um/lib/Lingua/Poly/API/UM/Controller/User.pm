@@ -28,7 +28,6 @@ use Email::Simple 2.216;
 use Email::Sender::Simple 1.300031 qw(sendmail);
 
 use Lingua::Poly::API::UM::Util qw(empty crypt_password check_password);
-use Lingua::Poly::API::UM::Model::User;
 
 use Mojo::Base qw(Lingua::Poly::API::UM::Controller);
 
@@ -205,10 +204,10 @@ sub login {
 	my $login_data = $self->req->json;
 	my $db = $self->app->database;
 
-	my $user = Lingua::Poly::API::UM::Model::User->new($db, $login_data->{id});
+	my $user = $self->app->userService->userByUsernameOrEmail($login_data->{id});
 	return $self->errorResponse(HTTP_UNAUTHORIZED, {
 		message => 'invalid username or password'
-	}) if !$user;
+	}) if !$user || !$user->confirmed;
 	return $self->errorResponse(HTTP_UNAUTHORIZED, {
 		message => 'invalid username or password'
 	}) if !check_password $login_data->{password}, $user->password;

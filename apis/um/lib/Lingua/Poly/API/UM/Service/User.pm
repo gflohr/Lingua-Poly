@@ -22,6 +22,26 @@ use base qw(Lingua::Poly::API::UM::Logging);
 has logger => (is => 'ro');
 has database => (is => 'ro');
 
+sub userByUsernameOrEmail {
+	my ($self, $id) = @_;
+
+	my $db = $self->database;
+	my $statement = $id =~ /@/ ?
+		'SELECT_USER_BY_EMAIL' : 'SELECT_USER_BY_USERNAME';
+
+	my ($user_id, $username, $email, $password, $confirmed) = $db->getRow(
+		$statement => $id
+	);
+	return if !defined $user_id;
+
+	return Lingua::Poly::API::UM::Model::User->new(
+		username =>  $username,
+		email => $email,
+		password => $password,
+		confirmed => $confirmed,
+	);
+}
+
 __PACKAGE__->meta->make_immutable;
 
 1;
