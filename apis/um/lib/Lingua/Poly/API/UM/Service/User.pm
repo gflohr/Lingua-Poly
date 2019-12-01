@@ -62,6 +62,7 @@ sub byToken {
 	return if !defined $user_id;
 
 	return Lingua::Poly::API::UM::Model::User->new(
+		id => $user_id,
 		username =>  $username,
 		email => $email,
 		password => $password,

@@ -58,8 +58,6 @@ sub startup {
 				my ($c, $definition, $scopes, $cb) = @_;
 
 				my $session = $c->stash->{session};
-				use Data::Dumper;
-				$self->info(Dumper $session);
 
 				return $c->$cb;
 			}
@@ -75,10 +73,16 @@ sub startup {
 		my $fingerprint = $self->requestContextService->fingerprint($ctx);
 		my $session_id = $self->requestContextService->sessionID($ctx);
 
-		# TODO! Make sure to re-use existing sessions!
-		my $session = $ctx->stash->{session}
+		$ctx->stash->{session}
 			= $self->sessionService->refreshOrCreate($session_id, $fingerprint);
-		$self->requestContextService->sessionCookie($ctx, $session);
+	});
+
+	$self->hook(after_dispatch => sub {
+		my ($ctx) = @_;
+
+		my $session = $ctx->stash->{session};
+		$self->requestContextService->sessionCookie($ctx, $session)
+			if $session;
 	});
 }
 

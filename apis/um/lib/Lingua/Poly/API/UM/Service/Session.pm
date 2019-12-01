@@ -99,7 +99,10 @@ sub renew {
 	my ($self, $session) = @_;
 
 	my $sid = Session::Token->new(entropy => 256)->get;
-	$self->database->transaction([UPDATE_SESSION_SID => $sid, $session->sid]);
+	my $user = $session->user;
+	my $user_id = $user ? $user-> id : undef;
+	$self->database->execute(
+		UPDATE_SESSION_SID => $sid, $user_id, $session->sid);
 	$session->sid($sid);
 
 	return $self;

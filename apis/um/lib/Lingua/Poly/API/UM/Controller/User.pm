@@ -43,7 +43,6 @@ sub login {
 	);
 	$user{email} = $user->email if defined $user->email;
 	$user{username} = $user->username if defined $user->username;
-	$self->app->requestContextService->sessionCookie($self, $session);
 
 	$self->render(openapi => \%user, status => HTTP_OK);
 }

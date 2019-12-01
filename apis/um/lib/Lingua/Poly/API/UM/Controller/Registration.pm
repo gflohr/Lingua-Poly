@@ -27,7 +27,6 @@ use Mojo::Base qw(Lingua::Poly::API::UM::Controller);
 sub createUser {
 	my $self = shift->openapi->valid_input or return;
 
-$DB::single = 1;
 	my $userDraft = $self->req->json;
 
 	my @errors;
@@ -177,9 +176,12 @@ sub confirm {
 		delete $user{$prop} if !defined $user{$prop};
 	}
 
+	my $session = $self->stash->{session};
+	$session->user($user);
+
 	$self->app->userService->activate($user);
 	$self->app->tokenService->delete($token);
-	$self->app->sessionService->renew($self->stash->{session});
+	$self->app->sessionService->renew($session);
 	$self->app->database->commit;
 
 	$self->render(openapi => \%user, status => HTTP_OK);

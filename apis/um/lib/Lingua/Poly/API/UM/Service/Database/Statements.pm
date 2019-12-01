@@ -41,7 +41,7 @@ UPDATE sessions
 EOF
 		UPDATE_SESSION_SID => <<EOF,
 UPDATE sessions
-   SET sid = ?, last_seen = NOW()
+   SET sid = ?, user_id = ?, last_seen = NOW()
  WHERE sid = ?
 EOF
 		DELETE_TOKEN_STALE => <<EOF,
