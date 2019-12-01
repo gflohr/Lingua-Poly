@@ -18,7 +18,8 @@ use Password::OWASP::Argon2;
 
 use base qw(Exporter);
 
-our @EXPORT_OK = qw(empty crypt_password check_password format_headers);
+our @EXPORT_OK = qw(empty crypt_password check_password
+                    format_headers format_request_line);
 
 sub empty($) {
     return if defined $_[0] && length $_[0];
@@ -47,5 +48,14 @@ sub format_headers($$) {
 	return @headers
 }
 
+sub format_request_line($$) {
+	my ($prefix, $req) = @_;
+
+	my $method = $req->method;
+	my $url = $req->url;
+	my $version =  $req->version;
+
+	return "$prefix $method $url HTTP/$version";
+}
 1;
 
