@@ -57,7 +57,7 @@ sub maintain {
 sub refreshOrCreate {
 	my ($self, $sid, $fingerprint) = @_;
 
-	my ($user_id, $username, $email, $confirmed);
+	my ($user_id, $username, $email, $password, $confirmed);
 	my $database = $self->database;
 
 	if (defined $sid && (($user_id) = $database->getRow(
@@ -66,10 +66,10 @@ sub refreshOrCreate {
 		$self->debug('updating session');
 		$database->execute(UPDATE_SESSION => $sid);
 		if (defined $user_id) {
-			($username, $email, $confirmed) = $database->getRow(
+			($username, $email, $password, $confirmed) = $database->getRow(
 				SELECT_USER_BY_ID => $user_id
 			);
-			if (!(defined $username && !defined $email) || !$confirmed) {
+			if ((!defined $username && !defined $email) || !$confirmed) {
 				$self->debug("updating anonymous session");
 				undef $user_id;
 			} else {
@@ -90,6 +90,8 @@ sub refreshOrCreate {
 			id => $user_id,
 			username => $username,
 			email => $email,
+			password => $password,
+			confirmed => $confirmed,
 		);
 	}
 	return Lingua::Poly::API::UM::Model::Session->new(%args);
@@ -101,6 +103,8 @@ sub renew {
 	my $sid = Session::Token->new(entropy => 256)->get;
 	my $user = $session->user;
 	my $user_id = $user ? $user-> id : undef;
+	# FIXME! It is safer to first delete the old session, and create
+	# a new one.  Otherwise there might be a race with the auto-cleanup.
 	$self->database->execute(
 		UPDATE_SESSION_SID => $sid, $user_id, $session->sid);
 	$session->sid($sid);

@@ -60,12 +60,13 @@ sub startup {
 		schema => 'v3',
 		security => {
 			cookieAuth => sub {
-				my ($c, $definition, $scopes, $cb) = @_;
+				my ($ctx, $definition, $scopes, $cb) = @_;
 
-				my $session = $c->stash->{session};
-				return $c->$cb('You are not logged in.') if !$session->user;
+				my $session = $ctx->stash->{session};
 
-				return $c->$cb;
+				return $ctx->$cb('You are not logged in.') if !$session->user;
+
+				return $ctx->$cb;
 			}
 		}
 	});
