@@ -1,6 +1,7 @@
-import { User } from "src/app/core/openapi/lingua-poly";
-import { createReducer, on } from "@ngrx/store";
-import { AuthApiActions, AuthActions } from "../actions";
+import { User } from 'src/app/core/openapi/lingua-poly';
+import { createReducer, on } from '@ngrx/store';
+import { AuthApiActions, AuthActions } from '../actions';
+import { UserApiActions } from '../../user/actions';
 
 export const statusFeatureKey = 'status';
 
@@ -15,6 +16,7 @@ export const initialState: State = {
 export const reducer = createReducer(
 	initialState,
 	on(AuthApiActions.loginSuccess, (state, { user }) => ({ ...state, user })),
+	on(UserApiActions.profileSuccess, (state, { user }) => ({ ...state, user })),
 	on(AuthActions.logout, () => initialState)
 );
 
