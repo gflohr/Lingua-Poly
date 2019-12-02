@@ -23,7 +23,7 @@
 			</a>
 		</li>
 		<li class="nav-item" *ngIf="loggedIn$ | async">
-			<a class="nav-item nav-link mr-md-2" href="/logout">
+			<a class="nav-item nav-link mr-md-2" (click)="logout()" href="#">
 				<span class="oi oi-account-login" title="{{ 'Login' | translate}}" aria-hidden="true"></span>
 				<span translate>Logout</span>
 			</a>

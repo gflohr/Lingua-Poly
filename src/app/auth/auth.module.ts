@@ -8,7 +8,6 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RegistrationReceivedComponent } from './components/registration-received/registration-received.component';
 import { CoreModule } from '../core/core.module';
 import { RegistrationConfirmedComponent } from './components/registration-confirmed/registration-confirmed.component';
-import { LogoutConfirmationComponent } from './components/logout-confirmation/logout-confirmation.component';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { AuthEffects } from './auth.effects';
@@ -25,6 +24,11 @@ import * as fromAuth from './reducers';
 		StoreModule.forFeature(fromAuth.authFeatureKey, fromAuth.reducers),
 		EffectsModule.forFeature([AuthEffects])
 	],
-	declarations: [LoginComponent, RegistrationComponent, RegistrationReceivedComponent, RegistrationConfirmedComponent, LogoutConfirmationComponent]
+	declarations: [
+		LoginComponent,
+		RegistrationComponent,
+		RegistrationReceivedComponent,
+		RegistrationConfirmedComponent
+	]
 })
 export class AuthModule { }

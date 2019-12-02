@@ -3,6 +3,9 @@ import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import * as fromAuth from '../../../auth/reducers';
 import { UserActions } from '../../../core/actions';
+import { AuthActions } from '../../../auth/actions';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { LogoutConfirmationComponent } from '../../logout-confirmation/logout-confirmation.component';
 
 @Component({
 	selector: 'app-header',
@@ -14,7 +17,8 @@ export class HeaderComponent implements OnInit {
 	loggedIn$: Observable<boolean>;
 
 	constructor(
-		private authStore: Store<fromAuth.State>
+		private authStore: Store<fromAuth.State>,
+		private modalService: NgbModal
 	) {
 		this.username$ = this.authStore.pipe(select(fromAuth.selectDisplayName));
 		this.loggedIn$ = this.authStore.pipe(select(fromAuth.selectLoggedIn));
@@ -22,5 +26,20 @@ export class HeaderComponent implements OnInit {
 
 	ngOnInit() {
 		this.authStore.dispatch(UserActions.requestProfile());
+	}
+
+	logout() {
+		this.authStore.dispatch(AuthActions.logout());
+
+		const modalRef = this.modalService.open(LogoutConfirmationComponent);
+		modalRef.result.then((result) => {
+			if (result === 'logout') {
+				this.authStore.dispatch(AuthActions.logout());
+			}
+		}).catch(() => {
+			this.authStore.dispatch(AuthActions.logoutConfirmationDismiss());
+		});
+
+		return false;
 	}
 }

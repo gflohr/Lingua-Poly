@@ -25,8 +25,6 @@ export class AuthEffects {
 		tap(() => this.router.navigate(['/']))
 	), { dispatch: false });
 
-	// logoutConfirmation$ = TODO
-
 	logoutIdleUser$ = createEffect(() => this.actions$.pipe(
 		ofType(UserActions.idleTimeout),
 		map(() => AuthActions.logout())

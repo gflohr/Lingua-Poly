@@ -7,6 +7,7 @@ import { CoreModule } from '../core/core.module';
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
+import { LogoutConfirmationComponent } from './logout-confirmation/logout-confirmation.component';
 
 @NgModule({
   imports: [
@@ -23,7 +24,11 @@ import { SidebarComponent } from './components/sidebar/sidebar.component';
   declarations: [
     HeaderComponent,
     FooterComponent,
-    SidebarComponent
+	SidebarComponent,
+	LogoutConfirmationComponent
+  ],
+  entryComponents: [
+	  LogoutConfirmationComponent
   ]
 })
 export class LayoutModule { }

@@ -15,7 +15,6 @@ import { Observable } from 'rxjs';
 })
 
 export class AppComponent implements OnInit, OnDestroy {
-	showSidenav$: Observable<boolean>;
 	loggedIn$: Observable<boolean>;
 
 	constructor(
@@ -27,7 +26,6 @@ export class AppComponent implements OnInit, OnDestroy {
 		this.translate.setDefaultLang(applicationConfig.defaultLocale);
 		this.translate.use(applicationConfig.defaultLocale);
 
-		this.showSidenav$ = this.store.pipe(select(fromRoot.selecthowSidenav));
 		this.loggedIn$ = this.store.pipe(select(fromAuth.selectLoggedIn));
 	};
 
