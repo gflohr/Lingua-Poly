@@ -29,15 +29,15 @@ export class HeaderComponent implements OnInit {
 	}
 
 	logout() {
-		this.authStore.dispatch(AuthActions.logout());
+		//this.authStore.dispatch(AuthActions.logoutConfirmation());
 
-		const modalRef = this.modalService.open(LogoutConfirmationComponent);
-		modalRef.result.then((result) => {
-			if (result === 'logout') {
-				this.authStore.dispatch(AuthActions.logout());
-			}
-		}).catch(() => {
-			this.authStore.dispatch(AuthActions.logoutConfirmationDismiss());
+		this.modalService.open( LogoutConfirmationComponent, { centered: true })
+		.result.then(() => {
+			console.log('TODO: logout!');
+			//this.authStore.dispatch(AuthActions.logout());
+		}, () => {
+			console.log('Logout cancelled.')
+			//this.authStore.dispatch(AuthActions.logoutConfirmationDismiss());
 		});
 
 		return false;

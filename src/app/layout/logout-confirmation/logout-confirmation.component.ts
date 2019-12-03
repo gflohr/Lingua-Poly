@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -12,9 +12,5 @@ export class LogoutConfirmationComponent implements OnInit {
 	) { }
 
 	ngOnInit() {
-	}
-
-	closeModal() {
-		this.activeModal.close('Modal closed');
 	}
 }

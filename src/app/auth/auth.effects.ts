@@ -30,6 +30,13 @@ export class AuthEffects {
 		map(() => AuthActions.logout())
 	));
 
+	logoutConfirmation$ = createEffect(() => this.actions$.pipe(
+		ofType(AuthActions.logoutConfirmation),
+		map (result => result
+			? AuthActions.logout()
+			: AuthActions.logoutConfirmationDismiss())
+	));
+
 	constructor(
 		private actions$: Actions,
 		private usersService: UsersService,

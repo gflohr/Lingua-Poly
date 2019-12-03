@@ -48,7 +48,8 @@
             position: -webkit-sticky;
             position: sticky;
             top: 0;
-            z-index: 1071
+            /* Must be less then the z-index of modal backdrops (1050)! */
+            z-index: 1021
         }
     }
 }
@@ -388,6 +389,3 @@
     background-color: transparent
 }
 
-.modal-content {
-	margin-top: 6rem;
-}

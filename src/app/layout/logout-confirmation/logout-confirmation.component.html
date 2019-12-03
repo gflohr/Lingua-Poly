@@ -1,7 +1,7 @@
 <div class="modal-header">
 	<h4 class="modal-title">Logout</h4>
 	<button type="button" class="close" aria-label="Close"
-		(click)="activeModal.dismiss('cancel')">
+		(click)="activeModal.dismiss()">
 		<span aria-hidden="true">&times;</span>
 	</button>
 </div>
@@ -10,12 +10,12 @@
 </div>
 <div class="modal-footer">
 	<button type="button" class="btn btn-secondary"
-		(click)="activeModal.dismiss('cancel')"
+		(click)="activeModal.dismiss()"
 		[attr.arial-label]="'Cancel' | translate" translate>
 		Cancel
 	</button>
 	<button type="button" class="btn btn-primary btn-default"
-		(click)="activeModal.dismiss('logout')"
+		(click)="activeModal.close()"
 		ngbAutofocus [attr.arial-label]="'Logout' | translate" translate>
 		Logout
 	</button>
