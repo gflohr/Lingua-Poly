@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { createEffect, Actions, ofType } from '@ngrx/effects';
-import { exhaustMap, map, catchError, tap } from 'rxjs/operators';
+import { exhaustMap, map, catchError, tap, switchMap } from 'rxjs/operators';
 import { UsersService } from '../core/openapi/lingua-poly';
 import { of, from } from 'rxjs';
 import { LoginPageActions, AuthApiActions, AuthActions } from './actions';
@@ -11,6 +11,14 @@ import { LogoutConfirmationComponent } from '../layout/components/logout-confirm
 
 @Injectable()
 export class AuthEffects {
+
+	constructor(
+		private actions$: Actions,
+		private usersService: UsersService,
+		private router: Router,
+		private modalService: NgbModal,
+	) { }
+
 	login$ = createEffect(() => this.actions$.pipe(
 		ofType(LoginPageActions.login),
 		map(action => action.credentials),
@@ -34,24 +42,19 @@ export class AuthEffects {
 
 	logoutConfirmation$ = createEffect(() => this.actions$.pipe(
 		ofType(AuthActions.logoutConfirmation),
-		tap(() => console.log('showing logout dialog')),
-		exhaustMap(() => {
-			return from(this.modalService.open(LogoutConfirmationComponent, { centered: true }).result;
-		}),
-		map(() => {
-			console.log('TODO: logout!');
-			return AuthActions.logout;
-		}),
-		catchError(() => {
-			console.log('Logout cancelled!');
-			return of([AuthActions.logoutConfirmationDismiss]);
-		),
+		switchMap(() => {
+			const modalRef = this.modalService.open(
+				LogoutConfirmationComponent,
+				{ centered: true });
+			const dialog$ = from(modalRef.result);
+			return dialog$.pipe(
+				map(() => {
+					return AuthActions.logout;
+				}),
+				catchError(() => {
+					return of([AuthActions.logoutConfirmationDismiss]);
+				})
+			)
+		})
 	), { dispatch: false });
-
-	constructor(
-		private actions$: Actions,
-		private usersService: UsersService,
-		private router: Router,
-		private modalService: NgbModal,
-	) { }
 }
