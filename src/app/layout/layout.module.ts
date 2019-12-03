@@ -7,7 +7,7 @@ import { CoreModule } from '../core/core.module';
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
-import { LogoutConfirmationComponent } from './logout-confirmation/logout-confirmation.component';
+import { LogoutConfirmationComponent } from './components/logout-confirmation/logout-confirmation.component';
 
 @NgModule({
   imports: [

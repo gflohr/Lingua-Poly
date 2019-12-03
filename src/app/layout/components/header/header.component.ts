@@ -5,7 +5,7 @@ import * as fromAuth from '../../../auth/reducers';
 import { UserActions } from '../../../core/actions';
 import { AuthActions } from '../../../auth/actions';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { LogoutConfirmationComponent } from '../../logout-confirmation/logout-confirmation.component';
+import { LogoutConfirmationComponent } from '../logout-confirmation/logout-confirmation.component';
 
 @Component({
 	selector: 'app-header',
