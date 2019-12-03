@@ -29,8 +29,8 @@ export class HeaderComponent implements OnInit {
 	}
 
 	logout() {
-		//this.authStore.dispatch(AuthActions.logoutConfirmation());
-
+		this.authStore.dispatch(AuthActions.logoutConfirmation());
+/*
 		this.modalService.open( LogoutConfirmationComponent, { centered: true })
 		.result.then(() => {
 			console.log('TODO: logout!');
@@ -39,7 +39,7 @@ export class HeaderComponent implements OnInit {
 			console.log('Logout cancelled.')
 			//this.authStore.dispatch(AuthActions.logoutConfirmationDismiss());
 		});
-
+*/
 		return false;
 	}
 }
