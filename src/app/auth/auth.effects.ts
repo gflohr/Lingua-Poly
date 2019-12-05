@@ -42,16 +42,18 @@ export class AuthEffects {
 
 	logoutConfirmation$ = createEffect(() => this.actions$.pipe(
 		ofType(AuthActions.logoutConfirmation),
-		switchMap(() => {
+		exhaustMap(() => {
 			const modalRef = this.modalService.open(
 				LogoutConfirmationComponent,
 				{ centered: true });
 			const dialog$ = from(modalRef.result);
 			return dialog$.pipe(
 				map(() => {
+					console.log('logout');
 					return AuthActions.logout;
 				}),
 				catchError(() => {
+					console.log('logout cancelled');
 					return of([AuthActions.logoutConfirmationDismiss]);
 				})
 			)
