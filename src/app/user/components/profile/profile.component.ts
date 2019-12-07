@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
 
 @Component({
 	selector: 'app-profile',
@@ -6,13 +7,17 @@ import { Component, OnInit } from '@angular/core';
 	styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent implements OnInit {
-	focus = {
-
+	constructor(
+		private fb: FormBuilder
+	) {
 	}
 
-	constructor() { }
+	profileForm = this.fb.group({
+		username: [''],
+		homepage: [''],
+		description: ['']
+	});
 
 	ngOnInit() {
 	}
-
 }
