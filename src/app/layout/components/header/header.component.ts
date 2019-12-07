@@ -4,7 +4,6 @@ import { Observable } from 'rxjs';
 import * as fromAuth from '../../../auth/reducers';
 import { UserActions } from '../../../core/actions';
 import { AuthActions } from '../../../auth/actions';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
 	selector: 'app-header',
@@ -17,7 +16,6 @@ export class HeaderComponent implements OnInit {
 
 	constructor(
 		private authStore: Store<fromAuth.State>,
-		private modalService: NgbModal
 	) {
 		this.username$ = this.authStore.pipe(select(fromAuth.selectDisplayName));
 		this.loggedIn$ = this.authStore.pipe(select(fromAuth.selectLoggedIn));
