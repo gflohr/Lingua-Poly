@@ -5,7 +5,6 @@ import * as fromAuth from '../../../auth/reducers';
 import { UserActions } from '../../../core/actions';
 import { AuthActions } from '../../../auth/actions';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { LogoutConfirmationComponent } from '../logout-confirmation/logout-confirmation.component';
 
 @Component({
 	selector: 'app-header',
@@ -30,16 +29,6 @@ export class HeaderComponent implements OnInit {
 
 	logout() {
 		this.authStore.dispatch(AuthActions.logoutConfirmation());
-/*
-		this.modalService.open( LogoutConfirmationComponent, { centered: true })
-		.result.then(() => {
-			console.log('TODO: logout!');
-			//this.authStore.dispatch(AuthActions.logout());
-		}, () => {
-			console.log('Logout cancelled.')
-			//this.authStore.dispatch(AuthActions.logoutConfirmationDismiss());
-		});
-*/
 		return false;
 	}
 }

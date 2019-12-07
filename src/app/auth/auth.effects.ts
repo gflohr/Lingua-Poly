@@ -19,6 +19,13 @@ export class AuthEffects {
 		private modalService: NgbModal,
 	) { }
 
+	/* FIXME! This should maybe go into a separate service.  */
+	runDialog = function(content) {
+		const modalRef = this.modalService.open(content, { centered: true });
+
+		return from(modalRef.result);
+	};
+
 	login$ = createEffect(() => this.actions$.pipe(
 		ofType(LoginPageActions.login),
 		map(action => action.credentials),
@@ -35,28 +42,19 @@ export class AuthEffects {
 		tap(() => this.router.navigate(['/']))
 	), { dispatch: false });
 
+	logout$ = createEffect(() => this.actions$.pipe(
+		ofType(UserActions.logout)
+	), { dispatch: false });
+
 	logoutIdleUser$ = createEffect(() => this.actions$.pipe(
 		ofType(UserActions.idleTimeout),
 		map(() => AuthActions.logout())
 	));
 
-	logoutConfirmation$ = createEffect(() => this.actions$.pipe(
 		ofType(AuthActions.logoutConfirmation),
-		exhaustMap(() => {
-			const modalRef = this.modalService.open(
-				LogoutConfirmationComponent,
-				{ centered: true });
-			const dialog$ = from(modalRef.result);
-			return dialog$.pipe(
-				map(() => {
-					console.log('logout');
-					return AuthActions.logout;
-				}),
-				catchError(() => {
-					console.log('logout cancelled');
-					return of([AuthActions.logoutConfirmationDismiss]);
-				})
-			)
-		})
-	), { dispatch: false });
+		exhaustMap(() => this.runDialog(LogoutConfirmationComponent).pipe(
+			map((result) => AuthActions.logout()),
+			catchError(() => of(AuthActions.logoutConfirmationDismiss()))
+		))
+	));
 }

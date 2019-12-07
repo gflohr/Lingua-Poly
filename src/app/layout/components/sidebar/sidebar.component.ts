@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-
-import * as fromAuth from 'src/app/auth/reducers';
 import { Store, select } from '@ngrx/store';
+
+import * as fromAuth from '../../../auth/reducers';
+import { AuthActions } from '../../../auth/actions';
+
 
 @Component({
 	selector: 'app-sidebar',
@@ -18,4 +20,8 @@ export class SidebarComponent {
 		this.loggedIn$ = this.authStore.pipe(select(fromAuth.selectLoggedIn));
 	}
 
+	logout() {
+		this.authStore.dispatch(AuthActions.logoutConfirmation());
+		return false;
+	}
 }

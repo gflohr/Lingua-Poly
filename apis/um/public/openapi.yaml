@@ -12,6 +12,9 @@ components:
       in: cookie
       name: id
   schemas:
+    Empty:
+      title: Empty
+      description: Empty object
     DefaultResponse:
       title: DefaultResponse
       description: Generic default response
@@ -94,6 +97,11 @@ components:
         - token
       additionalProperties: false
   requestBodies:
+    EmptyRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Empty'
     CreateUserRequest:
       content:
         application/json:
@@ -129,6 +137,26 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponse'
+  /logout:
+    post:
+      tags:
+      - users
+      summary: Log out of the system
+      x-mojo-to: 'user#logout
+      security:
+      - cookieAuth: []
+      operationId: userLogout
+      requestBody:
+        $ref: '#/components/requestBodyes/EmptyRequest'
+      responses:
+        204:
+          description: Successful logout
         default:
           description: Error
           content:

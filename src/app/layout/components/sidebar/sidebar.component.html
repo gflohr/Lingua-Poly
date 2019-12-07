@@ -23,8 +23,10 @@
                 <li><a routerLink="/login" routerLinkActive="active bd-sidenav-active" translate>Sign-in</a></li>
               </ul>
               <ul class="nav bd-sidenav" *ngIf="loggedIn$ | async">
-                <li><a routerLink="#" routerLinkActive="active bd-sidenav-active" translate>Profile</a></li>
-                <li><a routerLink="#" routerLinkActive="active bd-sidenav-active" translate>Preferences</a></li>
+                <li><a routerLink="/profile" routerLinkActive="active bd-sidenav-active" translate>Profile</a></li>
+                <li><a routerLink="/preferences" routerLinkActive="active bd-sidenav-active" translate>Preferences</a></li>
+                <li><a (click)="logout()" href="#"
+                       aria-label="'Logout' | translate" translate>Logout</a></li>
               </ul>
             </div>
             <div class="bd-toc-item">
