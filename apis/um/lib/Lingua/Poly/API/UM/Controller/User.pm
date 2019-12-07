@@ -49,6 +49,12 @@ sub login {
 	$self->render(openapi => \%user, status => HTTP_OK);
 }
 
+sub logout {
+	my $self = shift->openapi->valid_input or return;
+
+	$self->render(json => '', status => HTTP_NO_CONTENT);
+}
+
 sub profile {
 	my $self = shift->openapi->valid_input or return;
 

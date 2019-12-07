@@ -148,12 +148,10 @@ paths:
       tags:
       - users
       summary: Log out of the system
-      x-mojo-to: 'user#logout
+      x-mojo-to: 'user#logout'
       security:
       - cookieAuth: []
       operationId: userLogout
-      requestBody:
-        $ref: '#/components/requestBodyes/EmptyRequest'
       responses:
         204:
           description: Successful logout
