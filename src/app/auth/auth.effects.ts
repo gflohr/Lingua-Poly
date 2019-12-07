@@ -56,7 +56,7 @@ export class AuthEffects {
 	));
 
 	logout$ = createEffect(() => this.actions$.pipe(
-		ofType(UserActions.logout),
+		ofType(AuthActions.logout),
 		switchMap(() =>
 			this.usersService.logoutPost().pipe(
 				map(() => AuthApiActions.logoutSuccess()),
