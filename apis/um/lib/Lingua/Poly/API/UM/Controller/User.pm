@@ -52,6 +52,17 @@ sub login {
 sub logout {
 	my $self = shift->openapi->valid_input or return;
 
+	my $app = $self->app;
+
+	# Downgrade the session.  This is an authenticated request.  So we don't
+	# get here if the user does not have a valid session.
+	$app->sessionService->delete($self->stash->{session});
+	my $fingerprint = $app->requestContextService->fingerprint($self);
+	my $session_id = $app->requestContextService->sessionID($self);
+	$self->stash->{session}
+		= $app->sessionService->refreshOrCreate($session_id, $fingerprint);
+	$app->database->commit;
+
 	$self->render(json => '', status => HTTP_NO_CONTENT);
 }
 

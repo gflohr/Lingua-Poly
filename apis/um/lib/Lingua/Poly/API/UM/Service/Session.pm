@@ -112,6 +112,14 @@ sub renew {
 	return $self;
 }
 
+sub delete {
+	my ($self, $session) = @_;
+
+	$self->database->execute(DELETE_SESSION => $session->sid);
+
+	return $self;
+}
+
 __PACKAGE__->meta->make_immutable;
 
 1;
