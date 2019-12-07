@@ -14,6 +14,7 @@ import { StoreRouterConnectingModule, RouterState } from '@ngrx/router-store';
 import { ROOT_REDUCERS, metaReducers } from './app.reducers';
 import { EffectsModule } from '@ngrx/effects';
 import { UserEffects, RouterEffects } from './core/effects';
+import { UserModule } from './user/user.module';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { UserEffects, RouterEffects } from './core/effects';
     CoreModule,
     AuthModule,
     LayoutModule,
-    MainModule,
+	MainModule,
+	UserModule,
 	RouterModule.forRoot(appRoutes),
 	StoreModule.forRoot(ROOT_REDUCERS, { metaReducers }),
 	StoreRouterConnectingModule.forRoot({
