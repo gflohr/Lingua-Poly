@@ -1,56 +1,30 @@
 <form>
 	<div class="form-group">
 		<label for="username" translate>Username</label>
-		<div class="input-group">
-			<input type="text" class="form-control" id="username"
-				aria-describedby="usernameHelp">
-			<div class="input-group-apppend">
-				<button class="btn btn-outline-success">
-					<span class="oi oi-check" title="{{ 'Save' }}" aria-hidden="true"></span>
-				</button>
-				<button class="btn btn-outline-danger">
-					<span class="oi oi-x" title="{{ 'Cancel' }}" aria-hidden="true"></span>
-				</button>
-			</div>
-		</div>
+		<input type="text" class="form-control" id="username"
+			aria-describedby="usernameHelp">
 		<small id="usernameHelp" class="form-text text-muted">
 			Your optional username may be visible for other users.
 		</small>
 	</div>
 	<div class="form-group">
 		<label for="username" translate>Homepage</label>
-		<div class="input-group">
-			<input type="url" class="form-control" id="homepage"
-				aria-describedby="homepageHelp">
-			<div class="input-group-apppend">
-				<button class="btn btn-outline-success">
-					<span class="oi oi-check" title="{{ 'Save' }}" aria-hidden="true"></span>
-				</button>
-				<button class="btn btn-outline-danger">
-					<span class="oi oi-x" title="{{ 'Cancel' }}" aria-hidden="true"></span>
-				</button>
-			</div>
-		</div>
+		<input type="url" class="form-control" id="homepage"
+			aria-describedby="homepageHelp">
 		<small id="homepageHelp" class="form-text text-muted">
 			This is also visible for other users.
 		</small>
 	</div>
 	<div class="form-group">
 		<label for="aboutMe" translate>About Me</label>
-		<div class="input-group">
-			<textarea class="form-control" id="aboutMe"
+		<textarea class="form-control" id="aboutMe"
 				aria-describedby="aboutMeHelp"></textarea>
-			<div class="input-group-append">
-				<button class="btn btn-outline-success">
-					<span class="oi oi-check" title="{{ 'Save' }}" aria-hidden="true"></span>
-				</button>
-				<button class="btn btn-outline-danger">
-					<span class="oi oi-x" title="{{ 'Cancel' }}" aria-hidden="true"></span>
-				</button>
-			</div>
-		</div>
 		<small id="aboutMeHelp" class="form-text text-muted">
 			Say something about yourself
 		</small>
+	</div>
+	<div class="float-right">
+		<button class="btn btn-link" translate>Cancel</button>
+		<button class="btn btn-primary" translate>Save</button>
 	</div>
 </form>
