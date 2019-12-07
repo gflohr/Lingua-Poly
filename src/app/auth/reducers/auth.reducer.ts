@@ -17,7 +17,7 @@ export const reducer = createReducer(
 	initialState,
 	on(AuthApiActions.loginSuccess, (state, { user }) => ({ ...state, user })),
 	on(UserApiActions.profileSuccess, (state, { user }) => ({ ...state, user })),
-	on(AuthActions.logout, () => initialState)
+	on(AuthApiActions.logoutSuccess, () => initialState)
 );
 
 export const getUser = (state: State) => state.user;

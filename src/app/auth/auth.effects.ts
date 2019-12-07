@@ -42,19 +42,31 @@ export class AuthEffects {
 		tap(() => this.router.navigate(['/']))
 	), { dispatch: false });
 
-	logout$ = createEffect(() => this.actions$.pipe(
-		ofType(UserActions.logout)
-	), { dispatch: false });
-
 	logoutIdleUser$ = createEffect(() => this.actions$.pipe(
 		ofType(UserActions.idleTimeout),
 		map(() => AuthActions.logout())
 	));
 
+	logoutConfirmation$ = createEffect(() => this.actions$.pipe(
 		ofType(AuthActions.logoutConfirmation),
 		exhaustMap(() => this.runDialog(LogoutConfirmationComponent).pipe(
-			map((result) => AuthActions.logout()),
+			map(() => AuthActions.logout()),
 			catchError(() => of(AuthActions.logoutConfirmationDismiss()))
 		))
 	));
+
+	logout$ = createEffect(() => this.actions$.pipe(
+		ofType(UserActions.logout),
+		switchMap(() =>
+			this.usersService.logoutPost().pipe(
+				map(() => AuthApiActions.logoutSuccess()),
+				catchError(error => of(AuthApiActions.logoutFailure({ error })))
+			)
+		)
+	), { dispatch: false});
+
+	logoutSuccess$ = createEffect(() => this.actions$.pipe(
+		ofType(AuthApiActions.loginSuccess),
+		tap(() => this.router.navigate(['/']))
+	), { dispatch: false });
 }

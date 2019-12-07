@@ -11,4 +11,9 @@ export const loginFailure = createAction(
 	props<{ error: any }>()
 );
 
-export const loginRedirect = createAction('[Auth/API] Login Redirect');
+export const logoutSuccess = createAction('[Auth API] Logout Success');
+
+export const logoutFailure = createAction(
+	'[Auth API] Logout Failure',
+	props<{ error: any }>()
+);
