@@ -22,15 +22,21 @@ has username => (isa => 'Maybe[Str]', is => 'ro');
 has email => (isa => 'Maybe[Str]', is => 'ro');
 has password => (isa => 'Str', is => 'ro');
 has confirmed => (isa => 'Bool', is => 'ro');
+has homepage => (isa => 'Maybe[Str]', is => 'ro');
+has description => (isa => 'Maybe[Str]', is => 'ro');
 
 use Lingua::Poly::API::UM::Util qw(empty);
 
 sub toResponse {
-	my ($self) = @_;
+	my ($self, $myself) = @_;
 
 	my %user;
 	$user{username} = $self->username if !empty $self->username;
-	$user{email} = $self->email if !empty $self->email;
+	if ($myself) {
+		$user{email} = $self->email if !empty $self->email;
+	}
+	$user{homepage} = $self->homepage if !empty $self->homepage;
+	$user{description} = $self->description if !empty $self->description;
 
 	return %user;
 }

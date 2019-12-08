@@ -87,6 +87,25 @@ components:
       - id
       - password
       additionalProperties: false
+    ForeignUser:
+      title: Another user
+      type: object
+      properties:
+        name:
+          description: The optional username
+          type: string
+          minLength: 1
+          example: John Doe
+        homepage:
+          description: An optional homepage
+          type: string
+          minLength: 1
+          example: http://www.example.com/
+        description:
+          description: Small bio.
+          type: string
+          example: Always curious language enthusiast
+      additionalProperties: false
     Token:
       title: Token
       properties:
@@ -183,6 +202,27 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DefaultResponse'
+  /users/{name}:
+    get:
+      tags:
+      - users
+      summary: Check if usernaem is available
+      x-mojo-to: 'user#get'
+      operationId: getUserByName
+      parameters:
+        - name: name
+          in: path
+          description: The username
+          schema:
+            type: string
+          required: true
+      responses:
+         200:
+           description: Another user
+           content:
+             application/json:
+               schema:
+                 $ref: '#/components/schemas/ForeignUser'
   /profile:
     get:
       tags:

@@ -6,7 +6,9 @@ CREATE TABLE users (
     email CITEXT NOT NULL UNIQUE,
     username CITEXT UNIQUE,
     password TEXT NOT NULL,
-    confirmed BOOLEAN NOT NULL DEFAULT 'f'
+    confirmed BOOLEAN NOT NULL DEFAULT 'f',
+    homepage TEXT,
+    description TEXT
 );
 INSERT INTO users(id, email, username, password, confirmed) 
   SELECT 0, 'placeholder@example.com', 'admin', '{ARGON2}$argon2id$v=19$m=32768,t=12,p=1$MTM1QzRDNkEtMDUzOS0xMUVBLUI0NjItM0ZCMDQyNjU0QTBB$tir07b6/y+fWwkvJe9Cw3A', 't'

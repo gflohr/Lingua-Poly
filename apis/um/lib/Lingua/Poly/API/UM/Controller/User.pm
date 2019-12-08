@@ -71,7 +71,7 @@ sub profile {
 
 	my $user = $self->stash->{session}->user;
 
-	my %user = $user->toResponse;
+	my %user = $user->toResponse('self');
 	$user{sessionTTL} = $self->config->{session}->{timeout};
 
 	return $self->render(openapi => \%user, status => HTTP_OK);
