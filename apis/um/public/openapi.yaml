@@ -34,23 +34,41 @@ components:
       - errors
     User:
       title: User
-      description: A user object is identified by its username, its email or both.
+      description: A user object is identified by its username.
       properties:
         email:
           type: string
+          description: The user's email address.
           minLength: 3
           example: john.doe@acme.com
         username:
           type: string
+          description: How the user's  name gets displayed.
           minLength: 2
           example: JohnDoe
-        sessionTTL:
-          description: Number of seconds before session expires.
-          type: number
-          format: int64
-          minimum: 0
-          maximum: 18446744073709551615
-          example: 7200
+        homepage:
+          type: string
+          description: The user's web presence.
+          minLength: 11
+          example: http://www.example.com/
+        description:
+          type: string
+          description: Mini bio or additional information
+          example: Curious language enthusiast
+      additionalProperties: false
+    Profile:
+      title: User seend by themselves
+      description: A user object is identified by its username, its email or both.
+      allOf:
+        - $ref: '#/components/schemas/User'
+        - type: object
+          properties:
+            email:
+              type: string
+              description: The user's email address.
+              minLength: 3
+              example: john.doe@acme.com
+          additionalProperties: false
     UserDraft:
       title: UserDraft
       properties:
@@ -86,25 +104,6 @@ components:
       required:
       - id
       - password
-      additionalProperties: false
-    ForeignUser:
-      title: Another user
-      type: object
-      properties:
-        name:
-          description: The optional username
-          type: string
-          minLength: 1
-          example: John Doe
-        homepage:
-          description: An optional homepage
-          type: string
-          minLength: 1
-          example: http://www.example.com/
-        description:
-          description: Small bio.
-          type: string
-          example: Always curious language enthusiast
       additionalProperties: false
     Token:
       title: Token
@@ -202,11 +201,32 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DefaultResponse'
-  /users/{name}:
+  /profile:
     get:
       tags:
       - users
-      summary: Check if usernaem is available
+      summary: Get user profile
+      x-mojo-to: 'user#profile'
+      security:
+      - cookieAuth: []
+      responses:
+        200:
+          description: User profile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Profile'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponse'
+  /profile/{name}:
+    get:
+      tags:
+      - users
+      summary: Get public parts of foreign user profile
       x-mojo-to: 'user#get'
       operationId: getUserByName
       parameters:
@@ -222,28 +242,7 @@ paths:
            content:
              application/json:
                schema:
-                 $ref: '#/components/schemas/ForeignUser'
-  /profile:
-    get:
-      tags:
-      - users
-      summary: Get user profile
-      x-mojo-to: 'user#profile'
-      security:
-      - cookieAuth: []
-      responses:
-        200:
-          description: User profile
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
-        default:
-          description: Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DefaultResponse'
+                 $ref: '#/components/schemas/User'
   /register:
     post:
       tags:

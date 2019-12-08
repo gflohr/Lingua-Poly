@@ -40,9 +40,8 @@ sub login {
 	$self->app->sessionService->renew($session);
 	$self->app->database->commit;
 
-	my %user = (
-		sessionTTL => $self->config->{session}->{timeout},
-	);
+	my %user;
+	$self->res->headers('X-Session-TTL', $self->config->{session}->{timeout});
 	$user{email} = $user->email if defined $user->email;
 	$user{username} = $user->username if defined $user->username;
 
@@ -73,7 +72,7 @@ sub profile {
 
 	my %user = $user->toResponse('self');
 
-	$self->res->headers('X-Session-TTL') = $self->config->{session}->{timeout};
+	$self->res->headers('X-Session-TTL', $self->config->{session}->{timeout});
 
 	return $self->render(openapi => \%user, status => HTTP_OK);
 }

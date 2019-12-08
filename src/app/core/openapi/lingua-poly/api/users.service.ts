@@ -18,6 +18,7 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 import { DefaultResponse } from '../model/defaultResponse';
+import { Profile } from '../model/profile';
 import { Token } from '../model/token';
 import { User } from '../model/user';
 import { UserDraft } from '../model/userDraft';
@@ -53,13 +54,49 @@ export class UsersService {
 
 
     /**
+     * Get public parts of foreign user profile
+     * @param name The username
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public getUserByName(name: string, observe?: 'body', reportProgress?: boolean): Observable<User>;
+    public getUserByName(name: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<User>>;
+    public getUserByName(name: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<User>>;
+    public getUserByName(name: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+        if (name === null || name === undefined) {
+            throw new Error('Required parameter name was null or undefined when calling getUserByName.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        const httpHeaderAccepts: string[] = [
+            'application/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        return this.httpClient.get<User>(`${this.configuration.basePath}/profile/${encodeURIComponent(String(name))}`,
+            {
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
      * Get user profile
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public profileGet(observe?: 'body', reportProgress?: boolean): Observable<User>;
-    public profileGet(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<User>>;
-    public profileGet(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<User>>;
+    public profileGet(observe?: 'body', reportProgress?: boolean): Observable<Profile>;
+    public profileGet(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Profile>>;
+    public profileGet(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Profile>>;
     public profileGet(observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
         let headers = this.defaultHeaders;
@@ -75,7 +112,7 @@ export class UsersService {
         }
 
 
-        return this.httpClient.get<User>(`${this.configuration.basePath}/profile`,
+        return this.httpClient.get<Profile>(`${this.configuration.basePath}/profile`,
             {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
@@ -173,14 +210,13 @@ export class UsersService {
 
     /**
      * Log out of the system
-     * @param body 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public userLogout(body?: object, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public userLogout(body?: object, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public userLogout(body?: object, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-    public userLogout(body?: object, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public userLogout(observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public userLogout(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public userLogout(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public userLogout(observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
         let headers = this.defaultHeaders;
 
@@ -195,17 +231,8 @@ export class UsersService {
         }
 
 
-        // to determine the Content-Type header
-        const consumes: string[] = [
-            'application/json'
-        ];
-        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
-        if (httpContentTypeSelected !== undefined) {
-            headers = headers.set('Content-Type', httpContentTypeSelected);
-        }
-
         return this.httpClient.post<any>(`${this.configuration.basePath}/logout`,
-            body,
+            null,
             {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,

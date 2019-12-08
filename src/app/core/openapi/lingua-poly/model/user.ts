@@ -12,14 +12,24 @@
 
 
 /**
- * A user object is identified by its username, its email or both.
+ * A user object is identified by its username.
  */
 export interface User { 
+    /**
+     * The user\'s email address.
+     */
     email?: string;
+    /**
+     * How the user\'s  name gets displayed.
+     */
     username?: string;
     /**
-     * Number of seconds before session expires.
+     * The user\'s web presence.
      */
-    sessionTTL?: number;
+    homepage?: string;
+    /**
+     * Mini bio or additional information
+     */
+    description?: string;
 }
 
