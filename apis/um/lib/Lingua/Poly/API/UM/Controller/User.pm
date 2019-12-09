@@ -74,6 +74,27 @@ sub profile {
 
 	$self->res->headers('X-Session-TTL', $self->config->{session}->{timeout});
 
+	# FIXME! The validation fails here because the OpenAPI plug-in seems to not
+	# support allOf.
+	#return $self->render(openapi => \%user, status => HTTP_OK);
+	return $self->render(json => \%user, status => HTTP_OK);
+}
+
+sub get {
+	my $self = shift->openapi->valid_input or return;
+
+	my $name = $self->param('name');
+
+	my $user = $self->app->userService->userByUsernameOrEmail($name);
+	if (!$user) {
+		return $self->errorResponse(
+			HTTP_NOT_FOUND, {
+		    message => 'invalid username or password'
+		});
+	}
+
+	my %user = $user->toResponse;
+
 	return $self->render(openapi => \%user, status => HTTP_OK);
 }
 

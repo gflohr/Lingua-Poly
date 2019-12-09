@@ -57,8 +57,8 @@ components:
           example: Curious language enthusiast
       additionalProperties: false
     Profile:
-      title: User seend by themselves
-      description: A user object is identified by its username, its email or both.
+      title: Profile
+      description: A user with private information.
       allOf:
         - $ref: '#/components/schemas/User'
         - type: object
@@ -201,6 +201,27 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DefaultResponse'
+  /users/{name}:
+    get:
+      tags:
+      - users
+      summary: Get public parts of foreign user profile
+      x-mojo-to: 'user#get'
+      operationId: getUserByName
+      parameters:
+        - name: name
+          in: path
+          description: The username
+          schema:
+            type: string
+          required: true
+      responses:
+         200:
+           description: Another user
+           content:
+             application/json:
+               schema:
+                 $ref: '#/components/schemas/User'
   /profile:
     get:
       tags:
@@ -222,27 +243,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DefaultResponse'
-  /profile/{name}:
-    get:
-      tags:
-      - users
-      summary: Get public parts of foreign user profile
-      x-mojo-to: 'user#get'
-      operationId: getUserByName
-      parameters:
-        - name: name
-          in: path
-          description: The username
-          schema:
-            type: string
-          required: true
-      responses:
-         200:
-           description: Another user
-           content:
-             application/json:
-               schema:
-                 $ref: '#/components/schemas/User'
   /register:
     post:
       tags:
