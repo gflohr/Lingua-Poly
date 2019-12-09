@@ -207,6 +207,8 @@ paths:
       - users
       summary: Get public parts of foreign user profile
       x-mojo-to: 'user#get'
+      security:
+      - cookieAuth: []
       operationId: getUserByName
       parameters:
         - name: name
