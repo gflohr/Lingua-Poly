@@ -57,7 +57,8 @@ sub maintain {
 sub refreshOrCreate {
 	my ($self, $sid, $fingerprint) = @_;
 
-	my ($user_id, $username, $email, $password, $confirmed);
+	my ($user_id, $username, $email, $password, $confirmed,
+	    $homepage, $description);
 	my $database = $self->database;
 
 	if (defined $sid && (($user_id) = $database->getRow(
@@ -66,7 +67,8 @@ sub refreshOrCreate {
 		$self->debug('updating session');
 		$database->execute(UPDATE_SESSION => $sid);
 		if (defined $user_id) {
-			($username, $email, $password, $confirmed) = $database->getRow(
+			($username, $email, $password, $confirmed,
+			 $homepage, $description) = $database->getRow(
 				SELECT_USER_BY_ID => $user_id
 			);
 			if ((!defined $username && !defined $email) || !$confirmed) {
@@ -92,6 +94,8 @@ sub refreshOrCreate {
 			email => $email,
 			password => $password,
 			confirmed => $confirmed,
+			homepage => $homepage,
+			description => $description,
 		);
 	}
 	return Lingua::Poly::API::UM::Model::Session->new(%args);

@@ -40,7 +40,8 @@ sub userByUsernameOrEmail {
 	my $statement = $id =~ /@/ ?
 		'SELECT_USER_BY_EMAIL' : 'SELECT_USER_BY_USERNAME';
 
-	my ($user_id, $username, $email, $password, $confirmed) = $db->getRow(
+	my ($user_id, $username, $email, $password, $confirmed,
+	    $homepage, $description) = $db->getRow(
 		$statement => $id
 	);
 	return if !defined $user_id;
@@ -51,6 +52,8 @@ sub userByUsernameOrEmail {
 		email => $email,
 		password => $password,
 		confirmed => $confirmed,
+		homepage => $homepage,
+		description => $description,
 	);
 }
 
