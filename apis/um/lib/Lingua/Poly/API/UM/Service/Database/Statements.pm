@@ -84,7 +84,7 @@ DELETE FROM users u
 	AND EXTRACT(EPOCH FROM(NOW() - t.created)) > ?
 EOF
 		SELECT_USER_BY_ID => <<EOF,
-SELECT username, email, password, confirmed, homepae, description
+SELECT username, email, password, confirmed, homepage, description
   FROM users WHERE id = ?
 EOF
 		SELECT_USER_BY_USERNAME => <<EOF,
