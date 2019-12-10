@@ -45,7 +45,10 @@ sub login {
 	$user{email} = $user->email if defined $user->email;
 	$user{username} = $user->username if defined $user->username;
 
-	$self->render(openapi => \%user, status => HTTP_OK);
+	# FIXME! The validation fails here because the OpenAPI plug-in seems to not
+	# support allOf.
+	#return $self->render(openapi => \%user, status => HTTP_OK);
+	return $self->render(json => \%user, status => HTTP_OK);
 }
 
 sub logout {

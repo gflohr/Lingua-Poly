@@ -1,3 +1,8 @@
+<h1 class="col-12" translate>Profile</h1>
+<div class="col-12 pl-form-lead" translate>
+All of this information is optional.  You can delete it at any point by
+saving an empty value.
+</div>
 <form class="col-12" [formGroup]="profileForm" (ngSubmit)="onSubmit()">
 	<div class="form-group">
 		<label for="username" translate>Username</label>
@@ -7,6 +12,9 @@
 		<small id="usernameHelp" class="form-text text-muted">
 			Your optional username may be visible for other users.
 		</small>
+		<small *ngIf="profileForm.get('username').touched && profileForm.get('username').errors && profileForm.get('username').errors.space"
+			class="form-text alert alert-danger"
+			translate>Leading or trailing space is not allowed.</small>
 		<small *ngIf="profileForm.get('username').touched && profileForm.get('username').errors && profileForm.get('username').errors.slash"
 			class="form-text alert alert-danger"
 			translate>You cannot use a slash in your username.</small>
@@ -22,6 +30,12 @@
 		<small id="homepageHelp" class="form-text text-muted">
 			This is also visible for other users.
 		</small>
+		<small *ngIf="profileForm.get('homepage').touched && profileForm.get('homepage').errors && profileForm.get('homepage').errors.schema"
+			class="form-text alert alert-danger"
+			translate>The homepage must start with "https://" or "http://".</small>
+		<small *ngIf="profileForm.get('homepage').touched && profileForm.get('homepage').errors && !profileForm.get('homepage').errors.schema && profileForm.get('homepage').errors.homepage"
+			class="form-text alert alert-danger"
+			translate>This is not a valid URL or it is not allowed.</small>
 	</div>
 	<div class="form-group">
 		<label for="description" translate>About Me</label>

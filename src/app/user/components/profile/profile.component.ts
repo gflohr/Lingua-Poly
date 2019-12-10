@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { UsernameValidator } from 'src/app/core/validators/usernameValidator';
+import { UrlValidator } from 'src/app/core/validators/urlValidator';
 
 @Component({
 	selector: 'app-profile',
@@ -15,7 +16,7 @@ export class ProfileComponent {
 
 	profileForm = this.fb.group({
 		username: ['', UsernameValidator.username],
-		homepage: [''],
+		homepage: ['', [UrlValidator.schema, UrlValidator.homepage]],
 		description: ['']
 	}, {});
 
