@@ -9,16 +9,14 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { UserAllOf } from './userAllOf';
+import { Profile } from './profile';
 
 
 /**
- * A user object is identified by its username.
+ * A user object with private information included.
  */
 export interface User { 
-    /**
-     * The user\'s email address.
-     */
-    email?: string;
     /**
      * How the user\'s  name gets displayed.
      */
@@ -31,5 +29,9 @@ export interface User {
      * Mini bio or additional information
      */
     description?: string;
+    /**
+     * The user\'s email address.
+     */
+    email?: string;
 }
 

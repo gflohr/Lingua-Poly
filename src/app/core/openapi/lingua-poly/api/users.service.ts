@@ -59,9 +59,9 @@ export class UsersService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getUserByName(name: string, observe?: 'body', reportProgress?: boolean): Observable<User>;
-    public getUserByName(name: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<User>>;
-    public getUserByName(name: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<User>>;
+    public getUserByName(name: string, observe?: 'body', reportProgress?: boolean): Observable<Profile>;
+    public getUserByName(name: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Profile>>;
+    public getUserByName(name: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Profile>>;
     public getUserByName(name: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
         if (name === null || name === undefined) {
             throw new Error('Required parameter name was null or undefined when calling getUserByName.');
@@ -69,6 +69,7 @@ export class UsersService {
 
         let headers = this.defaultHeaders;
 
+        // authentication (cookieAuth) required
         // to determine the Accept header
         const httpHeaderAccepts: string[] = [
             'application/json'
@@ -79,7 +80,7 @@ export class UsersService {
         }
 
 
-        return this.httpClient.get<User>(`${this.configuration.basePath}/profile/${encodeURIComponent(String(name))}`,
+        return this.httpClient.get<Profile>(`${this.configuration.basePath}/users/${encodeURIComponent(String(name))}`,
             {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
@@ -94,9 +95,9 @@ export class UsersService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public profileGet(observe?: 'body', reportProgress?: boolean): Observable<Profile>;
-    public profileGet(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Profile>>;
-    public profileGet(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Profile>>;
+    public profileGet(observe?: 'body', reportProgress?: boolean): Observable<User>;
+    public profileGet(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<User>>;
+    public profileGet(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<User>>;
     public profileGet(observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
         let headers = this.defaultHeaders;
@@ -112,7 +113,50 @@ export class UsersService {
         }
 
 
-        return this.httpClient.get<Profile>(`${this.configuration.basePath}/profile`,
+        return this.httpClient.get<User>(`${this.configuration.basePath}/profile`,
+            {
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Update user profile
+     * @param profile 
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public profilePatch(profile?: Profile, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public profilePatch(profile?: Profile, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public profilePatch(profile?: Profile, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public profilePatch(profile?: Profile, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+
+        let headers = this.defaultHeaders;
+
+        // authentication (cookieAuth) required
+        // to determine the Accept header
+        const httpHeaderAccepts: string[] = [
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            headers = headers.set('Content-Type', httpContentTypeSelected);
+        }
+
+        return this.httpClient.patch<any>(`${this.configuration.basePath}/profile`,
+            profile,
             {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,

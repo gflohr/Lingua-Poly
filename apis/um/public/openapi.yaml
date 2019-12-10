@@ -32,9 +32,9 @@ components:
             - path
       required:
       - errors
-    User:
-      title: User
-      description: A user object is identified by its username.
+    Profile:
+      title: Profile
+      description: Public information about a user.
       properties:
         username:
           type: string
@@ -51,11 +51,11 @@ components:
           description: Mini bio or additional information
           example: Curious language enthusiast
       additionalProperties: false
-    Profile:
-      title: Profile
-      description: A user with private information.
+    User:
+      title: User
+      description: A user object with private information included.
       allOf:
-        - $ref: '#/components/schemas/User'
+        - $ref: '#/components/schemas/Profile'
         - type: object
           properties:
             email:
@@ -130,6 +130,11 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/UserLogin'
+    ProfileRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Profile'
 tags:
   - name: users
     description: User management
@@ -149,7 +154,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Profile'
+                $ref: '#/components/schemas/User'
         default:
           description: Error
           content:
@@ -196,6 +201,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DefaultResponse'
+  # FIXME! This should be /profile/{name}
   /users/{name}:
     get:
       tags:
@@ -218,7 +224,7 @@ paths:
            content:
              application/json:
                schema:
-                 $ref: '#/components/schemas/User'
+                 $ref: '#/components/schemas/Profile'
   /profile:
     get:
       tags:
@@ -233,13 +239,27 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Profile'
+                # For convenience, this is a User not a Profile so that the
+                # email address can be displayed in the profile form.
+                $ref: '#/components/schemas/User'
         default:
           description: Error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/DefaultResponse'
+    patch:
+      tags:
+      - users
+      summary: Update user profile
+      x-mojo-to: 'user#updateProfile'
+      security:
+      - cookieAuth: []
+      requestBody:
+        $ref: '#/components/requestBodies/ProfileRequest'
+      responses:
+        204:
+          description: Profile updated successfully
   /register:
     post:
       tags:
