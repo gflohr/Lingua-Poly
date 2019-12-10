@@ -201,30 +201,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DefaultResponse'
-  # FIXME! This should be /profile/{name}
-  /users/{name}:
-    get:
-      tags:
-      - users
-      summary: Get public parts of foreign user profile
-      x-mojo-to: 'user#get'
-      security:
-      - cookieAuth: []
-      operationId: getUserByName
-      parameters:
-        - name: name
-          in: path
-          description: The username
-          schema:
-            type: string
-          required: true
-      responses:
-         200:
-           description: Another user
-           content:
-             application/json:
-               schema:
-                 $ref: '#/components/schemas/Profile'
   /profile:
     get:
       tags:
@@ -260,6 +236,29 @@ paths:
       responses:
         204:
           description: Profile updated successfully
+  /profile/{name}:
+    get:
+      tags:
+      - users
+      summary: Get public parts of foreign user profile
+      x-mojo-to: 'user#get'
+      security:
+      - cookieAuth: []
+      operationId: getUserByName
+      parameters:
+        - name: name
+          in: path
+          description: The username
+          schema:
+            type: string
+          required: true
+      responses:
+         200:
+           description: Another user
+           content:
+             application/json:
+               schema:
+                 $ref: '#/components/schemas/Profile'
   /register:
     post:
       tags:

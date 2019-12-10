@@ -80,7 +80,7 @@ export class UsersService {
         }
 
 
-        return this.httpClient.get<Profile>(`${this.configuration.basePath}/users/${encodeURIComponent(String(name))}`,
+        return this.httpClient.get<Profile>(`${this.configuration.basePath}/profile/${encodeURIComponent(String(name))}`,
             {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
