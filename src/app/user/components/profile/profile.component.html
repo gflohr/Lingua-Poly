@@ -3,7 +3,8 @@
 All of this information is optional.  You can delete it at any point by
 saving an empty value.
 </div>
-<form class="col-12" [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+<form class="col-12" [formGroup]="profileForm" (ngSubmit)="onSubmit()"
+      [connectForm]="user$ | async">
 	<div class="form-group">
 		<label for="username" translate>Username</label>
 		<input formControlName="username" type="text"

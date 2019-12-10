@@ -7,6 +7,7 @@ import { UsernameAvailableValidator } from 'src/app/core/validators/usernameAvai
 import * as fromAuth from '../../../auth/reducers';
 import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
+import { User } from 'src/app/core/openapi/lingua-poly';
 
 @Component({
 	selector: 'app-profile',
@@ -14,14 +15,14 @@ import { Observable } from 'rxjs';
 	styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent {
-	username$: Observable<String>;
+	user$: Observable<User>;
 
 	constructor(
 		private fb: FormBuilder,
 		private usernameAvailableValidator: UsernameAvailableValidator,
 		private authStore:Store<fromAuth.State>
 	) {
-		this.username$ = this.authStore.pipe(select(fromAuth.selectUsername));
+		this.user$ = this.authStore.pipe(select(fromAuth.selectUser));
 	}
 
 	profileForm = this.fb.group({

@@ -13,6 +13,7 @@ import { ApiInterceptorService } from './services/api-interceptor.service';
 import { EffectsModule } from '@ngrx/effects';
 import { UserDomainService } from './services/domain/user.domain.service';
 import { AuthEffects } from '../auth/auth.effects';
+import { ConnectFormDirective } from './directives/connect-form.directive';
 
 export function HttpLoaderFactory(httpClient: HttpClient) {
 	return new TranslateHttpLoader(httpClient, './assets/i18n/', '.json');
@@ -36,9 +37,10 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
 		ApiModule
 	],
   	exports: [
-		TranslateModule
+		TranslateModule,
+		ConnectFormDirective
 	],
-	declarations: [],
+	declarations: [ConnectFormDirective],
 	providers: [
 		HttpClient,
 		TranslateService,
