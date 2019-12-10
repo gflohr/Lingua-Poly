@@ -1,23 +1,27 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
+import { UsernameValidator } from '../../../core/validators/usernameValidator';
 
 @Component({
 	selector: 'app-profile',
 	templateUrl: './profile.component.html',
 	styleUrls: ['./profile.component.css']
 })
-export class ProfileComponent implements OnInit {
+export class ProfileComponent {
 	constructor(
 		private fb: FormBuilder
 	) {
 	}
 
 	profileForm = this.fb.group({
-		username: [''],
+		username: ['', UsernameValidator],
 		homepage: [''],
 		description: ['']
 	});
 
-	ngOnInit() {
+	onSubmit() {
+		console.log('todo');
 	}
+
+	get username() { return this.profileForm.get('username'); }
 }
