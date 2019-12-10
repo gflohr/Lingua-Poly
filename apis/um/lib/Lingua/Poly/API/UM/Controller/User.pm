@@ -40,10 +40,8 @@ sub login {
 	$self->app->sessionService->renew($session);
 	$self->app->database->commit;
 
-	my %user;
 	$self->res->headers('X-Session-TTL', $self->config->{session}->{timeout});
-	$user{email} = $user->email if defined $user->email;
-	$user{username} = $user->username if defined $user->username;
+	my %user = $user->toResponse('private');
 
 	# FIXME! The validation fails here because the OpenAPI plug-in seems to not
 	# support allOf.
