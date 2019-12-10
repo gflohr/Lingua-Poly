@@ -1,36 +1,40 @@
 <form class="col-12" [formGroup]="profileForm" (ngSubmit)="onSubmit()">
 	<div class="form-group">
 		<label for="username" translate>Username</label>
-		<input formControlName="username" type="text" class="form-control" id="username"
-			aria-describedby="usernameHelp">
+		<input formControlName="username" type="text"
+		       class="form-control" id="username"
+		       aria-describedby="usernameHelp">
 		<small id="usernameHelp" class="form-text text-muted">
 			Your optional username may be visible for other users.
 		</small>
-		<small *ngIf="profileForm.get('username').touched && profileForm.get('username').errors && registrationForm.get('username').errors.slash"
+		<small *ngIf="profileForm.get('username').touched && profileForm.get('username').errors && profileForm.get('username').errors.slash"
 			class="form-text alert alert-danger"
 			translate>You cannot use a slash in your username.</small>
-		<small *ngIf="profileForm.get('username').touched && profileForm.get('username').errors && registrationForm.get('username').errors.atSign"
+		<small *ngIf="profileForm.get('username').touched && profileForm.get('username').errors && profileForm.get('username').errors.atSign"
 			class="form-text alert alert-danger"
 			translate>You cannot use an at sign in your username.</small>
 	</div>
 	<div class="form-group">
 		<label for="username" translate>Homepage</label>
-		<input type="url" class="form-control" id="homepage"
+		<input formControlName="homepage" type="url"
+			class="form-control" id="homepage"
 			aria-describedby="homepageHelp">
 		<small id="homepageHelp" class="form-text text-muted">
 			This is also visible for other users.
 		</small>
 	</div>
 	<div class="form-group">
-		<label for="aboutMe" translate>About Me</label>
-		<textarea class="form-control" id="aboutMe"
-				aria-describedby="aboutMeHelp"></textarea>
-		<small id="aboutMeHelp" class="form-text text-muted">
+		<label for="description" translate>About Me</label>
+		<textarea formControlName="description"
+			class="form-control" id="description"
+			aria-describedby="descriptionHelp"></textarea>
+		<small id="descriptionHelp" class="form-text text-muted">
 			Say something about yourself
 		</small>
 	</div>
 	<div class="float-right">
 		<button class="btn btn-link" translate>Cancel</button>
-		<button class="btn btn-primary" translate>Save</button>
+		<button class="btn btn-primary" [disabled]="!profileForm.valid"
+			translate>Save</button>
 	</div>
 </form>

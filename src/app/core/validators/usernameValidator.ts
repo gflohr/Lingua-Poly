@@ -1,14 +1,13 @@
-import { FormGroup } from '@angular/forms';
+import { FormGroup, AbstractControl, ValidationErrors } from '@angular/forms';
 
 export class UsernameValidator {
-	static username(fg: FormGroup) {
-		console.log('validating');
-		const username = fg.get('username');
+	static username(control: AbstractControl): ValidationErrors | null {
+		if (!control) return null;
 
-		if (!username.valid) return null;
+		const username = control.value;
 
-		if (username.value.includes('/')) return { slash: true };
-		if (username.value.includes('@')) return { atSign: true };
+		if (username.includes('/')) return { slash: true };
+		if (username.includes('@')) return { atSign: true };
 
 		return null;
 	}

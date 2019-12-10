@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import { UsernameValidator } from '../../../core/validators/usernameValidator';
+import { UsernameValidator } from 'src/app/core/validators/usernameValidator';
 
 @Component({
 	selector: 'app-profile',
@@ -14,14 +14,12 @@ export class ProfileComponent {
 	}
 
 	profileForm = this.fb.group({
-		username: ['', UsernameValidator],
+		username: ['', UsernameValidator.username],
 		homepage: [''],
 		description: ['']
-	});
+	}, {});
 
 	onSubmit() {
 		console.log('todo');
 	}
-
-	get username() { return this.profileForm.get('username'); }
 }
