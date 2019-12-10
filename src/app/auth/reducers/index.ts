@@ -67,3 +67,9 @@ export const selectDisplayName = createSelector(
 		return null;
 	}
 )
+
+export const selectUsername = createSelector(
+	selectUser, user => {
+		return user ? user.username : null;
+	}
+)
