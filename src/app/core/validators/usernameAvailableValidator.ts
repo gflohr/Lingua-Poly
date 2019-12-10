@@ -14,16 +14,19 @@ export class UsernameAvailableValidator implements AsyncValidator {
 		control: AbstractControl
 	): Promise<ValidationErrors | null> | Observable<ValidationErrors | null> {
 		if (!control.value.length) {
-			console.log('no value yet');
 			return of(null);
 		}
 
-
-		console.log('control.value:', control.value);
+		/* Check whether this was the originally chosen username.  This would
+		 * cause a false positive.
+		 */
+		if (control.parent.getRawValue().originalUsername === control.value) {
+			return of(null);
+		}
 
 		return this.usersService.getUserByName(control.value).pipe(
-			map(() => { return { unavailable: true }}),
-			catchError(() => null)
+			map(() => { return { unavailable: true }; }),
+			catchError(() => { return of(null); }),
 		);
 	}
 }

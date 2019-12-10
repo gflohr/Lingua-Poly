@@ -8,6 +8,7 @@ import * as fromAuth from '../../../auth/reducers';
 import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { User } from 'src/app/core/openapi/lingua-poly';
+import { first, map, tap } from 'rxjs/operators';
 
 @Component({
 	selector: 'app-profile',
@@ -22,7 +23,13 @@ export class ProfileComponent {
 		private usernameAvailableValidator: UsernameAvailableValidator,
 		private authStore:Store<fromAuth.State>
 	) {
-		this.user$ = this.authStore.pipe(select(fromAuth.selectUser));
+		this.user$ = this.authStore.pipe(
+			select(fromAuth.selectUser),
+			tap((user) => {
+				const username = user ? user.username : '';
+				this.profileForm.patchValue({ originalUsername: username });
+			})
+		);
 	}
 
 	profileForm = this.fb.group({
@@ -31,6 +38,7 @@ export class ProfileComponent {
 			UsernameValidator.username,
 			this.usernameAvailableValidator.validate.bind(this.usernameAvailableValidator)
 		],
+		originalUsername: [''],
 		homepage: ['', [UrlValidator.schema, UrlValidator.homepage]],
 		description: ['']
 	}, {});

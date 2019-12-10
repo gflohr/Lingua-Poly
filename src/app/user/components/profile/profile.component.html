@@ -10,6 +10,7 @@ saving an empty value.
 		<input formControlName="username" type="text"
 		       class="form-control" id="username"
 		       aria-describedby="usernameHelp">
+		<input formControlName="originalUsername" type="hidden">
 		<small id="usernameHelp" class="form-text text-muted">
 			Your optional username may be visible for other users.
 		</small>
@@ -22,7 +23,7 @@ saving an empty value.
 		<small *ngIf="profileForm.get('username').touched && profileForm.get('username').errors && profileForm.get('username').errors.atSign"
 			class="form-text alert alert-danger"
 			translate>You cannot use an at sign in your username.</small>
-		<small *ngIf="profileForm.get('username').touched && profileForm.get('username').errors && profileForm.get('username').errors.unavailable"
+		<small *ngIf="!profileForm.get('username').pristine && profileForm.get('username').errors && profileForm.get('username').errors.unavailable"
 			class="form-text alert alert-danger"
 			translate>This name is already taken.</small>
 	</div>
