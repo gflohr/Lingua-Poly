@@ -14,12 +14,33 @@ package Lingua::Poly::API::UM::Service::URLChecker;
 
 use strict;
 
+use URI;
+
 sub new {
-        my ($class) = @_;
-        
-        my $self = '';
-        
-        bless \$self, $class;
+	my ($class) = @_;
+
+	my $self = '';
+
+	bless \$self, $class;
+}
+
+sub check {
+	my ($self, $url, %options) = @_;
+
+	my $uri = URI->new($url);
+
+	$self->__checkSchemes($uri, $options{schemes}) if $options{schemes};
+
+	return $self;
+}
+
+sub __checkSchemes {
+	my ($self, $uri, $schemes) = @_;
+
+	my $scheme = $uri->scheme or '';
+
+	grep { $_ eq $scheme} @$schemes
+		or die "$scheme is not an allowed schema";
 }
 
 1;

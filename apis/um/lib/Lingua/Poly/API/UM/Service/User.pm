@@ -100,6 +100,7 @@ sub updateUser {
 	}
 
 	my $host = $homepage->host;
+	if ($host =~ /^(?:[0-9]))
 
 	if ($user->homepage !~ m{
 			^(https?:// # protocol
