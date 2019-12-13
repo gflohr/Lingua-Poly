@@ -10,6 +10,8 @@
 # to Public License, Version 2, as published by Sam Hocevar. See
 # http://www.wtfpl.net/ for more details.
 
+# ABSTRACT: User management API for Lingua-Poly.
+
 package Lingua::Poly::API::UM;
 
 use strict;

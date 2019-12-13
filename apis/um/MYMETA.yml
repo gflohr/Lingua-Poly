@@ -1,0 +1,48 @@
+---
+abstract: 'User management API for Lingua-Poly.'
+author:
+  - 'Guido Flohr <guido.flohr@cantanea.com>'
+build_requires:
+  Module::Build: '0.28'
+configure_requires:
+  ExtUtils::MakeMaker: '0'
+  Module::Build: '0.28'
+dynamic_config: 0
+generated_by: 'ExtUtils::MakeMaker version 7.34, CPAN::Meta::Converter version 2.150010'
+license: unrestricted
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: '1.4'
+name: Lingua-Poly-API-UM
+no_index:
+  directory:
+    - t
+    - inc
+requires:
+  CGI::Cookie: '0'
+  DBI: '0'
+  Data::Password::zxcvbn: v1.0.4
+  Email::Address: '1.912'
+  Email::Sender::Simple: '1.300031'
+  Email::Sender::Transport::SMTP: '1.300031'
+  Email::Simple: '2.216'
+  Exporter: '0'
+  HTTP::Status: '0'
+  Locale::Messages: '0'
+  Locale::TextDomain: '0'
+  Mojo::Base: '0'
+  Mojo::Log: '0'
+  Mojo::URL: '0'
+  Mojolicious::Plugin::RemoteAddr: '0.03'
+  Mojolicious::Plugin::Util::RandomString: '0.08'
+  Moose: '0'
+  Password::OWASP::Argon2: '0'
+  Session::Token: '1.503'
+  Time::HiRes: '0'
+  YAML: '0'
+  YAML::XS: '0'
+  base: '0'
+  namespace::autoclean: '0'
+  strict: '0'
+version: '1.0'
+x_serialization_backend: 'CPAN::Meta::YAML version 0.018'
