@@ -40,7 +40,9 @@ is $check->('http://WWW.exaMple.COM'), 'http://www.example.com/',
 is $check->('http://www.example.com:80'), 'http://www.example.com/',
 	'default port';
 
-#ok !$check->('http://localhost'), 'localhost is not allowed';
-#ok $check->('http://whatever'), 'non-fqdn is not allowed';
+ok !$check->('http://localhost'), 'localhost';
+ok !$check->('http://whatever'), 'non-fqdn';
+ok !$check->('http://what..ever.com'), 'consecutive dots';
+ok !$check->('http://what.ever.com..'), 'two trailing dots';
 
 done_testing;

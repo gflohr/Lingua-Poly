@@ -62,6 +62,12 @@ sub __checkHostname {
 	# One trailing dot means that there had been two trailing dots.
 	die "host\n" if '.' eq substr $host, -1, 1;
 
+	# No FQDN.
+	die "host\n" if $host !~ /\./;
+
+	# Two consecutive dots.
+	die "host\n" if $host =~ /\.\./;
+
 	return $self;
 }
 
