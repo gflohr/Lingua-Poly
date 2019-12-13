@@ -20,11 +20,7 @@ my $checker = Lingua::Poly::API::UM::Service::URLChecker->new;
 ok $checker;
 
 my $check = sub {
-	my ($url) = @_;
-
-	my %options = (
-		schemes => ['http', 'https']
-	);
+	my ($url, %options) = @_;
 
 	eval { $checker->check($url, %options) };
 	return if $@;
@@ -35,5 +31,7 @@ my $check = sub {
 ok $check->('http://my.example.com'), 'http okay';
 ok $check->('https://my.example.com', 'https okay');
 ok !$check->('gopher://my.example.com'), 'gopher not okay';
+ok $check->('gopher://my.example.com', schemes => ['gopher'], 'gopher ok');
+ok $check->('gopher://my.example.com', schemes => ['*'], 'scheme wildcard');
 
 done_testing;

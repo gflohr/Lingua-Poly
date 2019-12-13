@@ -28,6 +28,7 @@ sub check {
 	my ($self, $url, %options) = @_;
 
 	my $uri = URI->new($url);
+	$options{schemes} ||= ['http', 'https'];
 
 	$self->__checkSchemes($uri, $options{schemes}) if $options{schemes};
 
@@ -39,7 +40,7 @@ sub __checkSchemes {
 
 	my $scheme = $uri->scheme or '';
 
-	grep { $_ eq $scheme} @$schemes
+	grep { $scheme eq $_ || '*' eq $_ } @$schemes
 		or die "$scheme is not an allowed schema";
 }
 
