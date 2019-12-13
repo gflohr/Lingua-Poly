@@ -15,6 +15,7 @@ package Lingua::Poly::API::UM::Validator::Homepage;
 use strict;
 
 use URI;
+use Encode;
 
 sub new {
 	my ($class) = @_;
@@ -57,7 +58,16 @@ sub __checkHostname {
 	my $host = $uri->host;
 
 	# No empty hostname.
+	die "host\n" if !defined $host;
 	die "host\n" if '' eq $host;
+
+	# Forbidden characters.
+	die "host($1)\n" if $host =~ /([\x00-\x2d\x2f\x3a-\x60\x7b-\xff])/;
+
+	# Actually there are a lot of restrictions for using Unicode characters
+	# but they are tld specific.  We just check for a valid utf-8 input here.
+	Encode::_utf8_off($host);
+	$host = Encode::decode('UTF-8', $host, Encode::FB_CROAK);
 
 	# One trailing dot means that there had been two trailing dots.
 	die "host\n" if '.' eq substr $host, -1, 1;
@@ -74,10 +84,16 @@ sub __checkHostname {
 		die "host\n" if 4 == @octets && grep { $_ <= 255 } @octets;
 	}
 
+	# There is no need to check for IPv6 addresses because they cannot contain
+	# a dot.
+
 	my @labels = split /\./, $host;
 
-	# These would also be IPv4 addresses.
-	die "host\n" if 'in-addr' eq $labels[-2] && 'arpa' eq $labels[-1];
+	# We disallow .arpa altogether because '.in-addr.arpa' are IPv4 addresses
+	# (which are not allowed), '.ip6.arpa' are  IPv6 addresses (also not
+	# allowed) and '.home.arpa' are private networks.  And we simply assume
+	# that the rest is phased out or does not make sense for us.
+	die "host\n" if 'arpa' eq $labels[-1];
 
 	# RFC2606 top-level domain?
 	my %rfc2606 = map { $_ => 1 } qw(test example invalid localhost);
@@ -88,6 +104,13 @@ sub __checkHostname {
 		my %rfc2606_2 = map { $_ => 1 } qw(com net org);
 		die "host\n" if $rfc2606_2{$labels[-1]};
 	}
+
+	# Many tld registries do not allow the registration of 2nd level
+	# subdomains (for example .uk) or certain 2nd level subdomains have
+	# special purposes and cannot be registered (for example .b.br for
+	# Brasilian banks).  This could only be checked with a lookup table that
+	# has to be maintained.  Such homepage can simply not be resolved which
+	# is considered a minor problem.
 
 	return $self;
 }

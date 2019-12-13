@@ -28,6 +28,9 @@ my $check = sub {
 	return $canonical;
 };
 
+ok !$check->('http://my_example.fr', 'forbidden character');
+
+$DB::single = 1;
 ok $check->('http://my.example.fr'), 'http okay';
 ok $check->('https://my.example.fr', 'https okay');
 ok !$check->('gopher://my.example.fr'), 'gopher not okay';
