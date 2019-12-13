@@ -40,7 +40,7 @@ export class ProfileComponent {
 			this.usernameAvailableValidator.validate.bind(this.usernameAvailableValidator)
 		],
 		originalUsername: [''],
-		homepage: ['', [UrlValidator.schema, UrlValidator.homepage]],
+		homepage: ['', [UrlValidator.scheme, UrlValidator.hostname]],
 		description: ['']
 	}, {});
 
