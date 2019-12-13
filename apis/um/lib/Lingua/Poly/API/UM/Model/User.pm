@@ -18,12 +18,12 @@ use Moose;
 use namespace::autoclean;
 
 has id => (isa => 'Int', is => 'ro');
-has username => (isa => 'Maybe[Str]', is => 'ro');
-has email => (isa => 'Maybe[Str]', is => 'ro');
-has password => (isa => 'Str', is => 'ro');
-has confirmed => (isa => 'Bool', is => 'ro');
-has homepage => (isa => 'Maybe[Str]', is => 'ro');
-has description => (isa => 'Maybe[Str]', is => 'ro');
+has username => (isa => 'Maybe[Str]', is => 'rw');
+has email => (isa => 'Maybe[Str]', is => 'rw');
+has password => (isa => 'Str', is => 'rw');
+has confirmed => (isa => 'Bool', is => 'rw');
+has homepage => (isa => 'Maybe[Str]', is => 'rw');
+has description => (isa => 'Maybe[Str]', is => 'rw');
 
 use Lingua::Poly::API::UM::Util qw(empty);
 

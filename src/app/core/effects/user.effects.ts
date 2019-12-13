@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { fromEvent, merge, timer, of } from 'rxjs';
 import { createEffect, Actions, ofType } from '@ngrx/effects';
-import { map, exhaustMap, switchMapTo, catchError } from 'rxjs/operators';
+import { map, exhaustMap, switchMapTo, catchError, tap } from 'rxjs/operators';
 import { UserActions } from '../actions';
-import { UsersService } from '../openapi/lingua-poly';
+import { UsersService, Profile } from '../openapi/lingua-poly';
 import { UserApiActions } from 'src/app/user/actions';
+import { props } from '@ngrx/store';
 
 @Injectable()
 export class UserEffects {
@@ -31,8 +32,17 @@ export class UserEffects {
 		)
 	));
 
+	setProfile$ = createEffect(() => this.actions$.pipe(
+		ofType(UserActions.setProfile),
+		exhaustMap((props) =>
+			this.usersService.profilePatch(props.payload).pipe(
+				map(profile => console.log(profile))
+			)
+		)
+	), { dispatch: false });
+
 	constructor(
 		private actions$: Actions,
-		private usersService: UsersService
+		private usersService: UsersService,
 	) { }
 }

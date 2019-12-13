@@ -76,6 +76,13 @@ EOF
 		INSERT_USER => <<EOF,
 INSERT INTO users(email, password) VALUES(?, ?)
 EOF
+		UPDATE_USER => <<EOF,
+UPDATE users
+   SET username = ?,
+       homepage = ?,
+	   description = ?
+ WHERE id = ?
+EOF
 		DELETE_USER_STALE => <<EOF,
 DELETE FROM users u
   USING tokens t

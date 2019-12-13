@@ -81,6 +81,28 @@ sub profile {
 	return $self->render(json => \%user, status => HTTP_OK);
 }
 
+sub updateProfile {
+	my $self = shift->openapi->valid_input or return;
+
+	my $user = $self->stash->{session}->user;
+
+	$user->username($self->param('username'));
+	$user->homepage($self->param('homepage'));
+	$user->description($self->param('description'));
+
+	eval {
+		$self->app->userService->updateUser($user);
+	};
+	if ($@) {
+		$self->error($@);
+		return $self->errorResponse(HTTP_BAD_REQUEST, {
+			message => 'invalid user properties'
+		});
+	}
+
+	return $self->render(openapi => '', status => HTTP_NO_CONTENT);
+}
+
 sub get {
 	my $self = shift->openapi->valid_input or return;
 

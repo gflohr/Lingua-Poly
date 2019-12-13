@@ -82,6 +82,40 @@ sub activate {
 	return $self;
 }
 
+sub updateUser {
+	my ($self, $user) = @_;
+
+	# The RDBMS checks the uniqueness of the username.
+
+	if (!length $user->username) {
+		$user->username(undef);
+	} elsif ($user->username =~ m{[/@]}) {
+		die "username must not contain a slash or an at-sign.\n";
+	}
+
+	my $homepage = URI->new($user->homepage) or die;
+	my $schema = $homepage->schema;
+	if ('http' ne $schema && 'https' ne $schema) {
+		die;
+	}
+
+	my $host = $homepage->host;
+
+	if ($user->homepage !~ m{
+			^(https?:// # protocol
+			((([a-z\d]([a-z\d-]*[a-z\d])*)\.)+[a-z]{2,}| # domain name
+			((\d{1,3}\.){3}\d{1,3})) # OR ip (v4) address
+			(:\d+)?(/[-a-z\d%_.~+]*)* # port and path
+			(\?[;&a-z\d%_.~+=-]*)? # query string
+			(\#[-a-z\d_]*)?$/ix) {
+
+	}
+
+	$self->database->execute(
+		UPDATE_USER => $user->username, $user->homepage, $user->description,
+	);
+}
+
 __PACKAGE__->meta->make_immutable;
 
 1;

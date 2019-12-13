@@ -53,7 +53,7 @@ saving an empty value.
 	</div>
 	<div class="float-right">
 		<button class="btn btn-link" translate>Cancel</button>
-		<button class="btn btn-primary" [disabled]="!profileForm.valid"
+		<button class="btn btn-primary" [disabled]="!profileForm.dirty || !profileForm.valid"
 			translate>Save</button>
 	</div>
 </form>

@@ -8,7 +8,8 @@ import * as fromAuth from '../../../auth/reducers';
 import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { User } from 'src/app/core/openapi/lingua-poly';
-import { first, map, tap } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
+import { UserActions } from 'src/app/core/actions';
 
 @Component({
 	selector: 'app-profile',
@@ -21,7 +22,7 @@ export class ProfileComponent {
 	constructor(
 		private fb: FormBuilder,
 		private usernameAvailableValidator: UsernameAvailableValidator,
-		private authStore:Store<fromAuth.State>
+		private authStore: Store<fromAuth.State>,
 	) {
 		this.user$ = this.authStore.pipe(
 			select(fromAuth.selectUser),
@@ -44,6 +45,8 @@ export class ProfileComponent {
 	}, {});
 
 	onSubmit() {
-		console.log('todo');
+		let profile = this.profileForm.getRawValue();
+		delete profile.originalUsername;
+		this.authStore.dispatch(UserActions.setProfile({ payload: profile }));
 	}
 }
