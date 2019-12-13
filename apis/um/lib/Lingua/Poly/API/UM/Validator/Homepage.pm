@@ -68,6 +68,27 @@ sub __checkHostname {
 	# Two consecutive dots.
 	die "host\n" if $host =~ /\.\./;
 
+	# IPv4 address?
+	if ($host =~ /^(?:0|(?:[1-9][0-9]{0,2})\.){3}(?:0|(?:[1-9][0-9]{0,2}))$/) {
+		my @octets = split /\./, $host;
+		die "host\n" if 4 == @octets && grep { $_ <= 255 } @octets;
+	}
+
+	my @labels = split /\./, $host;
+
+	# These would also be IPv4 addresses.
+	die "host\n" if 'in-addr' eq $labels[-2] && 'arpa' eq $labels[-1];
+
+	# RFC2606 top-level domain?
+	my %rfc2606 = map { $_ => 1 } qw(test example invalid localhost);
+	die "host\n" if $rfc2606{$labels[-1]};
+
+	# RFC2606 second-level domain?
+	if ('example' eq $labels[-2]) {
+		my %rfc2606_2 = map { $_ => 1 } qw(com net org);
+		die "host\n" if $rfc2606_2{$labels[-1]};
+	}
+
 	return $self;
 }
 
