@@ -38,6 +38,11 @@ sub check {
 	$self->__checkScheme($uri);
 	$self->__checkHostname($uri);
 
+	# What about user info? That is an embedded username and password.  While
+	# it seems to be a little bit odd to publish such a URL on the internet,
+	# we do not have to prevent every possible way that users might shoot
+	# themselves in the foot.  So we just allow them.
+
 	return $uri;
 }
 
@@ -60,6 +65,14 @@ sub __checkHostname {
 	# No empty hostname.
 	die "host\n" if !defined $host;
 	die "host\n" if '' eq $host;
+
+	# RFC-952 states:
+	#
+	# > Host software MUST handle host names of up to 63 characters and
+	# > SHOULD handle host names of up to 255 characters.
+	#
+	# That means that host software is free to support longer names, and we
+	# therefore do not count the length of the hostname here.
 
 	# Forbidden characters.
 	die "host($1)\n" if $host =~ /([\x00-\x2d\x2f\x3a-\x60\x7b-\xff])/;
@@ -104,6 +117,10 @@ sub __checkHostname {
 		my %rfc2606_2 = map { $_ => 1 } qw(com net org);
 		die "host\n" if $rfc2606_2{$labels[-1]};
 	}
+
+	# A hyphen is not allowed as the first or last character of a label.
+	die "host\n" if grep { /^-/ } @labels;
+	die "host\n" if grep { /-$/ } @labels;
 
 	# Many tld registries do not allow the registration of 2nd level
 	# subdomains (for example .uk) or certain 2nd level subdomains have
