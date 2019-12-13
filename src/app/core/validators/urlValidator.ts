@@ -4,6 +4,8 @@ export class UrlValidator {
 	static homepage(control: AbstractControl): ValidationErrors | null {
 		if (!control.value.length) return null;
 
+		// Taken from https://stackoverflow.com/a/5717133 and terribly
+		// broken.
 		var pattern = new RegExp('^(https?:\\/\\/)'+ // protocol
 			'((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
 			'((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
