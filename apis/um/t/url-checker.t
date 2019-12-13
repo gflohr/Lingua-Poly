@@ -30,8 +30,27 @@ my $check = sub {
 
 ok $check->('http://my.example.com'), 'http okay';
 ok $check->('https://my.example.com', 'https okay');
+ok !$check->(
+	'http://my.example.com',
+	scheme_whitelist => ['https'],
+), 'http is not whitelisted';
 ok !$check->('gopher://my.example.com'), 'gopher not okay';
-ok $check->('gopher://my.example.com', schemes => ['gopher'], 'gopher ok');
-ok $check->('gopher://my.example.com', schemes => ['*'], 'scheme wildcard');
+ok $check->('gopher://my.example.com', scheme_whitelist => ['gopher']), 'gopher ok';
+ok $check->('gopher://my.example.com', scheme_whitelist => ['*']), 'scheme wildcard';
+
+ok !$check->('http://localhost'), 'localhost is not allowed';
+ok $check->('http://localhost', host_whitelist => ['localhost'],
+	'localhost is whitelisted');
+ok $check->('http://www.competitor.com'), 'www.competitor.com';
+ok !$check->('http://www.competitor.com',
+	host_blacklist => ['www.competitor.com']),
+	'www.competitor.com is blacklisted';
+ok $check->('http://www.competitor.com',
+	host_blacklist => ['competitor.com']),
+	'www.competitor.com is not blacklisted';
+$DB::single = 1;
+ok !$check->('http://www.competitor.com',
+	host_blacklist => ['*.competitor.com']),
+	'*.competitor.com is blacklisted';
 
 done_testing;

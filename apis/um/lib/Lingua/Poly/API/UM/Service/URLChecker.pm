@@ -27,21 +27,66 @@ sub new {
 sub check {
 	my ($self, $url, %options) = @_;
 
-	my $uri = URI->new($url);
-	$options{schemes} ||= ['http', 'https'];
+	my $uri = URI->new($url)->canonical;
 
-	$self->__checkSchemes($uri, $options{schemes}) if $options{schemes};
+	$options{scheme_whitelist} ||= ['http', 'https'];
+	$self->__checkScheme(
+		$uri,
+		$options{scheme_whitelist},
+		$options{scheme_blacklist}
+	);
+
+	$options{host_blacklist} ||= ['localhost', ''];
+	$self->__checkHostname(
+		$uri,
+		$options{host_whitelist},
+		$options{host_blacklist}
+	);
 
 	return $self;
 }
 
-sub __checkSchemes {
-	my ($self, $uri, $schemes) = @_;
+sub __checkScheme {
+	my ($self, $uri, $whitelist, $blacklist) = @_;
 
-	my $scheme = $uri->scheme or '';
+	my $subject = $uri->scheme or '';
 
-	grep { $scheme eq $_ || '*' eq $_ } @$schemes
-		or die "$scheme is not an allowed schema";
+	if ($whitelist) {
+		grep { $subject eq $_ || '*' eq $_ } map { lc $_ } @$whitelist and return 1;
+	}
+
+	die "scheme\n";
+}
+
+sub __checkHostname {
+	my ($self, $uri, $whitelist, $blacklist) = @_;
+
+	my $subject = $uri->host or '';
+
+	my $match = sub {
+		my ($subject, $listvalue) = @_;
+
+		if ('*' eq $listvalue) {
+			return 1;
+		} elsif ($listvalue =~ s/^\*\.(.)/$1/) {
+			my $l = length $listvalue;
+			$subject = substr $subject, -$l, $l;
+
+			return $subject eq $listvalue;
+		}
+
+		return $subject eq $listvalue;
+	};
+
+	if ($whitelist) {
+		grep { $match->($subject, $_) } map { lc $_ } @$whitelist and return 1;
+	}
+
+	if ($blacklist) {
+		grep { $match->($subject, $_) } map { lc $_ } @$blacklist and die "host\n";
+	}
+
+	return $self;
 }
 
 1;
