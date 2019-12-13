@@ -29,18 +29,16 @@ sub check {
 
 	my $uri = URI->new($url)->canonical;
 
-	$options{scheme_whitelist} ||= ['http', 'https'];
 	$self->__checkScheme(
 		$uri,
 		$options{scheme_whitelist},
-		$options{scheme_blacklist}
+		$options{scheme_blacklist},
 	);
 
-	$options{host_blacklist} ||= ['localhost', ''];
 	$self->__checkHostname(
 		$uri,
 		$options{host_whitelist},
-		$options{host_blacklist}
+		$options{host_blacklist},
 	);
 
 	return $self;
@@ -52,10 +50,18 @@ sub __checkScheme {
 	my $subject = $uri->scheme or '';
 
 	if ($whitelist) {
-		grep { $subject eq $_ || '*' eq $_ } map { lc $_ } @$whitelist and return 1;
+		grep { $subject eq $_ || '*' eq $_ }
+		map { lc $_ } @$whitelist
+		and return $self;
 	}
 
-	die "scheme\n";
+	if ($blacklist) {
+		grep { $subject eq $_ || '*' eq $_ }
+		map { lc $_ } @$blacklist
+		and die "scheme\n";
+	}
+
+	return $self;
 }
 
 sub __checkHostname {
@@ -79,11 +85,15 @@ sub __checkHostname {
 	};
 
 	if ($whitelist) {
-		grep { $match->($subject, $_) } map { lc $_ } @$whitelist and return 1;
+		grep { $match->($subject, $_) }
+		map { lc $_ } @$whitelist
+		and return $self;
 	}
 
 	if ($blacklist) {
-		grep { $match->($subject, $_) } map { lc $_ } @$blacklist and die "host\n";
+		grep { $match->($subject, $_) }
+		map { lc $_ } @$blacklist
+		and die "host\n";
 	}
 
 	return $self;

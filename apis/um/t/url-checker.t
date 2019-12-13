@@ -28,29 +28,52 @@ my $check = sub {
 	return 1;
 };
 
-ok $check->('http://my.example.com'), 'http okay';
-ok $check->('https://my.example.com', 'https okay');
+my %options;
+%options = (
+	scheme_whitelist => ['http', 'https'],
+	scheme_blacklist => ['*'],
+);
+ok $check->('http://my.example.com', %options), 'http okay';
+ok $check->('https://my.example.com', %options, 'https okay');
+$DB::single = 1;
 ok !$check->(
 	'http://my.example.com',
+	%options,
 	scheme_whitelist => ['https'],
 ), 'http is not whitelisted';
-ok !$check->('gopher://my.example.com'), 'gopher not okay';
-ok $check->('gopher://my.example.com', scheme_whitelist => ['gopher']), 'gopher ok';
-ok $check->('gopher://my.example.com', scheme_whitelist => ['*']), 'scheme wildcard';
+ok !$check->('gopher://my.example.com', %options), 'gopher not okay';
+ok $check->('gopher://my.example.com',
+	%options,
+	scheme_whitelist => ['gopher']
+), 'gopher ok';
+ok $check->('gopher://my.example.com',
+	%options,
+	scheme_whitelist => ['*']),
+'scheme wildcard';
 
-ok !$check->('http://localhost'), 'localhost is not allowed';
-ok $check->('http://localhost', host_whitelist => ['localhost'],
-	'localhost is whitelisted');
-ok $check->('http://www.competitor.com'), 'www.competitor.com';
-ok !$check->('http://www.competitor.com',
-	host_blacklist => ['www.competitor.com']),
-	'www.competitor.com is blacklisted';
+%options = (
+	host_blacklist => ['localhost', '']
+);
+ok !$check->('http://localhost', %options), 'localhost is not allowed';
+ok $check->('http://localhost',
+	%options,
+	host_whitelist => ['localhost'],
+	host_blacklist => ['localhost'],
+), 'localhost is whitelisted';
 ok $check->('http://www.competitor.com',
-	host_blacklist => ['competitor.com']),
-	'www.competitor.com is not blacklisted';
-$DB::single = 1;
+	%options,
+),'www.competitor.com';
 ok !$check->('http://www.competitor.com',
-	host_blacklist => ['*.competitor.com']),
-	'*.competitor.com is blacklisted';
+	%options,
+	host_blacklist => ['www.competitor.com']
+), 'www.competitor.com is blacklisted';
+ok $check->('http://www.competitor.com',
+	%options,
+	host_blacklist => ['competitor.com']
+), 'www.competitor.com is not blacklisted';
+ok !$check->('http://www.competitor.com',
+	%options,
+	host_blacklist => ['*.competitor.com']
+), '*.competitor.com is blacklisted';
 
 done_testing;
