@@ -22,16 +22,23 @@ ok $checker;
 my $check = sub {
 	my ($url, %options) = @_;
 
-	eval { $checker->check($url) };
+	my $canonical = eval { $checker->check($url) };
 	return if $@;
 
-	return 1;
+	return $canonical;
 };
 
 ok $check->('http://my.example.com'), 'http okay';
 ok $check->('https://my.example.com', 'https okay');
 ok !$check->('gopher://my.example.com'), 'gopher not okay';
 ok !$check->('/path/to/resource'), 'schemeless not okay';
+
+is $check->('http://www.example.com.'), 'http://www.example.com/',
+	'trailing dot';
+is $check->('http://WWW.exaMple.COM'), 'http://www.example.com/',
+	'to lowercase';
+is $check->('http://www.example.com:80'), 'http://www.example.com/',
+	'default port';
 
 #ok !$check->('http://localhost'), 'localhost is not allowed';
 #ok $check->('http://whatever'), 'non-fqdn is not allowed';
