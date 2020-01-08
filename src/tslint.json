@@ -12,6 +12,15 @@
             "element",
             "app",
             "kebab-case"
+        ],
+        "indent":  [
+            true,
+            "tabs",
+            4
+        ],
+        "curly": [
+            true,
+            "ignore-same-line"
         ]
     }
 }
