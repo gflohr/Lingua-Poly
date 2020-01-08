@@ -30,7 +30,6 @@ my $check = sub {
 
 ok !$check->('http://my_example.fr'), 'forbidden character';
 
-$DB::single = 1;
 ok $check->('http://my.example.fr'), 'http okay';
 ok $check->('https://my.example.fr', 'https okay');
 ok !$check->('gopher://my.example.fr'), 'gopher not okay';
@@ -66,6 +65,15 @@ ok $check->('http://www.xn--e1afmkfd'), 'unicode tld';
 ok !$check->('http://...'), 'triple dot';
 ok !$check->('http://..'), 'double dot';
 ok !$check->('http://.'), 'single dot';
+
+# IPv4 addresses.
+ok $check->('http://1.2.3.4'), 'valid IPv4';
+
+# IPv4 normalization.
+is $check->('http://0x78.00000.0.0000170'), 'http://120.0.0.120/', 'hex/octal IPv4';
+is $check->('http://0X00078.00000.0.0000170'), 'http://120.0.0.120/', 'hex/octal IPv4';
+# This is *not* an IPv4 address!  It's a fqdn with an invalid top-level domain.
+ok !$check->('http://1.2.3.08'), 'invalid IPv4 with octal';
 
 # RFC2606
 ok !$check->('http://www.test'), 'RFC2606 .test';

@@ -34,11 +34,8 @@ sub check {
 	$self->__checkScheme($uri);
 	$self->__checkPort($uri);
 	$self->__checkUserinfo($uri);
-	$self->__checkHostname($uri);
-
-	# Remove a possible trailing dot from the hostname.
-	my $host = $uri->host;
-	$uri->host($host) if $host =~ s/\.$//;
+	my $host = $self->__checkHostname($uri);
+	$uri->host($host);
 
 	return $uri;
 }
@@ -85,7 +82,7 @@ sub __checkHostname {
 	# Discard an empty root label.
 	$host =~ s/\.$//;
 
-	# This happens for two or more trailing dots.
+	# Two or more trailing dots.
 	die "host\n" if $host =~ /\.$/;
 
 	my @labels = split /\./, $host;
@@ -99,8 +96,8 @@ sub __checkHostname {
 	if (@labels == 4) {
 		my @octets;
 		foreach my $label (@labels) {
-			if ($label =~ /^0+[1-7]{1,4}$/ || $label =~ /^0x[0-9a-f]{1,2}$/i
-			    || $label =~ /^(?:[0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/) {
+			if ($label =~ /^0[0-7]+$/ || $label =~ /^0x[0-9a-f]+$/
+			    || $label =~ /^(?:0|[1-9][0-9]*)$/) {
 				my $octet = oct $label;
 				last if $octet > 255;
 				push @octets, $octet;
@@ -122,6 +119,7 @@ sub __checkHostname {
 			    || ($octets[0] == 168 && $octets[1] == 245)) {
 				die "ipv4_special\n";
 			}
+			$host = join '.', @octets;
 		}
 	} elsif ($host =~ /^\[([0-9a-fA-F:]+)\]$/ && $host =~ /:/) {
 		# Uncompress the IPv6 address.
@@ -160,7 +158,7 @@ sub __checkHostname {
 		}
 	}
 
-	return $self if $is_ip;
+	return $host if $is_ip;
 
 	die "no_fqdn\n" if @labels < 2;
 
@@ -197,7 +195,7 @@ sub __checkHostname {
 		die "label:forbidden_char($1)n";
 	}
 
-	return $self;
+	return $host;
 }
 
 1;
