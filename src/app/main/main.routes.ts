@@ -27,7 +27,7 @@ export const mainRoutes = [
 	},
 	{
 		path: ':lingua/mytest',
-		component:  StartComponent,
+		component:	StartComponent,
 		data: { title: _('Test') }
 	},
 ];

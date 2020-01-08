@@ -36,7 +36,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
 		HttpClientModule,
 		ApiModule
 	],
-  	exports: [
+		exports: [
 		TranslateModule,
 		ConnectFormDirective
 	],

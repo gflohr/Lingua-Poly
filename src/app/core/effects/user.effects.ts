@@ -14,7 +14,7 @@ export class UserEffects {
 	mouse$ = fromEvent(document, 'mousemove');
 
 	// FIXME! This is the wrong approach. Activity for us exclusively means
-	// API calls.  And the maximum allowed idle time comes from the server.
+	// API calls.	And the maximum allowed idle time comes from the server.
 	idle$ = createEffect(() =>
 		merge(this.clicks$, this.keys$, this.mouse$).pipe(
 			switchMapTo(timer(5 * 60 * 1000)), // 5 minute inactivity timeout

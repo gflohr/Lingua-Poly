@@ -19,8 +19,8 @@ export class PasswordValidator {
 		const email = fg.get('email').value;
 
 		const result = zxcvbn(password.value,
-							  [email, 'lingua', 'poly',
-							   'lingua-poly']);
+								[email, 'lingua', 'poly',
+								 'lingua-poly']);
 
 		switch (result.score) {
 			case 0:
@@ -41,7 +41,7 @@ export class PasswordValidator {
 		}
 
 		fg.get('passwordStrength').setValue(result.scoreDescription,
-			{ emitEvent: false,  onlySelf: true });
+			{ emitEvent: false,	onlySelf: true });
 
 		if (result.score >= 3) return null;
 

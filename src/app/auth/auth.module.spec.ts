@@ -1,13 +1,13 @@
 import { AuthModule } from './auth.module';
 
 describe('AuthModule', () => {
-  let authModule: AuthModule;
+	let authModule: AuthModule;
 
-  beforeEach(() => {
-    authModule = new AuthModule();
-  });
+	beforeEach(() => {
+		authModule = new AuthModule();
+	});
 
-  it('should create an instance', () => {
-    expect(authModule).toBeTruthy();
-  });
+	it('should create an instance', () => {
+		expect(authModule).toBeTruthy();
+	});
 });

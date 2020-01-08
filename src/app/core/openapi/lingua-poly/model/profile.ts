@@ -15,17 +15,17 @@
  * Public information about a user.
  */
 export interface Profile { 
-    /**
-     * How the user\'s  name gets displayed.
-     */
-    username?: string;
-    /**
-     * The user\'s web presence.
-     */
-    homepage?: string;
-    /**
-     * Mini bio or additional information
-     */
-    description?: string;
+		/**
+		 * How the user\'s	name gets displayed.
+		 */
+		username?: string;
+		/**
+		 * The user\'s web presence.
+		 */
+		homepage?: string;
+		/**
+		 * Mini bio or additional information
+		 */
+		description?: string;
 }
 

@@ -17,14 +17,14 @@ import { UserEffects, RouterEffects } from './core/effects';
 import { UserModule } from './user/user.module';
 
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
-  imports: [
-    BrowserModule,
-    CoreModule,
-    AuthModule,
-    LayoutModule,
+	declarations: [
+		AppComponent
+	],
+	imports: [
+		BrowserModule,
+		CoreModule,
+		AuthModule,
+		LayoutModule,
 	MainModule,
 	UserModule,
 	RouterModule.forRoot(appRoutes),
@@ -33,8 +33,8 @@ import { UserModule } from './user/user.module';
 		routerState: RouterState.Minimal
 	}),
 	EffectsModule.forRoot([UserEffects, RouterEffects]),
-  ],
-  providers: [],
-  bootstrap: [AppComponent]
+	],
+	providers: [],
+	bootstrap: [AppComponent]
 })
 export class AppModule { }

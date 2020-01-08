@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-disclaimer',
-  templateUrl: './disclaimer.component.html',
-  styleUrls: ['./disclaimer.component.css']
+	selector: 'app-disclaimer',
+	templateUrl: './disclaimer.component.html',
+	styleUrls: ['./disclaimer.component.css']
 })
 export class DisclaimerComponent implements OnInit {
 
-  constructor() { }
+	constructor() { }
 
-  ngOnInit() {
-  }
+	ngOnInit() {
+	}
 
 }

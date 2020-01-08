@@ -12,9 +12,9 @@
 
 
 export interface UserAllOf { 
-    /**
-     * The user\'s email address.
-     */
-    email?: string;
+		/**
+		 * The user\'s email address.
+		 */
+		email?: string;
 }
 

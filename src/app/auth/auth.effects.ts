@@ -19,7 +19,7 @@ export class AuthEffects {
 		private modalService: NgbModal,
 	) { }
 
-	/* FIXME! This should maybe go into a separate service.  */
+	/* FIXME! This should maybe go into a separate service.	*/
 	runDialog = function(content) {
 		const modalRef = this.modalService.open(content, { centered: true });
 

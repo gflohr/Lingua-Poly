@@ -15,6 +15,6 @@
  * Generic default response
  */
 export interface DefaultResponse { 
-    errors: Array<object>;
+		errors: Array<object>;
 }
 

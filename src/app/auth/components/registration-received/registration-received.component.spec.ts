@@ -3,23 +3,23 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RegistrationReceivedComponent } from './registration-received.component';
 
 describe('RegistrationReceivedComponent', () => {
-  let component: RegistrationReceivedComponent;
-  let fixture: ComponentFixture<RegistrationReceivedComponent>;
+	let component: RegistrationReceivedComponent;
+	let fixture: ComponentFixture<RegistrationReceivedComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ RegistrationReceivedComponent ]
-    })
-    .compileComponents();
-  }));
+	beforeEach(async(() => {
+		TestBed.configureTestingModule({
+			declarations: [ RegistrationReceivedComponent ]
+		})
+		.compileComponents();
+	}));
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(RegistrationReceivedComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+	beforeEach(() => {
+		fixture = TestBed.createComponent(RegistrationReceivedComponent);
+		component = fixture.componentInstance;
+		fixture.detectChanges();
+	});
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+	it('should create', () => {
+		expect(component).toBeTruthy();
+	});
 });

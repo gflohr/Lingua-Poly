@@ -11,8 +11,8 @@ import { Router } from '@angular/router';
 })
 export class RegistrationComponent {
 	constructor(private fb: FormBuilder,
-	            private router: Router,
-	            private usersService: UsersService) { }
+							private router: Router,
+							private usersService: UsersService) { }
 
 	registrationForm = this.fb.group ({
 		email: ['', [Validators.required, Validators.email]],

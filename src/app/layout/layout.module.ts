@@ -10,25 +10,25 @@ import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { LogoutConfirmationComponent } from './components/logout-confirmation/logout-confirmation.component';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    NgbModule,
-    RouterModule,
-    CoreModule
-  ],
-  exports: [
-    HeaderComponent,
-    FooterComponent,
-    SidebarComponent
-  ],
-  declarations: [
-    HeaderComponent,
-    FooterComponent,
+	imports: [
+		CommonModule,
+		NgbModule,
+		RouterModule,
+		CoreModule
+	],
+	exports: [
+		HeaderComponent,
+		FooterComponent,
+		SidebarComponent
+	],
+	declarations: [
+		HeaderComponent,
+		FooterComponent,
 	SidebarComponent,
 	LogoutConfirmationComponent
-  ],
-  entryComponents: [
-	  LogoutConfirmationComponent
-  ]
+	],
+	entryComponents: [
+		LogoutConfirmationComponent
+	]
 })
 export class LayoutModule { }

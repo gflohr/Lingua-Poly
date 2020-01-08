@@ -17,7 +17,7 @@ export class UsernameAvailableValidator implements AsyncValidator {
 			return of(null);
 		}
 
-		/* Check whether this was the originally chosen username.  This would
+		/* Check whether this was the originally chosen username.	This would
 		 * cause a false positive.
 		 */
 		if (control.parent.getRawValue().originalUsername === control.value) {
