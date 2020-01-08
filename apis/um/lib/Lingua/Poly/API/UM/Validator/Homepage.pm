@@ -154,10 +154,16 @@ sub __checkHostname {
 			    && ($max == 0 # the unspecified address
 				    # Loopback.
 				    || '0000:0000:0000:0000:0000:0000:0000:0001' eq $norm
+				    # IPv4 mapped addresses.
+				    || $norm =~ /^0000:0000:0000:0000:0000:ffff/
+				    # IPv4 translated addresses.
+				    || $norm =~ /^0000:0000:0000:0000:ffff:0000/
+				    # IPv4/IPv6 address translation.
+				    || $norm =~ /^0064:ff9b/
 				    # Discard prefix.
 				    || $norm =~ /^0100/
 				    # Teredo tunneling, ORCHIDv2, documentation, 6to4.
-				    || $norm =~ /^2[12]00/
+				    || $norm =~ /^200[12]/
 				    # Private networks.
 				    || $norm =~ /^fc[cd]/
 				    # Link-local.
