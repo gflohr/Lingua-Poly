@@ -6,7 +6,7 @@ import { environment } from 'src/environments/environment';
 
 export interface State {
 	router: fromRouter.RouterReducerState<any>;
-};
+}
 
 export const ROOT_REDUCERS = new InjectionToken<
 	ActionReducerMap<State, Action>

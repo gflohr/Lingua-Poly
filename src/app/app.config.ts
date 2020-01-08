@@ -19,11 +19,14 @@ export class ApiEndpoint {
 
 		getURL() {
 				let url = this.url;
-				
-				if (this.params)
-						for (const inx in this.params)
-								if (this.params.hasOwnProperty(inx))
-										url = url.replace('{' + inx + '}', this.params[inx]);
+
+				if (this.params) {
+					for (const inx in this.params) {
+						if (this.params.hasOwnProperty(inx)) {
+							url = url.replace('{' + inx + '}', this.params[inx]);
+						}
+					}
+				}
 
 				return url;
 		}
@@ -32,8 +35,8 @@ export class ApiEndpoint {
 export const ApiEndpoints = {
 		auth: {
 				login: (params: any = null) => ApiEndpoint.of(
-						'user/login', 
-						 params, 
+						'user/login',
+						 params,
 						 false),
 		}
-}
+};

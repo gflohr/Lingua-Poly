@@ -27,7 +27,7 @@ export class AppComponent implements OnInit, OnDestroy {
 		this.translate.use(applicationConfig.defaultLocale);
 
 		this.loggedIn$ = this.store.pipe(select(fromAuth.selectLoggedIn));
-	};
+	}
 
 	ngOnInit() {
 	}
