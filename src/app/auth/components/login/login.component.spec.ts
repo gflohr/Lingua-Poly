@@ -4,13 +4,11 @@ import { LoginComponent } from './login.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { provideMockStore, MockStore } from '@ngrx/store/testing';
-import { Store } from '@ngrx/store';
 import { HttpClientModule } from '@angular/common/http';
 
 describe('LoginComponent', () => {
 	let component: LoginComponent;
 	let fixture: ComponentFixture<LoginComponent>;
-	let store: MockStore<{}>;
 	const initialState = {};
 
 	beforeEach(async(() => {
@@ -28,8 +26,6 @@ describe('LoginComponent', () => {
 			]
 		})
 		.compileComponents();
-
-		store = TestBed.get<Store<any>>(Store);
 	}));
 
 	beforeEach(() => {
