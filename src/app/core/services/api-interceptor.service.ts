@@ -19,7 +19,7 @@ export class ApiInterceptorService implements HttpInterceptor {
 			return next.handle(req).pipe(
 				tap(response => {
 					// Check whether translation was loaded.
-					//console.log(response);
+					console.log(response);
 				}),
 				catchError((response: any) => {
 					this.apiErrorHandler.handleError(response, {

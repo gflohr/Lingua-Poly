@@ -45,7 +45,7 @@ export class ProfileComponent {
 	}, {});
 
 	onSubmit() {
-		let profile = this.profileForm.getRawValue();
+		const profile = this.profileForm.getRawValue();
 		delete profile.originalUsername;
 		this.authStore.dispatch(UserActions.setProfile({ payload: profile }));
 	}

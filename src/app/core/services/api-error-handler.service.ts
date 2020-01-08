@@ -17,7 +17,7 @@ export class ApiErrorHandlerService {
 		if (error instanceof HttpErrorResponse) {
 			const response: HttpErrorResponse = error;
 
-			switch(response.status) {
+			switch (response.status) {
 				case 401:
 					return this.handleHttpUnauthorized();
 				default:

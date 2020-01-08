@@ -1,5 +1,5 @@
-import { Injectable } from "@angular/core";
-import { UsersService } from "../../openapi/lingua-poly";
+import { Injectable } from '@angular/core';
+import { UsersService } from '../../openapi/lingua-poly';
 
 @Injectable()
 export class UserDomainService {
@@ -9,7 +9,7 @@ export class UserDomainService {
 
 	getProfile() {
 		return this.usersService.profileGet().pipe(
-			profile => { return profile; }
+			profile => profile
 		);
 	}
 }

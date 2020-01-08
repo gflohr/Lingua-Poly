@@ -24,19 +24,19 @@ export class PasswordValidator {
 
 		switch (result.score) {
 			case 0:
-				result.scoreDescription = "too guessable";
+				result.scoreDescription = 'too guessable';
 				break;
 			case 1:
-				result.scoreDescription = "very guessable";
+				result.scoreDescription = 'very guessable';
 				break;
 			case 2:
-				result.scoreDescription = "guessable";
+				result.scoreDescription = 'guessable';
 				break;
 			case 3:
-				result.scoreDescription = "safely unguessable";
+				result.scoreDescription = 'safely unguessable';
 				break;
 			default:
-				result.scoreDescription = "very unguessable";
+				result.scoreDescription = 'very unguessable';
 				break;
 		}
 

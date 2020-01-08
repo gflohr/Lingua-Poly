@@ -1,8 +1,8 @@
-import { AsyncValidator, AbstractControl, ValidationErrors } from "@angular/forms";
-import { Observable, of } from "rxjs";
-import { UsersService } from "../openapi/lingua-poly";
-import { map, catchError, tap, switchMap } from "rxjs/operators";
-import { Injectable } from "@angular/core";
+import { AsyncValidator, AbstractControl, ValidationErrors } from '@angular/forms';
+import { Observable, of } from 'rxjs';
+import { UsersService } from '../openapi/lingua-poly';
+import { map, catchError } from 'rxjs/operators';
+import { Injectable } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
 export class UsernameAvailableValidator implements AsyncValidator {
@@ -26,7 +26,7 @@ export class UsernameAvailableValidator implements AsyncValidator {
 
 		return this.usersService.getUserByName(control.value).pipe(
 			map(() => { return { unavailable: true }; }),
-			catchError(() => { return of(null); }),
+			catchError(() => of(null)),
 		);
 	}
 }
