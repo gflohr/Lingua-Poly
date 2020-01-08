@@ -117,31 +117,35 @@ is_deeply(
 	['0', '0', '0', '0', '0', '0', '0', '1'],
 	'convert ::1'
 );
+is_deeply(
+	[$convert->('fcde::ffff:ffff:ffff:ffff:ffff:ffff:ffff')],
+	[],
+	'convert fcde::ffff:ffff:ffff:ffff:ffff:ffff:ffff'
+);
 
 ok !$check->('http://[::]'), 'unspecified IPv6 address';
 ok !$check->('http://[::1]'), 'loopback IPv6 address';
-ok !$check->('http://[::ffff:1.2.3.4]'), 'IPv4 mapped address';
-ok !$check->('http://[::ffff:a:b]'), 'IPv4 mapped address space';
-ok !$check->('http://[::ffff:0:1.2.3.4]'), 'IPv4 translated address';
-ok !$check->('http://[::ffff:0:a:b]'), 'IPv4 translated address space';
+ok !$check->('http://[::ffff:1.2.3.4]'), 'IPv4 mapped address decimal';
+ok !$check->('http://[::ffff:a:b]'), 'IPv4 mapped address hex';
+ok !$check->('http://[::ffff:0:1.2.3.4]'), 'IPv4 translated address decimal';
+ok !$check->('http://[::ffff:0:a:b]'), 'IPv4 translated address hex';
+ok !$check->('http://[0000:0000:0000:0000:0000:0000:12.155.166.101]'),
+	'IPv4 compatible decimal';
+ok !$check->('http://[0000:0000:0000:0000:0000:0000:0C9B:A665]'),
+	'IPv4 compatible hex';
 ok !$check->('http://[64:ff9b::1.2.3.4]'), 'IPv4/IPv6 address translation';
 ok !$check->('http://[64:ff9b::a:b]'), 'IPv4/IPv6 address translation space';
 ok !$check->('http://[100::a:ffff:ffff:ffff:ffff]'), 'IPv6 discard prefix';
 $DB::single = 1;
-ok !$check->('http://[2001::abcd]'), 'IPv6 Teredo tunneling etc.';
-ok !$check->('http://[2002::abcd]'), '6to4 addressing scheme';
-ok !$check->(
-	'http://[fcde:ffff:ffff:ffff:ffff:ffff:ffff:ffff]',
-	'IPv6 unique local address'
-);
-ok !$check->(
-	'http://[fcde:ffff:ffff:ffff:ffff:ffff:ffff:ffff]',
-	'IPv6 link-local address'
-);
-ok !$check->(
-	'http://[ffab:ffff:ffff:ffff:ffff:ffff:ffff:ffff]',
-	'IPv6 multicast address'
-);
+ok !$check->('http://[2001:0:4136:E378:8000:63BF:3FFF:FDD2]'),
+	'IPv6 Teredo';
+ok !$check->('http://[2002:C9B:A665:1::C9B:A665]'), '6to4 addressing scheme';
+ok !$check->('http://[FD00:F53B:82E4::53]'),
+	'IPv6 site local address';
+ok !$check->('http://[FE80::5AFE:AA:20A2]'),
+	'IPv6 link-local address';
+ok !$check->('http://[FF02:AAAA:FEE5::1:3]'),
+	'IPv6 multicast address';
 
 # RFC2606
 ok !$check->('http://www.test'), 'RFC2606 .test';

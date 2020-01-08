@@ -159,17 +159,19 @@ sub __checkHostname {
 				    # IPv4 translated addresses.
 				    || $norm =~ /^0000:0000:0000:0000:ffff:0000/
 				    # IPv4/IPv6 address translation.
-				    || $norm =~ /^0064:ff9b/
+				    || $norm =~ /^0064:ff9b:0000:0000:0000:0000/
+				    # IPv4 compatible.
+					|| $norm =~ /^0000:0000:0000:0000:0000:0000/
 				    # Discard prefix.
 				    || $norm =~ /^0100/
 				    # Teredo tunneling, ORCHIDv2, documentation, 6to4.
 				    || $norm =~ /^200[12]/
 				    # Private networks.
-				    || $norm =~ /^fc[cd]/
+				    || $norm =~ /^f[cd]/
 				    # Link-local.
 				    || $norm =~ /^fe[89ab]/
 				    # Multicast.
-				    || $norm =~ /^ff00/
+				    || $norm =~ /^ff/
 				)) {
 					die "ipv6_special\n";
 				}
