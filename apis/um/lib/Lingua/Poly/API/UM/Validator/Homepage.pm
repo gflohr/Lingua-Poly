@@ -26,6 +26,28 @@ sub new {
 	bless \$self, $class;
 }
 
+sub __uncompressIPv6($) {
+	my ($host) = @_;
+
+	my @groups = split /:/, $host;
+	@groups = ('') if !@groups;
+	if (@groups < 8) {
+		for (my $i = 0; $i < @groups; ++$i) {
+			if ($groups[$i] eq '') {
+				splice @groups, $i, 1 while @groups > $i && '' eq $groups[$i];
+				my $missing = 8 - @groups;
+				splice @groups, $i, 0, ('0') x $missing;
+				last;
+			}
+		}
+	}
+
+	return if @groups != 8;
+	return if grep { !length } @groups;
+
+	return @groups;
+}
+
 sub check {
 	my ($self, $url) = @_;
 
@@ -121,27 +143,17 @@ sub __checkHostname {
 			}
 			$host = join '.', @octets;
 		}
-	} elsif ($host =~ /^[0-9a-fA-F:]+$/ && ($host =~ y/:/:/ >= 2)) {
+	} elsif ($host =~ /^[0-9a-f:]+$/ && ($host =~ y/:/:/ >= 2)) {
 		# Uncompress the IPv6 address.
-		my @groups = split /:/, $host;
-		if (@groups < 8) {
-			for (my $i = 0; $i < @groups; ++$i) {
-				if ($groups[$i] eq '') {
-					$groups[$i] = 0;
-					my $missing = 8 - @groups;
-					splice @groups, $i, 0, ('0') x $missing;
-					last;
-				}
-			}
-		}
-
+		my @groups = __uncompressIPv6 $host;
 		my $max = max map { hex } @groups;
 		if (@groups == 8 && $max <= 0xffff) {
-			$is_ip = 1;
 			my $norm = join ':', map { sprintf '%04s', $_ } @groups;
-			if ($max == 0 # the unspecified address
+			$is_ip = $norm =~ /^(?:[0-9a-f]{4}:){7}[0-9a-f]{4}$/;
+			if ($is_ip
+			    && ($max == 0 # the unspecified address
 				    # Loopback.
-				    || '0000:0000:0000:0000:0000:00000:0000:0001' eq $norm
+				    || '0000:0000:0000:0000:0000:0000:0000:0001' eq $norm
 				    # Discard prefix.
 				    || $norm =~ /^0100/
 				    # Teredo tunneling, ORCHIDv2, documentation, 6to4.
@@ -152,7 +164,7 @@ sub __checkHostname {
 				    || $norm =~ /^fe[89ab]/
 				    # Multicast.
 				    || $norm =~ /^ff00/
-				) {
+				)) {
 					die "ipv6_special\n";
 				}
 		}

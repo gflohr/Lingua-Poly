@@ -90,6 +90,37 @@ ok $check->('http://[89ab::1234]:1234'), 'valid IPv6 with port';
 ok $check->('http://[89ab::1234]:1234/'), 'valid IPv6 with port and slash';
 ok $check->('http://[89ab::1234]:1234/foo/bar'), 'valid IPv6 with port and path';
 
+my $convert = \&Lingua::Poly::API::UM::Validator::Homepage::__uncompressIPv6;
+
+is_deeply(
+	[$convert->('89ab::1234')],
+	['89ab', '0', '0', '0', '0', '0', '0', '1234'],
+	'convert 89ab::1234'
+);
+is_deeply(
+	[$convert->('89ab::1234::89ab')],
+	[],
+	'convert 89ab::1234::89ab'
+);
+is_deeply(
+	[$convert->('1:2:3:4:5:6:7:8:9')],
+	[],
+	'convert 1:2:3:4:5:6:7:8:9'
+);
+is_deeply(
+	[$convert->('::')],
+	['0', '0', '0', '0', '0', '0', '0', '0'],
+	'convert ::'
+);
+is_deeply(
+	[$convert->('::1')],
+	['0', '0', '0', '0', '0', '0', '0', '1'],
+	'convert ::1'
+);
+
+ok !$check->('http://[::]'), 'unspecified IPv6 address';
+ok !$check->('http://[::1]'), 'loopback IPv6 address';
+
 # RFC2606
 ok !$check->('http://www.test'), 'RFC2606 .test';
 ok !$check->('http://www.example'), 'RFC2606 .example';
