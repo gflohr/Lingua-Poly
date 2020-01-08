@@ -31,7 +31,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
 				useFactory: HttpLoaderFactory,
 				deps: [HttpClient]
 			},
-				useDefaultLang: true
+			useDefaultLang: true
 		}),
 		HttpClientModule,
 		ApiModule
