@@ -16,6 +16,7 @@ use strict;
 
 use URI;
 use Encode;
+use List::Util qw(max);
 
 sub new {
 	my ($class) = @_;
@@ -26,22 +27,18 @@ sub new {
 }
 
 sub check {
-	my ($self, $url, %options) = @_;
+	my ($self, $url) = @_;
 
 	my $uri = URI->new($url)->canonical;
 
-	# Remove trailing dot from host name.
-	my $host = $uri->host;
-	$host =~ s/\.$// if $host;
-	$uri->host($host);
-
 	$self->__checkScheme($uri);
+	$self->__checkPort($uri);
+	$self->__checkUserinfo($uri);
 	$self->__checkHostname($uri);
 
-	# What about user info? That is an embedded username and password.  While
-	# it seems to be a little bit odd to publish such a URL on the internet,
-	# we do not have to prevent every possible way that users might shoot
-	# themselves in the foot.  So we just allow them.
+	# Remove a possible trailing dot from the hostname.
+	my $host = $uri->host;
+	$uri->host($host) if $host =~ s/\.$//;
 
 	return $uri;
 }
@@ -57,8 +54,27 @@ sub __checkScheme {
 	return $self;
 }
 
+sub __checkPort {
+	my ($self, $uri) = @_;
+
+	# IMHO, URI should check that the port number is not out of range but it
+	# does not.
+	my $port = $uri->port;
+	die "port\n" if $port < 1 || $port > 65535;
+
+	return $self;
+}
+
+sub __checkUserinfo {
+	my ($self, $uri) = @_;
+
+	die "userinfo\n" if $uri->userinfo;
+
+	return $self;
+}
+
 sub __checkHostname {
-	my ($self, $uri, $whitelist, $blacklist) = @_;
+	my ($self, $uri) = @_;
 
 	my $host = $uri->host;
 
@@ -66,50 +82,97 @@ sub __checkHostname {
 	die "host\n" if !defined $host;
 	die "host\n" if '' eq $host;
 
-	# RFC-952 states:
-	#
-	# > Host software MUST handle host names of up to 63 characters and
-	# > SHOULD handle host names of up to 255 characters.
-	#
-	# That means that host software is free to support longer names, and we
-	# therefore do not count the length of the hostname here.
+	# Discard an empty root label.
+	$host =~ s/\.$//;
 
-	# Forbidden characters.
-	die "host($1)\n" if $host =~ /([\x00-\x2d\x2f\x3a-\x60\x7b-\xff])/;
-
-	# Actually there are a lot of restrictions for using Unicode characters
-	# but they are tld specific.  We just check for a valid utf-8 input here.
-	Encode::_utf8_off($host);
-	$host = Encode::decode('UTF-8', $host, Encode::FB_CROAK);
-
-	# One trailing dot means that there had been two trailing dots.
-	die "host\n" if '.' eq substr $host, -1, 1;
-
-	# No FQDN.
-	die "host\n" if $host !~ /\./;
-
-	# Two consecutive dots.
-	die "host\n" if $host =~ /\.\./;
-
-	# IPv4 address?
-	if ($host =~ /^(?:0|(?:[1-9][0-9]{0,2})\.){3}(?:0|(?:[1-9][0-9]{0,2}))$/) {
-		my @octets = split /\./, $host;
-		die "host\n" if 4 == @octets && grep { $_ <= 255 } @octets;
-	}
-
-	# There is no need to check for IPv6 addresses because they cannot contain
-	# a dot.
+	# This happens for two or more trailing dots.
+	die "host\n" if $host =~ /\.$/;
 
 	my @labels = split /\./, $host;
 
-	# We disallow .arpa altogether because '.in-addr.arpa' are IPv4 addresses
-	# (which are not allowed), '.ip6.arpa' are  IPv6 addresses (also not
-	# allowed) and '.home.arpa' are private networks.  And we simply assume
-	# that the rest is phased out or does not make sense for us.
-	die "host\n" if 'arpa' eq $labels[-1];
+	# Disallow other empty labels.
+	die "host\n" if grep { $_ eq '' } @labels;
 
-	# RFC2606 top-level domain?
-	my %rfc2606 = map { $_ => 1 } qw(test example invalid localhost);
+	# The URI module does not canonicalize quad-dotted notation of IPv4
+	# addresses if they are in octal or hexadecimal form.
+	my $is_ip;
+	if (@labels == 4) {
+		my @octets;
+		foreach my $label (@labels) {
+			if ($label =~ /^0+[1-7]{1,4}$/ || $label =~ /^0x[0-9a-f]{1,2}$/i
+			    || $label =~ /^(?:[0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/) {
+				my $octet = oct $label;
+				last if $octet > 255;
+				push @octets, $octet;
+			}
+		}
+
+		if (4 == @octets) {
+			$is_ip = 1;
+			# IPv4 addresses with special purpose?
+			if (# Loopback.
+			    $octets[0] == 127
+			    # Private IP ranges.
+			    || $octets[0] == 10
+			    || ($octets[0] == 172 && $octets[1] >= 16 && $octets[1] <= 31)
+			    || ($octets[0] == 192 && $octets[1] == 168)
+			    # Carrier-grade NAT deployment.
+			    || ($octets[0] == 100 && $octets[1] >= 64 && $octets[1] <= 127)
+			    # Link-local addresses.
+			    || ($octets[0] == 168 && $octets[1] == 245)) {
+				die "ipv4_special\n";
+			}
+		}
+	} elsif ($host =~ /^\[([0-9a-fA-F:]+)\]$/ && $host =~ /:/) {
+		# Uncompress the IPv6 address.
+		my @groups = split /:/, $host;
+		if (@groups < 7) {
+			for (my $i = 0; $i < @groups; ++$i) {
+				if ($groups[$i] eq '') {
+					$groups[$i] = 0;
+					my $missing = 7 - @groups;
+					@groups = splice @groups, $i, 0, '0' x $missing;
+				}
+				last;
+			}
+		}
+
+		my $max = max map { hex } @groups;
+		if ($max <= 0xffff) {
+			$is_ip = 1;
+			my $norm = join ':', map { sprintf '%04s' } @groups;
+			if ($max == 0 # the unspecified address
+				    # Loopback.
+				    || '0000:0000:0000:0000:0000:00000:0000:0001' eq $norm
+				    # Discard prefix.
+				    || $norm =~ /^0100/
+				    # Teredo tunneling, ORCHIDv2, documentation, 6to4.
+				    || $norm =~ /^2[12]00/
+				    # Private networks.
+				    || $norm =~ /^fc[cd]/
+				    # Link-local.
+				    || $norm =~ /^fe[89ab]/
+				    # Multicast.
+				    || $norm =~ /^ff00/
+				) {
+					die "ipv6_special\n";
+				}
+		}
+	}
+
+	return $self if $is_ip;
+
+	die "no_fqdn\n" if @labels < 2;
+
+	# The top-level domain name must not contain a hyphen or digit unless it
+	# is an IDN.
+	my $tld = $labels[-1];
+	if ('xn--' eq substr $tld, 0, 4 && $tld =~ /[-0-9]/) {
+		die "invalid_tld\n";
+	}
+
+	# RFC2606 top-level domain? We also disallow .arpa and .int altogether.
+	my %rfc2606 = map { $_ => 1 } qw(test example invalid localhost arpa int);
 	die "host\n" if $rfc2606{$labels[-1]};
 
 	# RFC2606 second-level domain?
@@ -118,16 +181,21 @@ sub __checkHostname {
 		die "host\n" if $rfc2606_2{$labels[-1]};
 	}
 
-	# A hyphen is not allowed as the first or last character of a label.
-	die "host\n" if grep { /^-/ } @labels;
-	die "host\n" if grep { /-$/ } @labels;
+	# Some people say that a top-level domain must be at least two characters
+	# long.  But there is no evidence for that.
 
-	# Many tld registries do not allow the registration of 2nd level
-	# subdomains (for example .uk) or certain 2nd level subdomains have
-	# special purposes and cannot be registered (for example .b.br for
-	# Brasilian banks).  This could only be checked with a lookup table that
-	# has to be maintained.  Such homepage can simply not be resolved which
-	# is considered a minor problem.
+	# Misplaced hyphen.
+	foreach my $label (@labels) {
+		if ($label =~ /^-/ || $label =~ /-$/) {
+			die "label:hyphen\n";
+		}
+	}
+
+	# Unicode.  We allow all characters except the forbidden ones in the
+	# ASCII range.
+	if ($host =~ /([\x00-\x2c\x2f\x3a-\x60\x7b-\x7f])/) {
+		die "label:forbidden_char($1)n";
+	}
 
 	return $self;
 }
