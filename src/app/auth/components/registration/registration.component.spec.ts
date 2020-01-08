@@ -2,6 +2,9 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { RegistrationComponent } from './registration.component';
 import { TranslateModule } from '@ngx-translate/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RouterTestingModule } from '@angular/router/testing';
+import { HttpClientModule, HttpClient } from '@angular/common/http';
 
 describe('RegistrationComponent', () => {
 	let component: RegistrationComponent;
@@ -9,8 +12,17 @@ describe('RegistrationComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [ TranslateModule.forRoot() ],
-			declarations: [ RegistrationComponent ]
+			imports: [
+				FormsModule,
+				ReactiveFormsModule,
+				RouterTestingModule,
+				TranslateModule.forRoot(),
+				HttpClientModule
+			],
+			declarations: [ RegistrationComponent ],
+			providers: [
+				HttpClientModule
+			]
 		})
 		.compileComponents();
 	}));
