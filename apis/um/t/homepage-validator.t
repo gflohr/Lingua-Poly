@@ -30,6 +30,7 @@ my $check = sub {
 
 ok !$check->('http://my_example.fr'), 'forbidden character';
 
+$DB::single = 1;
 ok $check->('http://my.example.fr'), 'http okay';
 ok $check->('https://my.example.fr', 'https okay');
 ok !$check->('gopher://my.example.fr'), 'gopher not okay';
@@ -56,6 +57,10 @@ ok !$check->('http://4.3.2.1.in-addr.arpa'), '.in-addr.arpa';
 ok !$check->('http://www.example.int'), '.int';
 
 ok $check->('http://www.пример.bg'), 'utf-8 domain name';
+
+ok !$check->('http://www.example.x-y'), 'hyphen in tld';
+ok !$check->('http://org.x11', 'digit in tld');
+ok $check->('http://www.xn--e1afmkfd'), 'unicode tld';
 
 # RFC2606
 ok !$check->('http://www.test'), 'RFC2606 .test';

@@ -167,7 +167,7 @@ sub __checkHostname {
 	# The top-level domain name must not contain a hyphen or digit unless it
 	# is an IDN.
 	my $tld = $labels[-1];
-	if ('xn--' eq substr $tld, 0, 4 && $tld =~ /[-0-9]/) {
+	if (('xn--' ne substr $tld, 0, 4) && ($tld =~ /[-0-9]/)) {
 		die "invalid_tld\n";
 	}
 
