@@ -96,9 +96,9 @@ sub __checkHostname {
 	if (@labels == 4) {
 		my @octets;
 		foreach my $label (@labels) {
-			if ($label =~ /^0[0-7]+$/ || $label =~ /^0x[0-9a-f]+$/
+			if ($label =~ /^(0)[0-7]+$/ || $label =~ /^(0x)[0-9a-f]+$/
 			    || $label =~ /^(?:0|[1-9][0-9]*)$/) {
-				my $octet = oct $label;
+				my $octet = defined $1 ? oct $label : $label;
 				last if $octet > 255;
 				push @octets, $octet;
 			}
@@ -116,7 +116,7 @@ sub __checkHostname {
 			    # Carrier-grade NAT deployment.
 			    || ($octets[0] == 100 && $octets[1] >= 64 && $octets[1] <= 127)
 			    # Link-local addresses.
-			    || ($octets[0] == 168 && $octets[1] == 245)) {
+			    || ($octets[0] == 169 && $octets[1] == 254)) {
 				die "ipv4_special\n";
 			}
 			$host = join '.', @octets;

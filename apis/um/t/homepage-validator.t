@@ -68,6 +68,13 @@ ok !$check->('http://.'), 'single dot';
 
 # IPv4 addresses.
 ok $check->('http://1.2.3.4'), 'valid IPv4';
+ok !$check->('http://127.0.0.1'), 'loopback';
+ok !$check->('http://127.2.3.4'), 'xloopback';
+ok !$check->('http://10.23.4.89'), 'private IPv4 10.x.x.x';
+ok !$check->('http://172.23.4.89'), 'private IPv4 172.x.x.x';
+ok !$check->('http://192.168.169.170'), 'private IPv4 192.168.x.x';
+ok !$check->('http://169.254.169.170'), 'link-local IPv4';
+ok !$check->('http://100.65.66.67'), 'carrier-grade NAT deployment IPv4';
 
 # IPv4 normalization.
 is $check->('http://0x78.00000.0.0000170'), 'http://120.0.0.120/', 'hex/octal IPv4';
