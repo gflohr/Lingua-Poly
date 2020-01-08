@@ -62,6 +62,11 @@ ok !$check->('http://www.example.x-y'), 'hyphen in tld';
 ok !$check->('http://org.x11', 'digit in tld');
 ok $check->('http://www.xn--e1afmkfd'), 'unicode tld';
 
+# Empty or invalid hostnames.
+ok !$check->('http://...'), 'triple dot';
+ok !$check->('http://..'), 'double dot';
+ok !$check->('http://.'), 'single dot';
+
 # RFC2606
 ok !$check->('http://www.test'), 'RFC2606 .test';
 ok !$check->('http://www.example'), 'RFC2606 .example';
