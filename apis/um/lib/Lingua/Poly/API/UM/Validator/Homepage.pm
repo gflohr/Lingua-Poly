@@ -121,24 +121,24 @@ sub __checkHostname {
 			}
 			$host = join '.', @octets;
 		}
-	} elsif ($uri =~ /^https?:\/\/\[([0-9a-fA-F:]+)\](:(?:0|[1-9][0-9]*))?(\/|\Z)/ && $host =~ /:/) {
+	} elsif ($host =~ /^[0-9a-fA-F:]+$/ && ($host =~ y/:/:/ >= 2)) {
 		# Uncompress the IPv6 address.
 		my @groups = split /:/, $host;
-		if (@groups < 7) {
+		if (@groups < 8) {
 			for (my $i = 0; $i < @groups; ++$i) {
 				if ($groups[$i] eq '') {
 					$groups[$i] = 0;
-					my $missing = 7 - @groups;
-					@groups = splice @groups, $i, 0, '0' x $missing;
+					my $missing = 8 - @groups;
+					splice @groups, $i, 0, ('0') x $missing;
+					last;
 				}
-				last;
 			}
 		}
 
 		my $max = max map { hex } @groups;
-		if ($max <= 0xffff) {
+		if (@groups == 8 && $max <= 0xffff) {
 			$is_ip = 1;
-			my $norm = join ':', map { sprintf '%04s' } @groups;
+			my $norm = join ':', map { sprintf '%04s', $_ } @groups;
 			if ($max == 0 # the unspecified address
 				    # Loopback.
 				    || '0000:0000:0000:0000:0000:00000:0000:0001' eq $norm

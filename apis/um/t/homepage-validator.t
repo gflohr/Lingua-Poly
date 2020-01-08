@@ -83,7 +83,6 @@ is $check->('http://0X00078.00000.0.0000170'), 'http://120.0.0.120/', 'hex/octal
 ok !$check->('http://1.2.3.08'), 'invalid IPv4 with octal';
 
 # IPv6 addresses.
-$DB::single =  1;
 ok $check->('http://[89ab::1234]'), 'valid IPv6';
 ok $check->('http://[89ab::1234]/'), 'valid IPv6 with slash';
 ok $check->('http://[89ab::1234]/foo/bar'), 'valid IPv6 with path';
