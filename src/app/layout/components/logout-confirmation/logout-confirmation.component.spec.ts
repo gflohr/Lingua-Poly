@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { LogoutConfirmationComponent } from './logout-confirmation.component';
+import { TranslateModule } from '@ngx-translate/core';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 describe('LogoutConfirmationComponent', () => {
 	let component: LogoutConfirmationComponent;
@@ -8,7 +10,13 @@ describe('LogoutConfirmationComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [ LogoutConfirmationComponent ]
+			imports: [
+				TranslateModule.forRoot()
+			],
+			declarations: [ LogoutConfirmationComponent ],
+			providers: [
+				NgbActiveModal
+			]
 		})
 		.compileComponents();
 	}));
