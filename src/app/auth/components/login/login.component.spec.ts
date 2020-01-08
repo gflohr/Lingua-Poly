@@ -5,6 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { provideMockStore, MockStore } from '@ngrx/store/testing';
 import { Store } from '@ngrx/store';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('LoginComponent', () => {
 	let component: LoginComponent;
@@ -17,11 +18,13 @@ describe('LoginComponent', () => {
 			imports: [
 				FormsModule,
 				ReactiveFormsModule,
-				TranslateModule.forRoot()
+				TranslateModule.forRoot(),
+				HttpClientModule
 			],
 			declarations: [ LoginComponent ],
 			providers: [
-				provideMockStore({ initialState })
+				provideMockStore({ initialState }),
+				HttpClientModule
 			]
 		})
 		.compileComponents();
