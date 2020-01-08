@@ -55,6 +55,8 @@ ok !$check->('http://what.ever.com..'), 'two trailing dots';
 ok !$check->('http://4.3.2.1.in-addr.arpa'), '.in-addr.arpa';
 ok !$check->('http://www.example.int'), '.int';
 
+ok $check->('http://www.пример.bg'), 'utf-8 domain name';
+
 # RFC2606
 ok !$check->('http://www.test'), 'RFC2606 .test';
 ok !$check->('http://www.example'), 'RFC2606 .example';
