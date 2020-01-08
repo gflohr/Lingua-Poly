@@ -7,7 +7,6 @@ import { provideMockStore } from '@ngrx/store/testing';
 describe('SidebarComponent', () => {
 	let component: SidebarComponent;
 	let fixture: ComponentFixture<SidebarComponent>;
-	const initialState = {};
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -16,7 +15,7 @@ describe('SidebarComponent', () => {
 			],
 			declarations: [ SidebarComponent ],
 			providers: [
-				provideMockStore({ initialState })
+				provideMockStore()
 			]
 		})
 		.compileComponents();
@@ -27,6 +26,8 @@ describe('SidebarComponent', () => {
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 	});
+
+	afterEach(() => { fixture.destroy(); });
 
 	it('should create', () => {
 		expect(component).toBeTruthy();

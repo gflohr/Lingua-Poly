@@ -7,14 +7,13 @@ import { provideMockStore } from '@ngrx/store/testing';
 describe('HeaderComponent', () => {
 	let component: HeaderComponent;
 	let fixture: ComponentFixture<HeaderComponent>;
-	const initialState = {};
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [ TranslateModule.forRoot() ],
 			declarations: [ HeaderComponent ],
 			providers: [
-				provideMockStore({ initialState })
+				provideMockStore()
 			]
 		})
 		.compileComponents();
@@ -25,6 +24,8 @@ describe('HeaderComponent', () => {
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 	});
+
+	afterEach(() => { fixture.destroy(); });
 
 	it('should create', () => {
 		expect(component).toBeTruthy();

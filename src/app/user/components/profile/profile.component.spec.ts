@@ -9,7 +9,6 @@ import { provideMockStore } from '@ngrx/store/testing';
 describe('ProfileComponent', () => {
 	let component: ProfileComponent;
 	let fixture: ComponentFixture<ProfileComponent>;
-	const initialState = {};
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -23,7 +22,7 @@ describe('ProfileComponent', () => {
 				ConnectFormDirective
 			],
 			providers: [
-				provideMockStore({ initialState })
+				provideMockStore()
 			]
 		})
 		.compileComponents();
@@ -34,6 +33,8 @@ describe('ProfileComponent', () => {
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 	});
+
+	afterEach(() => { fixture.destroy(); });
 
 	it('should create', () => {
 		expect(component).toBeTruthy();
