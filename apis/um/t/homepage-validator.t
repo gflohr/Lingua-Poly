@@ -82,6 +82,15 @@ is $check->('http://0X00078.00000.0.0000170'), 'http://120.0.0.120/', 'hex/octal
 # This is *not* an IPv4 address!  It's a fqdn with an invalid top-level domain.
 ok !$check->('http://1.2.3.08'), 'invalid IPv4 with octal';
 
+# IPv6 addresses.
+$DB::single =  1;
+ok $check->('http://[89ab::1234]'), 'valid IPv6';
+ok $check->('http://[89ab::1234]/'), 'valid IPv6 with slash';
+ok $check->('http://[89ab::1234]/foo/bar'), 'valid IPv6 with path';
+ok $check->('http://[89ab::1234]:1234'), 'valid IPv6 with port';
+ok $check->('http://[89ab::1234]:1234/'), 'valid IPv6 with port and slash';
+ok $check->('http://[89ab::1234]:1234/foo/bar'), 'valid IPv6 with port and path';
+
 # RFC2606
 ok !$check->('http://www.test'), 'RFC2606 .test';
 ok !$check->('http://www.example'), 'RFC2606 .example';

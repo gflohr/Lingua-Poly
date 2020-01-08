@@ -121,7 +121,7 @@ sub __checkHostname {
 			}
 			$host = join '.', @octets;
 		}
-	} elsif ($host =~ /^\[([0-9a-fA-F:]+)\]$/ && $host =~ /:/) {
+	} elsif ($uri =~ /^https?:\/\/\[([0-9a-fA-F:]+)\](:(?:0|[1-9][0-9]*))?(\/|\Z)/ && $host =~ /:/) {
 		# Uncompress the IPv6 address.
 		my @groups = split /:/, $host;
 		if (@groups < 7) {
