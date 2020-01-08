@@ -1,14 +1,23 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SidebarComponent } from './sidebar.component';
+import { TranslateModule } from '@ngx-translate/core';
+import { provideMockStore } from '@ngrx/store/testing';
 
 describe('SidebarComponent', () => {
 	let component: SidebarComponent;
 	let fixture: ComponentFixture<SidebarComponent>;
+	const initialState = {};
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [ SidebarComponent ]
+			imports: [
+				TranslateModule.forRoot()
+			],
+			declarations: [ SidebarComponent ],
+			providers: [
+				provideMockStore({ initialState })
+			]
 		})
 		.compileComponents();
 	}));
