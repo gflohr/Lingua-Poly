@@ -1,4 +1,4 @@
-import { Component, Directive, Input } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { UsernameValidator } from 'src/app/core/validators/usernameValidator';
 import { UrlValidator } from 'src/app/core/validators/urlValidator';

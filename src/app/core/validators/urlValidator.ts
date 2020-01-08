@@ -19,6 +19,8 @@ export class UrlValidator {
 	}
 
 	static scheme(control: AbstractControl): ValidationErrors | null {
+		if (!control.value.length) return null;
+
 		try {
 			const url = new URL(control.value);
 			if (!['https:', 'http:'].includes(url.protocol)) throw 'scheme';
