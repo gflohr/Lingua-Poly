@@ -55,7 +55,7 @@ export class UrlValidator {
 		// but 10.20.030.40 is NOT an IPv4 address but a hostname.	And,
 		// of course, 10.20.300.40 is not an IPv4 address but a hostname.
 		if (hostname.match(/^(?:0|(?:[1-9][0-9]{0,2})\.){3}(?:0|(?:[1-9][0-9]{0,2}))$/)) {
-			const octets = hostname.split('.').map((num) => parseInt(num));
+			const octets = hostname.split('.').map((num) => parseInt(num, 10));
 			if (octets.length === 4
 				&& octets.reduce((a, b) => Math.max(a, b)) < 256) {
 				return false;

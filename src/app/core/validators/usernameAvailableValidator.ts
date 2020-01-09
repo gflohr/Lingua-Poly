@@ -25,7 +25,7 @@ export class UsernameAvailableValidator implements AsyncValidator {
 		}
 
 		return this.usersService.getUserByName(control.value).pipe(
-			map(() => { return { unavailable: true }; }),
+			map(() => ({ unavailable: true })),
 			catchError(() => of(null)),
 		);
 	}
