@@ -25,14 +25,14 @@ import { UserModule } from './user/user.module';
 		CoreModule,
 		AuthModule,
 		LayoutModule,
-	MainModule,
-	UserModule,
-	RouterModule.forRoot(appRoutes),
-	StoreModule.forRoot(ROOT_REDUCERS, { metaReducers }),
-	StoreRouterConnectingModule.forRoot({
-		routerState: RouterState.Minimal
-	}),
-	EffectsModule.forRoot([UserEffects, RouterEffects]),
+		MainModule,
+		UserModule,
+		RouterModule.forRoot(appRoutes),
+		StoreModule.forRoot(ROOT_REDUCERS, { metaReducers }),
+		StoreRouterConnectingModule.forRoot({
+			routerState: RouterState.Minimal
+		}),
+		EffectsModule.forRoot([UserEffects, RouterEffects]),
 	],
 	providers: [],
 	bootstrap: [AppComponent]
