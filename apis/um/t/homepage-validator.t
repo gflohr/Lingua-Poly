@@ -28,8 +28,6 @@ my $check = sub {
 	return $canonical;
 };
 
-ok !$check->('http://my_example.fr'), 'forbidden character';
-
 ok $check->('http://my.example.fr'), 'http okay';
 ok $check->('https://my.example.fr', 'https okay');
 ok !$check->('gopher://my.example.fr'), 'gopher not okay';
@@ -40,6 +38,7 @@ ok !$check->('http://www.example.fr:0'), 'port zero';
 ok !$check->('http://www.example.fr:-80'), 'negative port';
 ok $check->('http://www.example.fr:1234', 'valid port');
 
+ok !$check->('http://my_example.fr'), 'forbidden character';
 is $check->('http://www.example.fr.'), 'http://www.example.fr/',
 	'trailing dot';
 is $check->('http://WWW.exaMple.FR'), 'http://www.example.fr/',
