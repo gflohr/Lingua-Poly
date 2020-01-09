@@ -37,16 +37,15 @@ ok !$check->('http://www.example.fr:65536'), 'port out of range';
 ok !$check->('http://www.example.fr:0'), 'port zero';
 ok !$check->('http://www.example.fr:-80'), 'negative port';
 ok $check->('http://www.example.fr:1234', 'valid port');
+is $check->('http://www.example.fr:80'), 'http://www.example.fr/',
+	'default port';
 
 ok !$check->('http://my_example.fr'), 'forbidden character';
 is $check->('http://www.example.fr.'), 'http://www.example.fr/',
 	'trailing dot';
 is $check->('http://WWW.exaMple.FR'), 'http://www.example.fr/',
 	'to lowercase';
-is $check->('http://www.example.fr:80'), 'http://www.example.fr/',
-	'default port';
 
-ok !$check->('http://localhost'), 'localhost';
 ok !$check->('http://whatever'), 'non-fqdn';
 ok !$check->('http://what..ever.com'), 'consecutive dots';
 ok !$check->('http://what.ever.com..'), 'two trailing dots';
@@ -149,6 +148,7 @@ ok !$check->('http://[FF02:AAAA:FEE5::1:3]'),
 # RFC2606
 ok !$check->('http://www.test'), 'RFC2606 .test';
 ok !$check->('http://www.example'), 'RFC2606 .example';
+ok !$check->('http://localhost'), 'RFC2606 localhost';
 ok !$check->('http://www.localhost'), 'RFC2606 .localhost';
 ok !$check->('http://www.invalid'), 'RFC2606 .invalid';
 ok !$check->('http://www.example.com'), 'RFC2606 .example.com';
