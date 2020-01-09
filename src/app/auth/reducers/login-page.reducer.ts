@@ -1,4 +1,4 @@
-import { createReducer, on } from '@ngrx/store';
+import { createReducer, on, Action } from '@ngrx/store';
 import { LoginPageActions, AuthApiActions } from '../actions';
 
 export const loginPageFeatureKey = 'loginPage';
@@ -13,7 +13,7 @@ export const initialState: State = {
 	pending: false
 };
 
-export const reducer = createReducer(
+export const loginPageReducer = createReducer(
 	initialState,
 	on(LoginPageActions.login, state => ({
 		...state,
@@ -33,6 +33,10 @@ export const reducer = createReducer(
 		pending: false,
 	}))
 );
+
+export function reducer(state: State | undefined, action: Action) {
+	return loginPageReducer(state, action);
+}
 
 export const getError = (state: State) => state.error;
 export const getPending = (state: State) => state.pending;
