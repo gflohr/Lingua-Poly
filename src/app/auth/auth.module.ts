@@ -21,7 +21,7 @@ import * as fromAuth from './reducers';
 		CoreModule,
 		FormsModule,
 		ReactiveFormsModule,
-		StoreModule.forFeature(fromAuth.authFeatureKey, fromAuth.reducers),
+		StoreModule.forFeature(fromAuth.authFeatureKey, fromAuth.authReducers),
 		EffectsModule.forFeature([AuthEffects])
 	],
 	declarations: [

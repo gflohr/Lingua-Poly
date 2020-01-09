@@ -4,7 +4,8 @@ import { ProfileComponent } from './profile.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ConnectFormDirective } from 'src/app/core/directives/connect-form.directive';
 import { HttpClientModule } from '@angular/common/http';
-import { provideMockStore } from '@ngrx/store/testing';
+import { StoreModule } from '@ngrx/store';
+import { authReducers, authFeatureKey } from '../../../auth/reducers/';
 
 describe('ProfileComponent', () => {
 	let component: ProfileComponent;
@@ -15,14 +16,19 @@ describe('ProfileComponent', () => {
 			imports: [
 				FormsModule,
 				ReactiveFormsModule,
-				HttpClientModule
+				HttpClientModule,
+				StoreModule.forRoot({ [authFeatureKey]: authReducers }, {
+					runtimeChecks: {
+						strictActionImmutability: true,
+						strictActionSerializability: true,
+						strictStateImmutability: true,
+						strictStateSerializability: true
+					}
+				})
 			],
 			declarations: [
 				ProfileComponent,
 				ConnectFormDirective
-			],
-			providers: [
-				provideMockStore()
 			]
 		})
 		.compileComponents();

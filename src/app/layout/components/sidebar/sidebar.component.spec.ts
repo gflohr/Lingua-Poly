@@ -3,10 +3,12 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { SidebarComponent } from './sidebar.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { provideMockStore } from '@ngrx/store/testing';
+import { authFeatureKey } from '../../../auth/reducers';
 
 describe('SidebarComponent', () => {
 	let component: SidebarComponent;
 	let fixture: ComponentFixture<SidebarComponent>;
+	const initialState = { [authFeatureKey]: {} };
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -15,7 +17,7 @@ describe('SidebarComponent', () => {
 			],
 			declarations: [ SidebarComponent ],
 			providers: [
-				provideMockStore()
+				provideMockStore({ initialState })
 			]
 		})
 		.compileComponents();

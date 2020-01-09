@@ -14,7 +14,7 @@ export interface State extends fromRoot.State {
 	[authFeatureKey]: AuthState;
 }
 
-export function reducers(state: AuthState | undefined, action: Action) {
+export function authReducers(state: AuthState | undefined, action: Action) {
 	return combineReducers({
 		[fromAuth.statusFeatureKey]: fromAuth.reducer,
 		[fromLoginPage.loginPageFeatureKey]: fromLoginPage.reducer

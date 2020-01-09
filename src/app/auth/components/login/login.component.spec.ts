@@ -5,11 +5,12 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { provideMockStore, MockStore } from '@ngrx/store/testing';
 import { HttpClientModule } from '@angular/common/http';
+import { authFeatureKey } from '../../reducers';
 
 describe('LoginComponent', () => {
 	let component: LoginComponent;
 	let fixture: ComponentFixture<LoginComponent>;
-	const initialState = {};
+	const initialState = { [authFeatureKey]: {}};
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -21,7 +22,7 @@ describe('LoginComponent', () => {
 			],
 			declarations: [ LoginComponent ],
 			providers: [
-				provideMockStore(),
+				provideMockStore({ initialState }),
 				HttpClientModule
 			]
 		})
