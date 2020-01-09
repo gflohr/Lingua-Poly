@@ -154,4 +154,7 @@ ok !$check->('http://www.example.com'), 'RFC2606 .example.com';
 ok !$check->('http://www.example.net'), 'RFC2606 .example.net';
 ok !$check->('http://www.example.org'), 'RFC2606 .example.org';
 
+ok !$check->('http://www.-example.fr'), 'leading hyphen';
+ok !$check->('http://www.example-.fr'), 'trailing hyphen';
+
 done_testing;

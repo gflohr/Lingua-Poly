@@ -85,9 +85,7 @@ export class UrlValidator {
 		} else if (!!url.hostname.match(/^\[([0-9a-fA-F:]+)\]$/)
 				&& !!url.hostname.match(/:/)) {
 			// Uncompress the IPv6 address.
-			console.log(url.hostname);
 			let groups = url.hostname.substr(1, url.hostname.length - 2).split(':');
-			console.log(groups);
 			if (groups.length < 8) {
 				for (let i = 0; i < groups.length; ++i) {
 					if (groups[i] === '') {
@@ -100,9 +98,6 @@ export class UrlValidator {
 					}
 				}
 			}
-			console.log(groups);
-			console.log('FILTER:');
-			console.log(groups.filter(group => group.match(/^[0-9a-f]+$/)));
 
 			// Check it.
 			if (groups.filter(group => group.match(/^[0-9a-f]+$/)).length === 8) {
@@ -115,16 +110,24 @@ export class UrlValidator {
 					if (max === 0 // the unspecified address
 						// Loopback.
 						|| '0000:0000:0000:0000:0000:00000:0000:0001' === norm
+						// IPv4 mapped addresses.
+						|| !!norm.match(/^0000:0000:0000:0000:0000:ffff/)
+						// IPv4 translated addresses.
+						|| !!norm.match(/^0000:0000:0000:0000:ffff:0000/)
+						// IPv4/IPv6 address translation.
+						|| !!norm.match(/^0064:ff9b:0000:0000:0000:0000/)
+						// IPv4 compatible.
+						|| !!norm.match(/^0000:0000:0000:0000:0000:0000/)
 						// Discard prefix.
 						|| !!norm.match(/^0100/)
 						// Teredo tunneling, ORCHIDv2, documentation, 6to4.
-						|| !!norm.match(/^2[12]00/)
+						|| !!norm.match(/^200[12]/)
 						// Private networks.
-						|| !!norm.match(/^fc[cd]/)
+						|| !!norm.match(/^f[cd]/)
 						// Link-local
 						|| !!norm.match(/^fe[89ab]/)
 						// Multicast.
-						|| !!norm.match(/^ff00/)
+						|| !!norm.match(/^ff/)
 					) {
 						return false;
 					}

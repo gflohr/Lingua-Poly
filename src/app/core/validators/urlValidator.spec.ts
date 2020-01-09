@@ -365,6 +365,16 @@ describe('UrlValidator', () => {
 			expected: 'hostname',
 			msg: 'RFC 2606 .example.org'
 		},
+		{
+			url: 'http://www.-example.fr',
+			expected: 'hostname',
+			msg: 'leading hyphen'
+		},
+		{
+			url: 'http://www.example-.fr',
+			expected: 'hostname',
+			msg: 'trailing hyphen'
+		}
 	];
 	for (let i = 0; i < hostnameTestCases.length; ++i) {
 		const tc = hostnameTestCases[i];
