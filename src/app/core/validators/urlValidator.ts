@@ -85,14 +85,14 @@ export class UrlValidator {
 		} else if (!!url.hostname.match(/^\[([0-9a-fA-F:]+)\]$/)
 				&& !!url.hostname.match(/:/)) {
 			// Uncompress the IPv6 address.
-			let groups = url.hostname.split(':');
+			console.log(url.hostname);
+			let groups = url.hostname.substr(1, url.hostname.length - 2).split(':');
+			console.log(groups);
 			if (groups.length < 8) {
-				let isComplete = false;
 				for (let i = 0; i < groups.length; ++i) {
 					if (groups[i] === '') {
-						isComplete = true;
 						groups[i] = '0';
-						let missing = 8 - groups.length;
+						let missing = 7 - groups.length;
 						for (let j = 0; j <= missing; ++j) {
 							groups.splice(i, 0, '0');
 						}
@@ -100,9 +100,12 @@ export class UrlValidator {
 					}
 				}
 			}
+			console.log(groups);
+			console.log('FILTER:');
+			console.log(groups.filter(group => group.match(/^[0-9a-f]+$/)));
 
 			// Check it.
-			if (groups.filter(group => group.match(/^[0-9a-fA-F]+$/)).length === 8) {
+			if (groups.filter(group => group.match(/^[0-9a-f]+$/)).length === 8) {
 				const igroups = groups.map(group => parseInt(group, 16));
 				const max = igroups.reduce((a, b) => Math.max(a, b));
 

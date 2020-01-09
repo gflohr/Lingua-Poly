@@ -131,10 +131,9 @@ ok !$check->('http://[0000:0000:0000:0000:0000:0000:12.155.166.101]'),
 	'IPv4 compatible decimal';
 ok !$check->('http://[0000:0000:0000:0000:0000:0000:0C9B:A665]'),
 	'IPv4 compatible hex';
-ok !$check->('http://[64:ff9b::1.2.3.4]'), 'IPv4/IPv6 address translation';
-ok !$check->('http://[64:ff9b::a:b]'), 'IPv4/IPv6 address translation space';
+ok !$check->('http://[64:ff9b::1.2.3.4]'), 'IPv4/IPv6 address translation decimal';
+ok !$check->('http://[64:ff9b::a:b]'), 'IPv4/IPv6 address translation hex';
 ok !$check->('http://[100::a:ffff:ffff:ffff:ffff]'), 'IPv6 discard prefix';
-$DB::single = 1;
 ok !$check->('http://[2001:0:4136:E378:8000:63BF:3FFF:FDD2]'),
 	'IPv6 Teredo';
 ok !$check->('http://[2002:C9B:A665:1::C9B:A665]'), '6to4 addressing scheme';
