@@ -19,8 +19,6 @@ export class AppComponent implements OnInit, OnDestroy {
 
 	constructor(
 		private translate: TranslateService,
-		private router: Router,
-		private route: ActivatedRoute,
 		private store: Store<fromRoot.State & fromAuth.State>
 	) {
 		this.translate.setDefaultLang(applicationConfig.defaultLocale);

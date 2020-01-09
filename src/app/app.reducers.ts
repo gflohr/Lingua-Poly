@@ -1,4 +1,4 @@
-import { ActionReducerMap, ActionReducer, createFeatureSelector, createSelector, Action, MetaReducer } from '@ngrx/store';
+import { ActionReducerMap, ActionReducer, Action, MetaReducer } from '@ngrx/store';
 import * as fromRouter from '@ngrx/router-store';
 
 import { InjectionToken } from '@angular/core';
