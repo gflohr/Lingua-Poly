@@ -1,5 +1,5 @@
-import { Model } from "../model";
-import { User } from "../openapi/lingua-poly";
+import { Model } from '../model';
+import { User } from '../openapi/lingua-poly';
 
 export abstract class UserBaseModel extends Model<UserBaseModel> implements User {
 	email?: string;

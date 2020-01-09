@@ -1,8 +1,8 @@
-import { UserBaseModel } from "./user";
+import { UserBaseModel } from './user';
 
 export interface ErrorHandlerDataDTO {
-	message: string,
-	params: { [key: string]: any }
+	message: string;
+	params: { [key: string]: any };
 }
 
 export interface UserSetDTO {

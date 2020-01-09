@@ -5,7 +5,6 @@ import { map, exhaustMap, switchMapTo, catchError, tap } from 'rxjs/operators';
 import { UserActions } from '../actions';
 import { UsersService, Profile } from '../openapi/lingua-poly';
 import { UserApiActions } from 'src/app/user/actions';
-import { props } from '@ngrx/store';
 
 @Injectable()
 export class UserEffects {
