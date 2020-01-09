@@ -13,7 +13,7 @@
     "build": "ng build",
     "maildev": "maildev",
     "test": "ng test",
-    "lint": "ng lint",
+    "lint": "ng lint --exclude=./src/app/core/openapi/**/*.ts",
     "e2e": "ng e2e",
     "extract": "node node_modules/@biesbjerg/ngx-translate-extract/bin/cli.js --input=./src --output=src/assets/i18n/en.po --clean --sort --format=pot --marker=_",
     "openapi-generate": "openapi-generator generate -i apis/um/public/openapi.yaml -g typescript-angular -o src/app/core/openapi/lingua-poly"
