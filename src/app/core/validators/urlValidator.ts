@@ -6,10 +6,8 @@ export class UrlValidator {
 
 		try {
 			const url = new URL(control.value);
-			const valid = this.checkHostname(url);
+			const valid = this.checkPort(url) && this.checkHostname(url);
 
-			// We allow username and password as part of the URL.	It's stupid
-			// by the user but why not?
 			if (!valid) return { hostname: true };
 		} catch (e) {
 			return { hostname: true };
@@ -23,12 +21,16 @@ export class UrlValidator {
 
 		try {
 			const url = new URL(control.value);
-			if (!['https:', 'http:'].includes(url.protocol)) throw new Error('scheme');
+			if (!['https:', 'http:'].includes(url.protocol)) return { scheme: true };
 		} catch (e) {
 			return { scheme: true };
 		}
 
 		return null;
+	}
+
+	private static checkPort(url: URL): boolean {
+		return url.port !== '0';
 	}
 
 	private static checkHostname(url: URL): boolean {
