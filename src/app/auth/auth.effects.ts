@@ -19,13 +19,6 @@ export class AuthEffects {
 		private modalService: NgbModal,
 	) { }
 
-	/* FIXME! This should maybe go into a separate service.	*/
-	runDialog = function(content) {
-		const modalRef = this.modalService.open(content, { centered: true });
-
-		return from(modalRef.result);
-	};
-
 	login$ = createEffect(() => this.actions$.pipe(
 		ofType(LoginPageActions.login),
 		map(action => action.credentials),
@@ -69,4 +62,11 @@ export class AuthEffects {
 		ofType(AuthApiActions.loginSuccess),
 		tap(() => this.router.navigate(['/']))
 	), { dispatch: false });
+
+	/* FIXME! This should maybe go into a separate service.	*/
+	runDialog = function(content) {
+		const modalRef = this.modalService.open(content, { centered: true });
+
+		return from(modalRef.result);
+	};
 }
