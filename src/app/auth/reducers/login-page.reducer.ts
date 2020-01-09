@@ -1,12 +1,12 @@
-import { createReducer, on } from "@ngrx/store";
-import { LoginPageActions, AuthApiActions } from "../actions";
+import { createReducer, on } from '@ngrx/store';
+import { LoginPageActions, AuthApiActions } from '../actions';
 
 export const loginPageFeatureKey = 'loginPage';
 
 export interface State {
-	error: string | null,
-	pending: boolean
-};
+	error: string | null;
+	pending: boolean;
+}
 
 export const initialState: State = {
 	error: null,

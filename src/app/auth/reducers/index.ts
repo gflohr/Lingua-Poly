@@ -6,7 +6,7 @@ import * as fromLoginPage from './login-page.reducer';
 import { combineReducers, Action, createFeatureSelector, createSelector } from '@ngrx/store';
 
 export interface AuthState {
-	[fromAuth.statusFeatureKey]: fromAuth.State,
+	[fromAuth.statusFeatureKey]: fromAuth.State;
 	[fromLoginPage.loginPageFeatureKey]: fromLoginPage.State;
 }
 
@@ -66,10 +66,10 @@ export const selectDisplayName = createSelector(
 
 		return null;
 	}
-)
+);
 
 export const selectUsername = createSelector(
 	selectUser, user => {
 		return user ? user.username : null;
 	}
-)
+);

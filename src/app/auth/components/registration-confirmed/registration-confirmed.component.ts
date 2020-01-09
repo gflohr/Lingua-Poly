@@ -8,7 +8,7 @@ import { UsersService, Token } from 'src/app/core/openapi/lingua-poly';
 	styleUrls: ['./registration-confirmed.component.css']
 })
 export class RegistrationConfirmedComponent implements OnInit {
-	pending: boolean = true;
+	pending = true;
 	error: boolean;
 	success: boolean;
 
