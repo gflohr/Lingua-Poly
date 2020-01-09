@@ -2,10 +2,10 @@ import { Directive, Input } from '@angular/core';
 import { FormGroupDirective } from '@angular/forms';
 
 @Directive({
-	selector: '[connectForm]'
+	selector: '[appConnectForm]'
 })
 export class ConnectFormDirective {
-	@Input('connectForm')
+	@Input('appConnectForm')
 	set data(value: any) {
 		if (value) {
 			this.formGroupDirective.form.patchValue(value);
