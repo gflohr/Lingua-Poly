@@ -154,7 +154,15 @@ ok !$check->('http://www.example.com'), 'RFC2606 .example.com';
 ok !$check->('http://www.example.net'), 'RFC2606 .example.net';
 ok !$check->('http://www.example.org'), 'RFC2606 .example.org';
 
+# RFC6762
+ok !$check->('http://www.example.local'), 'RFC6762 .local';
+
+# RFC7686
+ok !$check->('http://www.example.onion'), 'RFC7686 .onion';
+
 ok !$check->('http://www.-example.fr'), 'leading hyphen';
+ok !$check->('http://www.7example.fr'), 'leading digit';
 ok !$check->('http://www.example-.fr'), 'trailing hyphen';
+ok $check->('http://www.example7.fr'), 'trailing digit';
 
 done_testing;

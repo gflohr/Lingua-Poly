@@ -366,14 +366,34 @@ describe('UrlValidator', () => {
 			msg: 'RFC 2606 .example.org'
 		},
 		{
+			url: 'http://www.example.local',
+			expected: 'hostname',
+			msg: 'RFC 6762 .local'
+		},
+		{
+			url: 'http://www.example.onion',
+			expected: 'hostname',
+			msg: 'RFC 7686 .onion'
+		},
+		{
 			url: 'http://www.-example.fr',
 			expected: 'hostname',
 			msg: 'leading hyphen'
 		},
 		{
+			url: 'http://www.7example.fr',
+			expected: 'hostname',
+			msg: 'leading digit'
+		},
+		{
 			url: 'http://www.example-.fr',
 			expected: 'hostname',
 			msg: 'trailing hyphen'
+		},
+		{
+			url: 'http://www.example7.fr',
+			expected: null,
+			msg: 'trailing digit'
 		}
 	];
 	for (let i = 0; i < hostnameTestCases.length; ++i) {

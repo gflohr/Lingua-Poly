@@ -101,16 +101,15 @@ sub __checkHostname {
 	die "host\n" if !defined $host;
 	die "host\n" if '' eq $host;
 
+	die "host\n" if $host =~ /\.\./;
+
 	# Discard an empty root label.
 	$host =~ s/\.$//;
 
-	# Two or more trailing dots.
-	die "host\n" if $host =~ /\.$/;
-
 	my @labels = split /\./, $host;
 
-	# Disallow other empty labels.
-	die "host\n" if grep { $_ eq '' } @labels;
+	# Disallow empty labels.
+	die "host\n" if $uri->host =~ /\.\./;
 
 	# The URI module does not canonicalize quad-dotted notation of IPv4
 	# addresses if they are in octal or hexadecimal form.
@@ -189,9 +188,24 @@ sub __checkHostname {
 		die "invalid_tld\n";
 	}
 
-	# RFC2606 top-level domain? We also disallow .arpa and .int altogether.
-	my %rfc2606 = map { $_ => 1 } qw(test example invalid localhost arpa int);
-	die "host\n" if $rfc2606{$labels[-1]};
+	# Special purpose top-level domain? We also disallow .arpa and .int
+	# altogether.  Both .home and .corp are not registered but recommended for
+	# private use (see for example  https://support.apple.com/en-us/HT207511).
+	my %special_tld = map {
+		$_ => 1
+	} qw(
+		test
+		example
+		invalid
+		localhost
+		local
+		onion
+		arpa
+		int
+		home
+		corp
+	);
+	die "host\n" if $special_tld{$labels[-1]};
 
 	# RFC2606 second-level domain?
 	if ('example' eq $labels[-2]) {
@@ -202,9 +216,9 @@ sub __checkHostname {
 	# Some people say that a top-level domain must be at least two characters
 	# long.  But there is no evidence for that.
 
-	# Misplaced hyphen.
+	# Leading hyphens or digits, and trailing hyphens are not allowed.
 	foreach my $label (@labels) {
-		if ($label =~ /^-/ || $label =~ /-$/) {
+		if ($label =~ /^[-0-9]/ || $label =~ /-$/) {
 			die "label:hyphen\n";
 		}
 	}

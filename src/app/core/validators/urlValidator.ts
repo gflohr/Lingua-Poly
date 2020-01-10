@@ -34,12 +34,12 @@ export class UrlValidator {
 	}
 
 	private static checkHostname(url: URL): boolean {
-		// Only allow http URLs?
+		// Only allow http and https URLs.
 		if ('https:' !== url.protocol && 'http:' !== url.protocol) {
 			return false;
 		}
 
-		// Allow username and password?
+		// Do not allow username or password information.
 		if (url.username !== '' || url.password !== '') {
 			return false;
 		}
@@ -151,20 +151,31 @@ export class UrlValidator {
 			return false;
 		}
 
-		// RFC 2606 and special purpose domains (.arpa, .int).
-		if (['example', 'test', 'localhost', 'invalid', 'arpa', 'int'].includes(tld)
-		|| ('example' === labels[labels.length - 2] &&
-			['com', 'net', 'org'].includes(tld))) {
+		// RFC 2606, RFC6762, RFC7686, and special purpose domains
+		// (.arpa, .int) or recommended for private use (.home, .corp).
+		if ([
+			'example',
+			'test',
+			'localhost',
+			'invalid',
+			'local',
+			'onion',
+			'home',
+			'corp',
+			'arpa',
+			'int'].includes(tld)
+		    || ('example' === labels[labels.length - 2]
+		        && ['com', 'net', 'org'].includes(tld))) {
 			return false;
 		}
 
 		// Some people say that a top-level domain must be at least two
 		// characters long.  But there's no evidence for that.
 
-		// Misplaced hyphen.
+		// Leading hyphens or digits, and trailing hyphens are not allowed.
 		for (let i = 0; i < labels.length; ++i) {
 			const label = labels[i];
-			if (!!label.match(/^-/) || !!label.match(/-$/)) {
+			if (!!label.match(/^[-0-9]/) || !!label.match(/-$/)) {
 				return false;
 			}
 		}
