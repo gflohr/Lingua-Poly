@@ -39,6 +39,9 @@ ok !$check->('http://www.example.fr:-80'), 'negative port';
 ok $check->('http://www.example.fr:1234', 'valid port');
 is $check->('http://www.example.fr:80'), 'http://www.example.fr/',
 	'default port';
+ok $check->('http://www.example.fr:0008080'), 'leading zeroes in port';
+is $check->('http://www.example.fr:0008080'), 'http://www.example.fr:8080/',
+	'leading zeroes in port not stripped off';
 
 ok !$check->('http://my_example.fr'), 'forbidden character';
 is $check->('http://www.example.fr.'), 'http://www.example.fr/',

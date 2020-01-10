@@ -53,11 +53,10 @@ sub check {
 
 	my $uri = URI->new($url)->canonical;
 
-	$self->__checkScheme($uri);
-	$self->__checkPort($uri);
-	$self->__checkUserinfo($uri);
-	my $host = $self->__checkHostname($uri);
-	$uri->host($host);
+	$uri = $self->__checkScheme($uri);
+	$uri = $self->__checkPort($uri);
+	$uri = $self->__checkUserinfo($uri);
+	$uri = $self->__checkHostname($uri);
 
 	return $uri;
 }
@@ -70,7 +69,7 @@ sub __checkScheme {
 
 	grep { $scheme eq $_ } ('http', 'https') or die "scheme\n";
 
-	return $self;
+	return $uri;
 }
 
 sub __checkPort {
@@ -79,9 +78,13 @@ sub __checkPort {
 	# IMHO, URI should check that the port number is not out of range but it
 	# does not.
 	my $port = $uri->port;
+
+	# IMHO, URI should do that ....
+	$uri->port($port) if $port =~ s/^0+//;
+
 	die "port\n" if $port < 1 || $port > 65535;
 
-	return $self;
+	return $uri;
 }
 
 sub __checkUserinfo {
@@ -89,7 +92,7 @@ sub __checkUserinfo {
 
 	die "userinfo\n" if $uri->userinfo;
 
-	return $self;
+	return $uri;
 }
 
 sub __checkHostname {
@@ -177,59 +180,61 @@ sub __checkHostname {
 		}
 	}
 
-	return $host if $is_ip;
+	if (!$is_ip) {
+		die "no_fqdn\n" if @labels < 2;
 
-	die "no_fqdn\n" if @labels < 2;
+		# The top-level domain name must not contain a hyphen or digit unless it
+		# is an IDN.
+		my $tld = $labels[-1];
+		if (('xn--' ne substr $tld, 0, 4) && ($tld =~ /[-0-9]/)) {
+			die "invalid_tld\n";
+		}
 
-	# The top-level domain name must not contain a hyphen or digit unless it
-	# is an IDN.
-	my $tld = $labels[-1];
-	if (('xn--' ne substr $tld, 0, 4) && ($tld =~ /[-0-9]/)) {
-		die "invalid_tld\n";
-	}
+		# Special purpose top-level domain? We also disallow .arpa and .int
+		# altogether.  Both .home and .corp are not registered but recommended for
+		# private use (see for example  https://support.apple.com/en-us/HT207511).
+		my %special_tld = map {
+			$_ => 1
+		} qw(
+			test
+			example
+			invalid
+			localhost
+			local
+			onion
+			arpa
+			int
+			home
+			corp
+		);
+		die "host\n" if $special_tld{$labels[-1]};
 
-	# Special purpose top-level domain? We also disallow .arpa and .int
-	# altogether.  Both .home and .corp are not registered but recommended for
-	# private use (see for example  https://support.apple.com/en-us/HT207511).
-	my %special_tld = map {
-		$_ => 1
-	} qw(
-		test
-		example
-		invalid
-		localhost
-		local
-		onion
-		arpa
-		int
-		home
-		corp
-	);
-	die "host\n" if $special_tld{$labels[-1]};
+		# RFC2606 second-level domain?
+		if ('example' eq $labels[-2]) {
+			my %rfc2606_2 = map { $_ => 1 } qw(com net org);
+			die "host\n" if $rfc2606_2{$labels[-1]};
+		}
 
-	# RFC2606 second-level domain?
-	if ('example' eq $labels[-2]) {
-		my %rfc2606_2 = map { $_ => 1 } qw(com net org);
-		die "host\n" if $rfc2606_2{$labels[-1]};
-	}
+		# Some people say that a top-level domain must be at least two characters
+		# long.  But there is no evidence for that.
 
-	# Some people say that a top-level domain must be at least two characters
-	# long.  But there is no evidence for that.
+		# Leading hyphens or digits, and trailing hyphens are not allowed.
+		foreach my $label (@labels) {
+			if ($label =~ /^[-0-9]/ || $label =~ /-$/) {
+				die "label:hyphen\n";
+			}
+		}
 
-	# Leading hyphens or digits, and trailing hyphens are not allowed.
-	foreach my $label (@labels) {
-		if ($label =~ /^[-0-9]/ || $label =~ /-$/) {
-			die "label:hyphen\n";
+		# Unicode.  We allow all characters except the forbidden ones in the
+		# ASCII range.
+		if ($host =~ /([\x00-\x2c\x2f\x3a-\x60\x7b-\x7f])/) {
+			die "label:forbidden_char($1)n";
 		}
 	}
 
-	# Unicode.  We allow all characters except the forbidden ones in the
-	# ASCII range.
-	if ($host =~ /([\x00-\x2c\x2f\x3a-\x60\x7b-\x7f])/) {
-		die "label:forbidden_char($1)n";
-	}
+	$uri->host($host);
 
-	return $host;
+	return $uri;
 }
 
 1;
