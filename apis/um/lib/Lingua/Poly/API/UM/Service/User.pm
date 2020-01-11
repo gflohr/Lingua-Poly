@@ -17,7 +17,7 @@ use strict;
 use Moose;
 use namespace::autoclean;
 
-use Lingua::Poly::API::UM::Util qw(crypt_password);
+use Lingua::Poly::API::UM::Util qw(crypt_password empty);
 use Lingua::Poly::API::UM::Validator::Homepage;
 
 use base qw(Lingua::Poly::API::UM::Logging);
@@ -94,10 +94,15 @@ sub updateUser {
 		die "username must not contain a slash or an at-sign.\n";
 	}
 
-	my $homepage = Lingua::Poly::API::UM::Validator::Homepage->new->check($user->homepage);
+	my $homepage = $user->homepage;
+	if (empty $homepage) {
+		undef $homepage;
+	} else {
+		$homepage = Lingua::Poly::API::UM::Validator::Homepage->new->check($homepage);
+	}
 
 	$self->database->execute(
-		UPDATE_USER => $user->username, $homepage, $user->description,
+		UPDATE_USER => $user->username, $homepage, $user->description, $user->id
 	);
 }
 

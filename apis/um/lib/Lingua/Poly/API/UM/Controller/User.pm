@@ -85,10 +85,11 @@ sub updateProfile {
 	my $self = shift->openapi->valid_input or return;
 
 	my $user = $self->stash->{session}->user;
+	my $json = $self->req->json;
 
-	$user->username($self->param('username'));
-	$user->homepage($self->param('homepage'));
-	$user->description($self->param('description'));
+	$user->username($json->{username});
+	$user->homepage($json->{homepage});
+	$user->description($json->{description});
 
 	eval {
 		$self->app->userService->updateUser($user);
@@ -100,7 +101,7 @@ sub updateProfile {
 		});
 	}
 
-	return $self->render(openapi => '', status => HTTP_NO_CONTENT);
+	return $self->render(json => '', status => HTTP_NO_CONTENT);
 }
 
 sub get {
