@@ -70,6 +70,11 @@ describe('UrlValidator', () => {
 			expected: null,
 			msg: 'default port'
 		},
+		{
+			url: 'http://my.example.fr:0008080',
+			expected: null,
+			msg: 'default port'
+		},
 	];
 	for (let i = 0; i < portTestCases.length; ++i) {
 		const tc = portTestCases[i];

@@ -174,9 +174,12 @@ sub __checkHostname {
 				    || $norm =~ /^fe[89ab]/
 				    # Multicast.
 				    || $norm =~ /^ff/
-				)) {
-					die "ipv6_special\n";
-				}
+					)
+				) {
+				die "ipv6_special\n";
+			}
+
+			# FIXME! Compress the address into its canonical form.
 		}
 	}
 
