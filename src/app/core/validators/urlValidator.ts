@@ -6,9 +6,10 @@ export class UrlValidator {
 
 		try {
 			const url = new URL(control.value);
-			const valid = this.checkPort(url) && this.checkHostname(url);
-
-			if (!valid) return { hostname: true };
+			if (!(UrlValidator.checkPort(url)
+				&& UrlValidator.checkHostname(url))) {
+					return { hostname: true };
+			}
 		} catch (e) {
 			return { hostname: true };
 		}

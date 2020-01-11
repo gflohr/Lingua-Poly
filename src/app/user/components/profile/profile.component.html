@@ -35,12 +35,12 @@ saving an empty value.
 		<small id="homepageHelp" class="form-text text-muted">
 			This is also visible for other users.
 		</small>
-		<small *ngIf="profileForm.get('homepage').touched && profileForm.get('homepage').errors && !profileForm.get('homepage').errors.hostname"
-			class="form-text alert alert-danger"
-			translate>This is not a valid URL or it is not allowed.</small>
-		<small *ngIf="profileForm.get('homepage').touched && profileForm.get('homepage').errors && !profileForm.get('homepage').errors.hostname && profileForm.get('homepage').errors.scheme"
+		<small *ngIf="profileForm.get('homepage').touched && profileForm.get('homepage').errors && profileForm.get('homepage').errors.scheme"
 			class="form-text alert alert-danger"
 			translate>The homepage must start with "https://" or "http://".</small>
+		<small *ngIf="profileForm.get('homepage').touched && profileForm.get('homepage').errors && !profileForm.get('homepage').errors.scheme && profileForm.get('homepage').errors.hostname"
+			class="form-text alert alert-danger"
+			translate>This is not a valid URL or it is not allowed.</small>
 	</div>
 	<div class="form-group">
 		<label for="description" translate>About Me</label>
