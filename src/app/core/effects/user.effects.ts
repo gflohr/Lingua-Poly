@@ -5,6 +5,7 @@ import { map, exhaustMap, switchMapTo, catchError, tap } from 'rxjs/operators';
 import { UserActions } from '../actions';
 import { UsersService, Profile } from '../openapi/lingua-poly';
 import { UserApiActions } from 'src/app/user/actions';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class UserEffects {
@@ -35,7 +36,8 @@ export class UserEffects {
 		ofType(UserActions.setProfile),
 		exhaustMap((props) =>
 			this.usersService.profilePatch(props.payload).pipe(
-				map(profile => console.log(profile))
+				tap(() => this.router.navigate(['/'])),
+				catchError(error => of(UserApiActions.profileFailure({ error })))
 			)
 		)
 	), { dispatch: false });
@@ -43,5 +45,6 @@ export class UserEffects {
 	constructor(
 		private actions$: Actions,
 		private usersService: UsersService,
+		private router: Router
 	) { }
 }
