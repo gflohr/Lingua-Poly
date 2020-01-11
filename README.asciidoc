@@ -57,14 +57,14 @@ directory, you have to run `cpanm` with `sudo`:
 [source,bash]
 ----
 $ cd /path/to/Lingua-Poly
-$ cd perl
+$ cd apis/um
 $ sudo cpanm --installdeps .
 $ sudo cpanm -n .
 ----
 
 One of the indirect dependencies is `Authen::Passphrase::Scrypt` which may
 be difficult to compile.  You have to make sure that `libcrypto` from the
-OpenSSL package is installed, and you may have to pass the directoried,
+OpenSSL package is installed, and you may have to pass the directories,
 where the library file `libcrypto.a` and the header `openssl/aes.h` are
 found.
 
@@ -88,19 +88,37 @@ A regular backend (API) server is started like this:
 [source,bash]
 ----
 $ cd /path/to/Lingua-Poly
-$ cd perl
-$ perl -Ilib script/lingua-poly daemon
+$ cd apis/um
+$ perl -Ilib script/lingua-poly-service-um daemon
 ----
 
 If you have the web server `morby` in your `$PATH` (should be installed as a
 dependency), you can also start a development web server that watches for
-changes and restarts itself.
+changes and restarts itself:
+
+[source,bash]
+----
+$ cd /path/to/Lingua-Poly
+$ cd apis/um
+$ morbo script/lingua-poly-service-um daemon
+----
+
+Environment variables:
+
+LINGUA_POLY_DEBUG::
+A list of debugging realms separated by commas, spaces, tabs, colons, or
+pipe symbols. The following realms are currently supported:
+  core::: the core API framework
+  session::: session handling and controller methods
+  db::: database-related stuff
+  request::: set a debugger breakpoint at the beginning of the request handler
+  all::: all of the above
 
 [[configuration]]
 ==== Configuration
 
-You need a minimal configuration file `lingua-poly.api.yaml` in
-http://yaml.org/[YAML] format in the `perl` directory:
+You need a minimal configuration file `lingua-poly-service-um.api.yaml` in
+http://yaml.org/[YAML] format in the `apis/um` directory:
 
 [source,yaml]
 ----
@@ -118,27 +136,22 @@ Instead of "inventing" a secret, you are advised just omit it initially.  The
 server application will fail in that case and a randomly generated secret will
 be shown in the error message.
 
-[[starting-the-backend-server]]
-==== Starting the Backend Server
+[[starting-a-mail-server]]
+==== Starting a Mail Server
 
-Start the backend server like this:
+In development mode, you do not need a real mail server but can start a fake
+one:
 
 [source,bash]
 ----
-$ cd /path/to/Lingua-Poly/perl
-$ perl -Ilib script/lingua-poly
+$ cd /path/to/Lingua-Poly
+$ yarn run maildev
 ----
 
-Environment variables:
-
-LINGUA_POLY_DEBUG::
-A list of debugging realms separated by commas, spaces, tabs, colons, or
-pipe symbols. The following realms are currently supported:
-  core::: the core API framework
-  session::: session handling and controller methods
-  db::: database-related stuff
-  request::: set a debugger breakpoint at the beginning of the request handler
-  all::: all of the above
+This will start maildev, a development smtp server on your local machine
+running on port 1025.  This mail server will not deliver any mail but will put
+them all into one single mailbox that you can access under
+http://localhost:1080.
 
 [[manually-create-passwords]]
 ==== Manually Create Passwords
