@@ -34,3 +34,12 @@
 	text-align: center;
 }
 
+.btn-facebook {
+	margin-top: 1.5rem;
+	background-color: #3b5998;
+	border: rgba(0, 0, 0, 0.2);
+}
+
+.btn-facebook:hover {
+	background-color: #2d4373;
+}
