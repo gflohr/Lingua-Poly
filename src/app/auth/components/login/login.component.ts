@@ -1,18 +1,23 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { UserLogin } from '../../../../app/core/openapi/lingua-poly';
 import { Store, select } from '@ngrx/store';
 import * as fromAuth from '../../reducers';
 import { LoginPageActions } from '../../actions';
+import { SocialUser, AuthService, FacebookLoginProvider } from 'angularx-social-login';
 
 @Component({
 	selector: 'app-login',
 	templateUrl: './login.component.html',
 	styleUrls: ['./login.component.css']
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
 	pending$ = this.authStore.pipe(select(fromAuth.selectLoginPagePending));
 	error$ = this.authStore.pipe(select(fromAuth.selectLoginPageError));
+
+	// FIXME! Use store instead!
+	user: SocialUser;
+	loggedIn: boolean;
 
 	@Input()
 	set pending(isPending: boolean) {
@@ -31,8 +36,13 @@ export class LoginComponent {
 
 	constructor(
 		private fb: FormBuilder,
-		private authStore: Store<fromAuth.State>
+		private authStore: Store<fromAuth.State>,
+		private authService: AuthService
 	) {
+	}
+
+	signInWithFacebook(): void {
+		this.authService.signIn(FacebookLoginProvider.PROVIDER_ID);
 	}
 
 	loginForm = this.fb.group({
