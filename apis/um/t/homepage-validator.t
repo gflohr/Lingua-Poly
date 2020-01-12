@@ -132,28 +132,35 @@ is_deeply(
 );
 
 is_deeply(
-	[parse_ipv4 split /:/, '037777777777'],
+	[parse_ipv4 split /\./, '037777777777'],
 	[255, 255, 255, 255],
 	'parse_ipv4 037777777777'
 );
-ok !parse_ipv4(split /:/, '040000000000'), 'octal overflow';
-ok !parse_ipv4(split /:/, '0377777777770'), 'octal overflow';
-ok !parse_ipv4(split /:/, '08'), 'invalid octal';
+ok !parse_ipv4(split /\./, '040000000000'), 'octal overflow';
+ok !parse_ipv4(split /\./, '0377777777770'), 'octal overflow';
+ok !parse_ipv4(split /\./, '08'), 'invalid octal';
 
 is_deeply(
-	[parse_ipv4 split /:/, '0xffffffff'],
+	[parse_ipv4 split /\./, '0xffffffff'],
 	[255, 255, 255, 255],
 	'parse_ipv4 0xffffffff'
 );
-ok !parse_ipv4(split /:/, ''), 'hex overflow';
+ok !parse_ipv4(split /\./, ''), 'hex overflow';
 
 is_deeply(
-	[parse_ipv4 split /:/, '4294967295'],
+	[parse_ipv4 split /\./, '4294967295'],
 	[255, 255, 255, 255],
 	'parse_ipv4 4294967295'
 );
-ok !parse_ipv4(split /:/, '4294967296'), 'decimal overflow';
-ok !parse_ipv4(split /:/, '42949672960'), 'decimal overflow';
+ok !parse_ipv4(split /\./, '4294967296'), 'decimal overflow';
+ok !parse_ipv4(split /\./, '42949672960'), 'decimal overflow';
+
+# x.x with 8.24 bits.
+is_deeply(
+	[parse_ipv4 split /\./, '42.16777215'],
+	[42, 255, 255, 255],
+	'parse_ipv4 42.16777215'
+);
 
 ok !$check->('http://[::]'), 'unspecified IPv6 address';
 ok !$check->('http://[::1]'), 'loopback IPv6 address';
