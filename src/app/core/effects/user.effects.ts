@@ -6,6 +6,8 @@ import { UserActions } from '../actions';
 import { UsersService, Profile } from '../openapi/lingua-poly';
 import { UserApiActions } from 'src/app/user/actions';
 import { Router } from '@angular/router';
+import * as fromAuth from '../../auth/reducers';
+import { Store } from '@ngrx/store';
 
 @Injectable()
 export class UserEffects {
@@ -36,6 +38,7 @@ export class UserEffects {
 		ofType(UserActions.setProfile),
 		exhaustMap((props) =>
 			this.usersService.profilePatch(props.payload).pipe(
+				tap(() => this.authStore.dispatch(UserActions.requestProfile())),
 				tap(() => this.router.navigate(['/'])),
 				catchError(error => of(UserApiActions.profileFailure({ error })))
 			)
@@ -45,6 +48,7 @@ export class UserEffects {
 	constructor(
 		private actions$: Actions,
 		private usersService: UsersService,
-		private router: Router
+		private router: Router,
+		private authStore: Store<fromAuth.State>
 	) { }
 }
