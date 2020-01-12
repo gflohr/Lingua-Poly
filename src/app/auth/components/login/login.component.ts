@@ -15,10 +15,6 @@ export class LoginComponent implements OnInit {
 	pending$ = this.authStore.pipe(select(fromAuth.selectLoginPagePending));
 	error$ = this.authStore.pipe(select(fromAuth.selectLoginPageError));
 
-	// FIXME! Use store instead!
-	user: SocialUser;
-	loggedIn: boolean;
-
 	@Input()
 	set pending(isPending: boolean) {
 		if (isPending) {
@@ -39,6 +35,12 @@ export class LoginComponent implements OnInit {
 		private authStore: Store<fromAuth.State>,
 		private authService: AuthService
 	) {
+	}
+
+	ngOnInit() {
+		this.authService.authState.subscribe((user) => {
+			console.log(user);
+		});
 	}
 
 	signInWithFacebook(): void {

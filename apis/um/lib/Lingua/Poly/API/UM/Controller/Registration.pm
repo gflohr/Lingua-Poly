@@ -102,7 +102,8 @@ sub createUser {
 			# Create the  user.
 			$self->app->userService->create(
 				$userDraft->{email},
-				$userDraft->{password});
+				$userDraft->{password},
+				'local');
 			$token = $tokenService->create(registration => $userDraft->{email});
 		}
 
@@ -149,7 +150,8 @@ EOF
 	sendmail $email, { transport => $self->emailSenderTransport };
 
 	my %user = (email => $userDraft->{email});
-	$self->render(openapi => \%user, status => HTTP_CREATED);
+
+	$self->render(json => \%user, status => HTTP_CREATED);
 }
 
 sub confirm {

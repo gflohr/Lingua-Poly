@@ -1,9 +1,23 @@
 SET client_encoding = 'UTF8';
 CREATE EXTENSION IF NOT EXISTS citext;
 
+CREATE TABLE identity_providers ( 
+        id SERIAL PRIMARY KEY,
+        name TEXT NOT NULL UNIQUE
+);
+INSERT INTO identity_providers(name) SELECT 'local'
+  WHERE NOT EXISTS (
+    SELECT 1 FROM identity_providers WHERE name  = 'local'
+  );
+INSERT INTO identity_providers(name) SELECT 'FACEBOOK'
+  WHERE NOT EXISTS (
+    SELECT 1 FROM identity_providers WHERE name  = 'FACEBOOK'
+  );
+
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     email CITEXT NOT NULL UNIQUE,
+    identity_provider_id INTEGER REFERENCES identity_providers(id) ON DELETE CASCADE,
     username CITEXT UNIQUE,
     password TEXT NOT NULL,
     confirmed BOOLEAN NOT NULL DEFAULT 'f',

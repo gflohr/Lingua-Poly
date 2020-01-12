@@ -74,7 +74,9 @@ SELECT t.token FROM tokens t, users u
 	AND NOT u.confirmed
 EOF
 		INSERT_USER => <<EOF,
-INSERT INTO users(email, password) VALUES(?, ?)
+INSERT INTO users(email, password, identity_provider_id)
+  VALUES(?, ?,
+    (SELECT id FROM identity_providers WHERE name = ?))
 EOF
 		UPDATE_USER => <<EOF,
 UPDATE users
