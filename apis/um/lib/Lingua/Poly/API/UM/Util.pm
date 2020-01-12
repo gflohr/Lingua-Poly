@@ -109,7 +109,7 @@ sub parse_ipv4 {
 			$label = '0' if !$label;
 			my $l = length $label;
 			return if 10 < $l;
-			return if 10 == $l && $label gt '4294967296';
+			return if 10 == $l && $label gt '4294967295';
 			push @parts, $label;
 		} else {
 			return;
