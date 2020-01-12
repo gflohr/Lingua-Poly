@@ -99,10 +99,11 @@ sub parse_ipv4 {
 			push @parts, oct $label;
 		} elsif ($label =~ s/^0[xX]([0-9a-f]*)$/$1/) {
 			# Hexadecimal number.  Make sure it fits into 32 bits.
-			$label =~ s/^0*/0/;
+			$label =~ s/^0+/0/;
+			$label = '0' if !length $label;
 			return if 8 < length $label;
 			push @parts, oct "0x$label";
-		} elsif ($label =~ /^[0-9]+$/) {
+		} elsif ($label =~ /^[1-9][0-9]*$/) {
 			# Decimal number. Make sure, it fits into 32 bits.
 			$label =~ s/^0+//;
 			$label = '0' if !$label;

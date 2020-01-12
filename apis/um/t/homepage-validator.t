@@ -130,6 +130,22 @@ is_deeply(
 	[127, 0, 0, 1],
 	'parse_ipv4 127.0.0.1'
 );
+
+is_deeply(
+	[parse_ipv4 split /:/, '037777777777'],
+	[255, 255, 255, 255],
+	'parse_ipv4 037777777777'
+);
+ok !parse_ipv4(split /:/, '040000000000'), 'octal overflow';
+ok !parse_ipv4(split /:/, '0377777777770'), 'octal overflow';
+ok !parse_ipv4(split /:/, '08'), 'invalid octal';
+
+is_deeply(
+	[parse_ipv4 split /:/, '0xffffffff'],
+	[255, 255, 255, 255],
+	'parse_ipv4 0xffffffff'
+);
+ok !parse_ipv4(split /:/, ''), 'hex overflow';
 is_deeply(
 	[parse_ipv4 split /:/, '037777777777'],
 	[255, 255, 255, 255],
