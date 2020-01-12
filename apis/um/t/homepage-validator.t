@@ -14,6 +14,7 @@ use strict;
 use Test::More;
 
 use Lingua::Poly::API::UM::Validator::Homepage;
+use Lingua::Poly::API::UM::Util qw(parse_ipv4);
 
 my $checker = Lingua::Poly::API::UM::Validator::Homepage->new;
 
@@ -123,6 +124,19 @@ is_deeply(
 	[],
 	'convert fcde::ffff:ffff:ffff:ffff:ffff:ffff:ffff'
 );
+
+is_deeply(
+	[parse_ipv4 '127', '0', '0', '1'],
+	[127, 0, 0, 1],
+	'parse_ipv4 127.0.0.1'
+);
+is_deeply(
+	[parse_ipv4 split /:/, '037777777777'],
+	[255, 255, 255, 255],
+	'parse_ipv4 037777777777'
+);
+ok !parse_ipv4(split /:/, '040000000000'), 'octal overflow';
+ok !parse_ipv4(split /:/, '0377777777770'), 'octal overflow';
 
 ok !$check->('http://[::]'), 'unspecified IPv6 address';
 ok !$check->('http://[::1]'), 'loopback IPv6 address';
