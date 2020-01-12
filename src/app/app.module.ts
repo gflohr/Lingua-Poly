@@ -15,6 +15,18 @@ import { ROOT_REDUCERS, metaReducers } from './app.reducers';
 import { EffectsModule } from '@ngrx/effects';
 import { UserEffects, RouterEffects } from './core/effects';
 import { UserModule } from './user/user.module';
+import { AuthServiceConfig, FacebookLoginProvider, SocialLoginModule } from 'angularx-social-login';
+
+const config = new AuthServiceConfig([
+	{
+		id: FacebookLoginProvider.PROVIDER_ID,
+		provider: new FacebookLoginProvider('2485272091733885')
+	}
+]);
+
+export function provideConfig() {
+	return config;
+}
 
 @NgModule({
 	declarations: [
@@ -33,8 +45,14 @@ import { UserModule } from './user/user.module';
 			routerState: RouterState.Minimal
 		}),
 		EffectsModule.forRoot([UserEffects, RouterEffects]),
+		SocialLoginModule
 	],
-	providers: [],
+	providers: [
+		{
+			provide: AuthServiceConfig,
+			useFactory: provideConfig
+		}
+	],
 	bootstrap: [AppComponent]
 })
 export class AppModule { }
