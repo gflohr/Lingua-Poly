@@ -128,7 +128,7 @@ sub parse_ipv4 {
 	} elsif (2 == @parts) {
 		# x.x with 8.24 bits.
 		return if $parts[0] > 0xff;
-		return if $parts[0] > 0xffffff;
+		return if $parts[1] > 0xffffff;
 		$parts[3] = $parts[1] & 0xff;
 		$parts[2] = $parts[1] >> 8 & 0xff;
 		$parts[1] >>= 16;

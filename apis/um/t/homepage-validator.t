@@ -161,6 +161,20 @@ is_deeply(
 	[42, 255, 255, 255],
 	'parse_ipv4 42.16777215'
 );
+ok !$check->('http://42.16777216'), '8.24 overflow';
+
+# x.x.x with 8.8.15 bits.
+is_deeply(
+	[parse_ipv4 split /\./, '23.4.65535'],
+	[23, 4, 255, 255],
+	'parse_ipv4 23.4.65535'
+);
+ok !$check->('http://23.4.65536'), '8.8.16 overflow';
+
+ok $check->('http://0x78.0x90.0xab.0xcd/'), '0x78.0x90.0xab.0xcd';
+ok $check->('http://0x78.0x90.0xabcd/'), '0x78.0x90.0xabcd';
+ok $check->('http://0x78.0x90abcd/'), '0x78.0x90abcd';
+ok $check->('http://0x7890abcd/'), '0x7890abcd';
 
 ok !$check->('http://[::]'), 'unspecified IPv6 address';
 ok !$check->('http://[::1]'), 'loopback IPv6 address';
