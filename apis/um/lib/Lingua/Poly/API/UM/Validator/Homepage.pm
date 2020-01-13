@@ -18,6 +18,8 @@ use URI;
 use Encode;
 use List::Util qw(max);
 
+use Lingua::Poly::API::UM::Util qw(parse_ipv4);
+
 sub new {
 	my ($class) = @_;
 
@@ -114,37 +116,26 @@ sub __checkHostname {
 	# Disallow empty labels.
 	die "host\n" if $uri->host =~ /\.\./;
 
-	# The URI module does not canonicalize quad-dotted notation of IPv4
-	# addresses if they are in octal or hexadecimal form.
+	# The URI module does not canonicalize numerical IPv4 addresses.
+	my @octets = parse_ipv4 @labels;
 	my $is_ip;
-	if (@labels == 4) {
-		my @octets;
-		foreach my $label (@labels) {
-			if ($label =~ /^(0)[0-7]+$/ || $label =~ /^(0x)[0-9a-f]+$/
-			    || $label =~ /^(?:0|[1-9][0-9]*)$/) {
-				my $octet = defined $1 ? oct $label : $label;
-				last if $octet > 255;
-				push @octets, $octet;
-			}
-		}
+	if (@octets) {
+		$is_ip = 1;
 
-		if (4 == @octets) {
-			$is_ip = 1;
-			# IPv4 addresses with special purpose?
-			if (# Loopback.
-			    $octets[0] == 127
-			    # Private IP ranges.
-			    || $octets[0] == 10
-			    || ($octets[0] == 172 && $octets[1] >= 16 && $octets[1] <= 31)
-			    || ($octets[0] == 192 && $octets[1] == 168)
-			    # Carrier-grade NAT deployment.
-			    || ($octets[0] == 100 && $octets[1] >= 64 && $octets[1] <= 127)
-			    # Link-local addresses.
-			    || ($octets[0] == 169 && $octets[1] == 254)) {
-				die "ipv4_special\n";
-			}
-			$host = join '.', @octets;
+		# IPv4 addresses with special purpose?
+		if (# Loopback.
+			$octets[0] == 127
+			# Private IP ranges.
+			|| $octets[0] == 10
+			|| ($octets[0] == 172 && $octets[1] >= 16 && $octets[1] <= 31)
+			|| ($octets[0] == 192 && $octets[1] == 168)
+			# Carrier-grade NAT deployment.
+			|| ($octets[0] == 100 && $octets[1] >= 64 && $octets[1] <= 127)
+			# Link-local addresses.
+			|| ($octets[0] == 169 && $octets[1] == 254)) {
+			die "ipv4_special\n";
 		}
+		$host = join '.', @octets;
 	} elsif ($host =~ /^[0-9a-f:]+$/ && ($host =~ y/:/:/ >= 2)) {
 		# Uncompress the IPv6 address.
 		my @groups = __uncompressIPv6 $host;
