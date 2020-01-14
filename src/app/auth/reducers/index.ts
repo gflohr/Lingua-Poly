@@ -73,3 +73,8 @@ export const selectUsername = createSelector(
 		return user ? user.username : null;
 	}
 );
+
+export const selectProvider = createSelector(
+	selectAuthStatusState,
+	status => status.provider
+)

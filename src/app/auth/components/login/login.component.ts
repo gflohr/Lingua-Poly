@@ -36,7 +36,7 @@ export class LoginComponent {
 	}
 
 	signInWithFacebook(): void {
-		this.authStore.dispatch(LoginPageActions.socialLogin(
+		this.authStore.dispatch(LoginPageActions.socialLoginRequest(
 			{
 				provider: OAuth2Login.ProviderEnum.FACEBOOK
 			}

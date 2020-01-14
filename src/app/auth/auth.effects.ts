@@ -68,7 +68,7 @@ export class AuthEffects {
 	), { dispatch: false });
 
 	oauth2Login$ = createEffect(() => this.actions$.pipe(
-		ofType(LoginPageActions.socialLogin),
+		ofType(LoginPageActions.socialLoginRequest),
 		map(action => this.oauth2Service.signIn(action.provider))
 	), { dispatch: false });
 

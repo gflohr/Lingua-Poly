@@ -27,3 +27,4 @@ export function reducer(state: State | undefined, action: Action) {
 }
 
 export const getUser = (state: State) => state.user;
+export const getProvider = (state: State) => state.provider;
