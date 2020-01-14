@@ -69,14 +69,8 @@ export class AuthEffects {
 
 	oauth2Login$ = createEffect(() => this.actions$.pipe(
 		ofType(LoginPageActions.socialLogin),
-		map(action => action.provider),
-		exhaustMap(provider =>
-			this.oauth2Service.signIn(provider).pipe(
-				map(user => AuthApiActions.loginSuccess({ user, provider })),
-				catchError(error => of(AuthApiActions.loginFailure({ error })))
-			)
-		)
-	));
+		map(action => this.oauth2Service.signIn(action.provider))
+	), { dispatch: false });
 
 	/* FIXME! This should maybe go into a separate service.	*/
 	runDialog = function(content) {
