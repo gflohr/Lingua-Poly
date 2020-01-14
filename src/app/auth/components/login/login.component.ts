@@ -4,14 +4,14 @@ import { UserLogin } from '../../../../app/core/openapi/lingua-poly';
 import { Store, select } from '@ngrx/store';
 import * as fromAuth from '../../reducers';
 import { LoginPageActions } from '../../actions';
-import { SocialUser, AuthService, FacebookLoginProvider } from 'angularx-social-login';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
 	selector: 'app-login',
 	templateUrl: './login.component.html',
 	styleUrls: ['./login.component.css']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent {
 	pending$ = this.authStore.pipe(select(fromAuth.selectLoginPagePending));
 	error$ = this.authStore.pipe(select(fromAuth.selectLoginPageError));
 
@@ -32,19 +32,12 @@ export class LoginComponent implements OnInit {
 
 	constructor(
 		private fb: FormBuilder,
-		private authStore: Store<fromAuth.State>,
-		private authService: AuthService
+		private authStore: Store<fromAuth.State>
 	) {
 	}
 
-	ngOnInit() {
-		this.authService.authState.subscribe((user) => {
-			console.log(user);
-		});
-	}
-
 	signInWithFacebook(): void {
-		this.authService.signIn(FacebookLoginProvider.PROVIDER_ID);
+		this.authStore.dispatch(LoginPageActions.socialLogin({ provider: 'FACEBOOK'}));
 	}
 
 	loginForm = this.fb.group({

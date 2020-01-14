@@ -6,8 +6,9 @@ import { of, from } from 'rxjs';
 import { LoginPageActions, AuthApiActions, AuthActions } from './actions';
 import { Router } from '@angular/router';
 import { UserActions } from '../core/actions';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LogoutConfirmationComponent } from '../layout/components/logout-confirmation/logout-confirmation.component';
+import { AuthService, FacebookLoginProvider } from 'angularx-social-login';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Injectable()
 export class AuthEffects {
@@ -17,6 +18,7 @@ export class AuthEffects {
 		private usersService: UsersService,
 		private router: Router,
 		private modalService: NgbModal,
+		private authService: AuthService,
 	) { }
 
 	login$ = createEffect(() => this.actions$.pipe(
@@ -61,6 +63,16 @@ export class AuthEffects {
 	logoutSuccess$ = createEffect(() => this.actions$.pipe(
 		ofType(AuthApiActions.loginSuccess),
 		tap(() => this.router.navigate(['/']))
+	), { dispatch: false });
+
+
+	socialLogin$ = createEffect(() => this.actions$.pipe(
+		ofType(LoginPageActions.socialLogin),
+		map(action => {
+			if (action.provider === 'FACEBOOK') {
+				this.authService.signIn(FacebookLoginProvider.PROVIDER_ID)
+			}
+		})
 	), { dispatch: false });
 
 	/* FIXME! This should maybe go into a separate service.	*/
