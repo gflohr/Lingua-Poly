@@ -19,7 +19,12 @@ export class AuthEffects {
 		private router: Router,
 		private modalService: NgbModal,
 		private authService: AuthService,
-	) { }
+	) {
+		authService.authState.subscribe((user) => {
+			console.log('AuthService: ', user);
+		});
+
+	}
 
 	login$ = createEffect(() => this.actions$.pipe(
 		ofType(LoginPageActions.login),
