@@ -1,17 +1,15 @@
 import { Injectable } from '@angular/core';
 import { createEffect, Actions, ofType } from '@ngrx/effects';
 import { exhaustMap, map, catchError, tap, switchMap } from 'rxjs/operators';
-import { UsersService } from '../core/openapi/lingua-poly';
+import { UsersService, OAuth2Login } from '../core/openapi/lingua-poly';
 import { of, from } from 'rxjs';
 import { LoginPageActions, AuthApiActions, AuthActions } from './actions';
 import { Router } from '@angular/router';
 import { UserActions } from '../core/actions';
 import { LogoutConfirmationComponent } from '../layout/components/logout-confirmation/logout-confirmation.component';
-import { AuthService, FacebookLoginProvider } from 'angularx-social-login';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
-import * as fromAuth from './reducers';
-import { Store } from '@ngrx/store';
+import { OAuth2Service } from './services/oauth2.service';
 
 @Injectable()
 export class AuthEffects {
@@ -21,12 +19,8 @@ export class AuthEffects {
 		private usersService: UsersService,
 		private router: Router,
 		private modalService: NgbModal,
-		private authService: AuthService,
-		private authStore: Store<fromAuth.State>
+		private oauth2Service: OAuth2Service
 	) {
-		authService.authState.subscribe((user) => {
-			this.authStore.dispatch(AuthActions.socialLogin({ user }))
-		});
 	}
 
 	login$ = createEffect(() => this.actions$.pipe(
@@ -74,13 +68,9 @@ export class AuthEffects {
 	), { dispatch: false });
 
 
-	socialLogin$ = createEffect(() => this.actions$.pipe(
+	oauth2Login$ = createEffect(() => this.actions$.pipe(
 		ofType(LoginPageActions.socialLogin),
-		map(action => {
-			if (action.provider === 'FACEBOOK') {
-				this.authService.signIn(FacebookLoginProvider.PROVIDER_ID)
-			}
-		})
+		map(action => this.oauth2Service.signIn(action.provider))
 	), { dispatch: false });
 
 	/* FIXME! This should maybe go into a separate service.	*/
