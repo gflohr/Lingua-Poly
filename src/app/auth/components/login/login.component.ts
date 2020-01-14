@@ -1,10 +1,9 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { UserLogin } from '../../../../app/core/openapi/lingua-poly';
+import { UserLogin, OAuth2Login } from '../../../../app/core/openapi/lingua-poly';
 import { Store, select } from '@ngrx/store';
 import * as fromAuth from '../../reducers';
 import { LoginPageActions } from '../../actions';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
 	selector: 'app-login',
@@ -37,7 +36,11 @@ export class LoginComponent {
 	}
 
 	signInWithFacebook(): void {
-		this.authStore.dispatch(LoginPageActions.socialLogin({ provider: 'FACEBOOK'}));
+		this.authStore.dispatch(LoginPageActions.socialLogin(
+			{
+				provider: OAuth2Login.ProviderEnum.FACEBOOK
+			}
+		));
 	}
 
 	loginForm = this.fb.group({

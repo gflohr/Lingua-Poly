@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { UserLogin } from '../../core/openapi/lingua-poly';
+import { UserLogin, OAuth2Login } from '../../core/openapi/lingua-poly';
 
 export const login = createAction(
 	'[Login page] Login',
@@ -7,5 +7,5 @@ export const login = createAction(
 );
 export const socialLogin = createAction(
 	'[Login page] Social Login',
-	props<{ provider: String }>()
+	props<{ provider: OAuth2Login.ProviderEnum }>()
 );

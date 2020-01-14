@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { createEffect, Actions, ofType } from '@ngrx/effects';
 import { exhaustMap, map, catchError, tap, switchMap } from 'rxjs/operators';
-import { UsersService, OAuth2Login } from '../core/openapi/lingua-poly';
+import { UsersService } from '../core/openapi/lingua-poly';
 import { of, from } from 'rxjs';
 import { LoginPageActions, AuthApiActions, AuthActions } from './actions';
 import { Router } from '@angular/router';

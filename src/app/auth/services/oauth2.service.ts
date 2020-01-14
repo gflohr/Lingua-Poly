@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { AuthService } from 'angularx-social-login';
-import { Store } from '@ngrx/store';
-import { AuthActions } from '../actions';
+import { Store, Action } from '@ngrx/store';
+import { AuthActions, AuthApiActions } from '../actions';
 
 import * as fromAuth from '../reducers';
 import { Observable, of } from 'rxjs';
-import { User } from '../../core/openapi/lingua-poly';
+import { User, OAuth2Login } from '../../core/openapi/lingua-poly';
 
 @Injectable({
 	providedIn: 'root'
@@ -21,9 +21,8 @@ export class OAuth2Service {
 		});
 	}
 
-	// FIXME: Should return an Observable<Action> and provider should be
-	// an enum.
-	signIn(provider: String): Observable<User> {
+	// FIXME: Should return an Observable<Action>.
+	signIn(provider: OAuth2Login.ProviderEnum): Observable<User> {
 		console.log('signing in with provider ' + provider);
 		return of({
 			username: 'Humpty Dumpty',
