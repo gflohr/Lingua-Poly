@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { AuthService, FacebookLoginProvider } from 'angularx-social-login';
-import { Store, select } from '@ngrx/store';
-import { AuthActions, AuthApiActions } from '../actions';
+import { Store, select, Action } from '@ngrx/store';
+import { AuthActions } from '../actions';
 import * as fromAuth from '../reducers';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { OAuth2Login } from '../../core/openapi/lingua-poly';
-import { switchMap, tap } from 'rxjs/operators';
+import { tap, map, filter } from 'rxjs/operators';
 
 @Injectable({
 	providedIn: 'root'
@@ -92,5 +92,12 @@ export class OAuth2Service {
 			case OAuth2Login.ProviderEnum.GOOGLE:
 				throw new Error('Google login not yet implemented');
 		}
+	}
+
+	logout(): Observable<Action> {
+		return this.provider$.pipe(
+			filter(provider => provider !== null),
+			map(() => AuthActions.logout)
+		);
 	}
 }

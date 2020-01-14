@@ -72,6 +72,11 @@ export class AuthEffects {
 		map(action => this.oauth2Service.signIn(action.provider))
 	), { dispatch: false });
 
+	oauth2Logout$ = createEffect(() => this.actions$.pipe(
+		ofType(AuthActions.socialLogout),
+		map(() => this.oauth2Service.logout())
+	), { dispatch: false });
+
 	/* FIXME! This should maybe go into a separate service.	*/
 	runDialog = function(content) {
 		const modalRef = this.modalService.open(content, { centered: true });
