@@ -1,0 +1,284 @@
+openapi: '3.0.2'
+info:
+  title: 'Lingua::Poly OpenAPI WebApp'
+  version:  '1.0'
+servers:
+  - url: http://localhost:4200/api/lingua-poly/users/v1
+    description: The development server
+components:
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: id
+  schemas:
+    Empty:
+      title: Empty
+      description: Empty object
+    DefaultResponse:
+      title: DefaultResponse
+      description: Generic default response
+      properties:
+        errors:
+          type: array
+          items:
+            properties:
+              message:
+                type: string
+              path:
+                type: string
+            required:
+            - message
+            - path
+      required:
+      - errors
+    Profile:
+      title: Profile
+      description: Public information about a user.
+      properties:
+        username:
+          type: string
+          description: How the user's  name gets displayed.
+          minLength: 2
+          example: JohnDoe
+        homepage:
+          type: string
+          description: The user's web presence.
+          minLength: 11
+          example: http://www.example.com/
+        description:
+          type: string
+          description: Mini bio or additional information
+          example: Curious language enthusiast
+      additionalProperties: false
+    User:
+      title: User
+      description: A user object with private information included.
+      allOf:
+        - $ref: '#/components/schemas/Profile'
+        - type: object
+          properties:
+            email:
+              type: string
+              description: The user's email address.
+              minLength: 3
+              example: john.doe@acme.com
+          additionalProperties: false
+    UserDraft:
+      title: UserDraft
+      properties:
+        email:
+          type: string
+          minLength: 3
+          example: john.doe@acme.com
+        password:
+          type: string
+          minLength: 1
+          example: s3cr3t
+      required:
+      - email
+      - password
+      additionalProperties: false
+    UserLogin:
+      title: Data sent for login
+      type: object
+      properties:
+        id:
+          description: Username or email address.
+          type: string
+          minLength: 1
+          example: lingua@example.com
+        password:
+          type: string
+          minLength: 1
+          example: s3cr3t
+        persistant:
+          description: Remember me?
+          type: boolean
+          example: true
+      required:
+      - id
+      - password
+      additionalProperties: false
+    Token:
+      title: Token
+      properties:
+        token:
+          type: string
+          example: abcdef
+      required:
+        - token
+      additionalProperties: false
+  requestBodies:
+    EmptyRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Empty'
+    CreateUserRequest:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/UserDraft"
+    Token:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Token"
+    LoginRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UserLogin'
+    ProfileRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Profile'
+tags:
+  - name: users
+    description: User management
+paths:
+  /login:
+    post:
+      tags:
+      - users
+      summary: Log in to the system
+      x-mojo-to: 'user#login'
+      operationId: userLogin
+      requestBody:
+        $ref: '#/components/requestBodies/LoginRequest'
+      responses:
+        200:
+          description: Successful login
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponse'
+  /logout:
+    post:
+      tags:
+      - users
+      summary: Log out of the system
+      x-mojo-to: 'user#logout'
+      security:
+      - cookieAuth: []
+      operationId: userLogout
+      responses:
+        204:
+          description: Successful logout
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponse'
+  /users:
+    post:
+      tags:
+      - users
+      summary: Create a new user
+      x-mojo-to: 'registration#createUser'
+      operationId: usersPost
+      requestBody:
+        $ref: "#/components/requestBodies/CreateUserRequest"
+      responses:
+        201:
+          description: User waiting for confirmation created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponse'
+  /profile:
+    get:
+      tags:
+      - users
+      summary: Get user profile
+      x-mojo-to: 'user#profile'
+      security:
+      - cookieAuth: []
+      responses:
+        200:
+          description: User profile
+          content:
+            application/json:
+              schema:
+                # For convenience, this is a User not a Profile so that the
+                # email address can be displayed in the profile form.
+                $ref: '#/components/schemas/User'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponse'
+    patch:
+      tags:
+      - users
+      summary: Update user profile
+      x-mojo-to: 'user#updateProfile'
+      security:
+      - cookieAuth: []
+      requestBody:
+        $ref: '#/components/requestBodies/ProfileRequest'
+      responses:
+        204:
+          description: Profile updated successfully
+  /profile/{name}:
+    get:
+      tags:
+      - users
+      summary: Get public parts of foreign user profile
+      x-mojo-to: 'user#get'
+      security:
+      - cookieAuth: []
+      operationId: getUserByName
+      parameters:
+        - name: name
+          in: path
+          description: The username
+          schema:
+            type: string
+          required: true
+      responses:
+         200:
+           description: Another user
+           content:
+             application/json:
+               schema:
+                 $ref: '#/components/schemas/Profile'
+  /register:
+    post:
+      tags:
+      - users
+      summary: Confirm a registration
+      x-mojo-to: 'registration#confirm'
+      operationId: register
+      requestBody:
+        $ref: '#/components/requestBodies/Token'
+      responses:
+        200:
+          description: User activated after confirmation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponse'
+      

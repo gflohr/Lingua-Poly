@@ -12,14 +12,14 @@
 
 
 export interface UserLogin { 
-		/**
-		 * Username or email address.
-		 */
-		id: string;
-		password: string;
-		/**
-		 * Remember me?
-		 */
-		persistant?: boolean;
+    /**
+     * Username or email address.
+     */
+    id: string;
+    password: string;
+    /**
+     * Remember me?
+     */
+    persistant?: boolean;
 }
 

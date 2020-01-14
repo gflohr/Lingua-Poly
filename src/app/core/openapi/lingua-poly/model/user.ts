@@ -17,21 +17,21 @@ import { Profile } from './profile';
  * A user object with private information included.
  */
 export interface User { 
-		/**
-		 * How the user\'s	name gets displayed.
-		 */
-		username?: string;
-		/**
-		 * The user\'s web presence.
-		 */
-		homepage?: string;
-		/**
-		 * Mini bio or additional information
-		 */
-		description?: string;
-		/**
-		 * The user\'s email address.
-		 */
-		email?: string;
+    /**
+     * How the user\'s  name gets displayed.
+     */
+    username?: string;
+    /**
+     * The user\'s web presence.
+     */
+    homepage?: string;
+    /**
+     * Mini bio or additional information
+     */
+    description?: string;
+    /**
+     * The user\'s email address.
+     */
+    email?: string;
 }
 

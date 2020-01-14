@@ -57,7 +57,7 @@ directory, you have to run `cpanm` with `sudo`:
 [source,bash]
 ----
 $ cd /path/to/Lingua-Poly
-$ cd apis/um
+$ cd apis/users
 $ sudo cpanm --installdeps .
 $ sudo cpanm -n .
 ----
@@ -88,8 +88,8 @@ A regular backend (API) server is started like this:
 [source,bash]
 ----
 $ cd /path/to/Lingua-Poly
-$ cd apis/um
-$ perl -Ilib script/lingua-poly-service-um daemon
+$ cd apis/users
+$ perl -Ilib script/lingua-poly-service-users daemon
 ----
 
 If you have the web server `morby` in your `$PATH` (should be installed as a
@@ -99,13 +99,13 @@ changes and restarts itself:
 [source,bash]
 ----
 $ cd /path/to/Lingua-Poly
-$ cd apis/um
-$ morbo script/lingua-poly-service-um daemon
+$ cd apis/users
+$ morbo script/lingua-poly-service-users
 ----
 
 Environment variables:
 
-LINGUA_POLY_DEBUG::
+LINGUA_POLY_USERS_DEBUG::
 A list of debugging realms separated by commas, spaces, tabs, colons, or
 pipe symbols. The following realms are currently supported:
   core::: the core API framework
@@ -117,8 +117,8 @@ pipe symbols. The following realms are currently supported:
 [[configuration]]
 ==== Configuration
 
-You need a minimal configuration file `lingua-poly-service-um.api.yaml` in
-http://yaml.org/[YAML] format in the `apis/um` directory:
+You need a minimal configuration file `lingua-poly-service-users.api.yaml` in
+http://yaml.org/[YAML] format in the `apis/users` directory:
 
 [source,yaml]
 ----
