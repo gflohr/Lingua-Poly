@@ -83,6 +83,22 @@ components:
       - id
       - password
       additionalProperties: false
+    OAuth2Login:
+      title: Data sent for an OAuth2 login
+      type: object
+      properties:
+        provider:
+          description: Opaque name of an OAuth2 provider
+          type: string
+          enum: [FACEBOOK, GOOGLE]
+        token:
+          type: string
+          minLength: 1
+          example: abcdef0123456789abcdef
+      required:
+      - token
+      - provider
+      additionalProperties: false
     Token:
       title: Token
       properties:
@@ -113,6 +129,11 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/UserLogin'
+    OAuth2LoginRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/OAuth2Login'
     ProfileRequest:
       content:
         application/json:
@@ -138,6 +159,22 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
+  /oauth2Login:
+    post:
+      tags:
+      - users
+      summary: Log in to the system via an OAuth2 service
+      x-mojo-to: 'user#oauth2Login'
+      operationId: oauth2Login
+      requestBody:
+        $ref: '#/components/requestBodies/OAuth2LoginRequest'
+      responses:
+        200:
+          description: Successful login
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OAuth2Login'
   /logout:
     post:
       tags:
