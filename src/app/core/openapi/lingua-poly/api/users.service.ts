@@ -17,7 +17,6 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
-import { DefaultResponse } from '../model/defaultResponse';
 import { Profile } from '../model/profile';
 import { Token } from '../model/token';
 import { User } from '../model/user';
@@ -33,7 +32,7 @@ import { Configuration }                                     from '../configurat
 })
 export class UsersService {
 
-    protected basePath = 'http://localhost:4200/api/lingua-poly/user/v1';
+    protected basePath = 'http://localhost:4200/api/lingua-poly/users/v1';
     public defaultHeaders = new HttpHeaders();
     public configuration = new Configuration();
     public encoder: HttpParameterCodec;
@@ -267,7 +266,6 @@ export class UsersService {
         // authentication (cookieAuth) required
         // to determine the Accept header
         const httpHeaderAccepts: string[] = [
-            'application/json'
         ];
         const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         if (httpHeaderAcceptSelected !== undefined) {

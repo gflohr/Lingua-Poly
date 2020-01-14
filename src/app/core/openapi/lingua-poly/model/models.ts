@@ -1,4 +1,3 @@
-export * from './defaultResponse';
 export * from './empty';
 export * from './profile';
 export * from './token';

@@ -15,23 +15,6 @@ components:
     Empty:
       title: Empty
       description: Empty object
-    DefaultResponse:
-      title: DefaultResponse
-      description: Generic default response
-      properties:
-        errors:
-          type: array
-          items:
-            properties:
-              message:
-                type: string
-              path:
-                type: string
-            required:
-            - message
-            - path
-      required:
-      - errors
     Profile:
       title: Profile
       description: Public information about a user.
@@ -155,12 +138,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
-        default:
-          description: Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DefaultResponse'
   /logout:
     post:
       tags:
@@ -173,12 +150,6 @@ paths:
       responses:
         204:
           description: Successful logout
-        default:
-          description: Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DefaultResponse'
   /users:
     post:
       tags:
@@ -195,12 +166,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
-        default:
-          description: Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DefaultResponse'
   /profile:
     get:
       tags:
@@ -218,12 +183,6 @@ paths:
                 # For convenience, this is a User not a Profile so that the
                 # email address can be displayed in the profile form.
                 $ref: '#/components/schemas/User'
-        default:
-          description: Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DefaultResponse'
     patch:
       tags:
       - users
@@ -275,10 +234,4 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
-        default:
-          description: Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DefaultResponse'
-      
+
