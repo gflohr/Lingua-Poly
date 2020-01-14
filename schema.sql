@@ -17,9 +17,8 @@ INSERT INTO identity_providers(name) SELECT 'FACEBOOK'
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     email CITEXT NOT NULL UNIQUE,
-    identity_provider_id INTEGER REFERENCES identity_providers(id) ON DELETE CASCADE,
     username CITEXT UNIQUE,
-    password TEXT NOT NULL,
+    password TEXT,
     confirmed BOOLEAN NOT NULL DEFAULT 'f',
     homepage TEXT,
     description TEXT
@@ -53,6 +52,8 @@ CREATE TABLE sessions (
     sid TEXT NOT NULL UNIQUE,
     user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
     fingerprint TEXT,
+    identity_provider_id INTEGER REFERENCES identity_providers(id) ON DELETE CASCADE,
+    auth_token TEXT NOT NULL,
     last_seen TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 

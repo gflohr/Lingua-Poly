@@ -49,6 +49,37 @@ sub login {
 	return $self->render(json => \%user, status => HTTP_OK);
 }
 
+sub oauth2Login {
+	my $self = shift->openapi->valid_input or return;
+
+	my $request_data = $self->req->json;
+	my $db = $self->app->database;
+
+	my $auth_token = 'abcdef0123456789';
+	my $social_user = {
+		email => 'guido.flohr@cantanea.com',
+	};
+
+	my $user = $self->app->userService->userByUsernameOrEmail($social_user->{email});
+	if (!$user) {
+		# Create a new user that is immediately confirmed.
+		my $user_id = $self->app->userService->create($social_user->{email});
+		$user = Lingua::Poly::API::Users::Model::User->new(
+			id => $user_id,
+			email => $social_user->{email},
+		);
+		$self->app->userService->activate($user);
+	}
+
+	my $session = $self->stash->{session};
+	$session->user($user);
+	$self->app->sessionService->renew($session);
+	$self->app->database->commit;
+
+	my %user = $user->toResponse('private');
+	return $self->render(json => \%user, status => HTTP_OK);
+}
+
 sub logout {
 	my $self = shift->openapi->valid_input or return;
 

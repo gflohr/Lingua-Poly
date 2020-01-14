@@ -26,15 +26,11 @@ has logger => (is => 'ro');
 has database => (is => 'ro');
 
 sub create {
-	my ($self, $email, $password, $provider) = @_;
-
-	if (empty $provider) {
-		require Carp;
-		Carp::croak('provider is mandatory');
-	}
+	my ($self, $email, $password) = @_;
 
 	my $db = $self->database;
-	$db->execute(INSERT_USER => $email, crypt_password $password, $provider);
+	my $digest = empty $password ? undef : crypt_password $password;
+	$db->execute(INSERT_USER => $email, $digest);
 
 	return $db->lastInsertId('users');
 }
