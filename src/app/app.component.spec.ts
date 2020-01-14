@@ -5,6 +5,18 @@ import { CoreModule } from './core/core.module';
 import { LayoutModule } from './layout/layout.module';
 import { ROOT_REDUCERS, metaReducers } from './app.reducers';
 import { StoreModule } from '@ngrx/store';
+import { SocialLoginModule, AuthServiceConfig, FacebookLoginProvider } from 'angularx-social-login';
+
+const config = new AuthServiceConfig([
+	{
+		id: FacebookLoginProvider.PROVIDER_ID,
+		provider: new FacebookLoginProvider('invalid')
+	}
+]);
+
+export function provideConfig() {
+	return config;
+}
 
 describe('AppComponent', () => {
 	beforeEach(async(() => {
@@ -14,10 +26,17 @@ describe('AppComponent', () => {
 				LayoutModule,
 				RouterTestingModule,
 				StoreModule.forRoot(ROOT_REDUCERS, { metaReducers }),
+				SocialLoginModule
 			],
 			declarations: [
 				AppComponent
 			],
+			providers: [
+				{
+					provide: AuthServiceConfig,
+					useFactory: provideConfig
+				}
+			]
 		}).compileComponents();
 	}));
 
