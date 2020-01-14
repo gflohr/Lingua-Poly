@@ -1,4 +1,4 @@
-import { User } from 'src/app/core/openapi/lingua-poly';
+import { User, OAuth2Login } from 'src/app/core/openapi/lingua-poly';
 import { createReducer, on, Action } from '@ngrx/store';
 import { AuthApiActions, AuthActions } from '../actions';
 import { UserApiActions } from '../../user/actions';
@@ -7,10 +7,12 @@ export const statusFeatureKey = 'status';
 
 export interface State {
 	user: User | null;
+	provider: OAuth2Login.ProviderEnum
 }
 
 export const initialState: State = {
-	user: null
+	user: null,
+	provider: null
 };
 
 export const authReducer = createReducer(
