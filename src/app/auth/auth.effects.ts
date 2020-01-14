@@ -10,6 +10,9 @@ import { LogoutConfirmationComponent } from '../layout/components/logout-confirm
 import { AuthService, FacebookLoginProvider } from 'angularx-social-login';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
+import * as fromAuth from './reducers';
+import { Store } from '@ngrx/store';
+
 @Injectable()
 export class AuthEffects {
 
@@ -19,11 +22,11 @@ export class AuthEffects {
 		private router: Router,
 		private modalService: NgbModal,
 		private authService: AuthService,
+		private authStore: Store<fromAuth.State>
 	) {
 		authService.authState.subscribe((user) => {
-			console.log('AuthService: ', user);
+			this.authStore.dispatch(AuthActions.socialLogin({ user }))
 		});
-
 	}
 
 	login$ = createEffect(() => this.actions$.pipe(
