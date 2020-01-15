@@ -15,6 +15,7 @@ package Lingua::Poly::API::Users::Controller::User;
 use strict;
 
 use HTTP::Status qw(:constants);
+use URI;
 
 use Lingua::Poly::API::Users::Util qw(empty crypt_password check_password);
 
@@ -52,15 +53,29 @@ sub login {
 sub oauth2Login {
 	my $self = shift->openapi->valid_input or return;
 
-$DB::single = 1;
-	my $request_data = $self->req->json;
+	my $payload = $self->req->json;
 	my $db = $self->app->database;
 
-	my $auth_token = 'abcdef0123456789';
-	my $social_user = {
-		email => 'guido.flohr@cantanea.com',
-		provider => 'FACEBOOK',
-	};
+	my $auth_url;
+	if ('FACEBOOK' eq $payload->{provider}) {
+		$auth_url = URI->new('https://graph.facebook.com/v4.0/me/');
+		$auth_url->query_form(
+			access_token => $payload->{token},
+			fields => 'email,name',
+			method => 'get',
+		);
+	} else {
+		die "Identity provider '$payload->{provider}' is not supported.\n";
+	}
+
+	my ($social_user, $response) = $self->app->restService->get($auth_url);
+	return $self->errorResponse(HTTP_UNAUTHORIZED, {
+		message => $social_user->{error}->{message}
+	}) if $social_user->{error};
+	return $self->errorResponse(HTTP_UNAUTHORIZED, {
+		message => "no valid email address available"
+	}) if !$social_user->{email};
+
 
 	my $user = $self->app->userService->userByUsernameOrEmail($social_user->{email});
 	if (!$user) {
@@ -75,7 +90,7 @@ $DB::single = 1;
 
 	my $session = $self->stash->{session};
 	$session->user($user);
-	$session->provider($social_user->{provider});
+	$session->provider($payload->{provider});
 	$self->app->sessionService->renew($session);
 	$self->app->database->commit;
 

@@ -19,6 +19,7 @@ use namespace::autoclean;
 
 use LWP::UserAgent;
 use HTTP::Request;
+use JSON;
 
 use base qw(Lingua::Poly::API::Users::Logging);
 
@@ -49,7 +50,7 @@ sub request {
 		content_type => 'application/json; charset=UTF-8'
 	);
 
-	$self->info("sending request with method '$method' to '$uri'");
+	#$self->info("sending request with method '$method' to '$uri'");
 	my $request = HTTP::Request->new($method, $uri, \@headers, $content);
 	my $ua = $self->ua;
 	my $response = $self->ua->request($request);
@@ -60,7 +61,7 @@ sub request {
 
 	my $payload = JSON->new->decode($response->content);
 
-	return wantarray ? $payload : ($payload, $response);
+	return $payload, $response;
 }
 
 __PACKAGE__->meta->make_immutable;
