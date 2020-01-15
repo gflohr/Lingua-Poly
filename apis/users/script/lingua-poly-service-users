@@ -39,6 +39,7 @@ my $c = container App => ['Env'] => as {
 			sessionService => '/User/session',
 			requestContextService => 'RequestContext',
 			tokenService => 'Token',
+			restService => 'REST',
 		},
 	);
 
@@ -59,6 +60,11 @@ my $c = container App => ['Env'] => as {
 			logger => { '/Logging/logger' => { realm => 'request' }},
 			database => '/Storage/database',
 		}
+	);
+
+	service REST => (
+		class => 'Lingua::Poly::API::Users::Service::RESTClient',
+		lifecycle => 'Singleton'
 	);
 
 	container Storage => as {

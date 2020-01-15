@@ -46,6 +46,8 @@ has sessionService => (is => 'ro');
 has requestContextService => (is => 'ro');
 has tokenService => (isa => 'Lingua::Poly::API::Users::Service::Token',
                      is => 'ro');
+has restService => (isa => 'Lingua::Poly::API::Users::Service::RESTClient',
+                    is => 'ro');
 
 sub startup {
 	my ($self) = @_;
