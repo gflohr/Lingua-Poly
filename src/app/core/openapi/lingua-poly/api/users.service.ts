@@ -96,9 +96,9 @@ export class UsersService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public oauth2Login(oAuth2Login?: OAuth2Login, observe?: 'body', reportProgress?: boolean): Observable<OAuth2Login>;
-    public oauth2Login(oAuth2Login?: OAuth2Login, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<OAuth2Login>>;
-    public oauth2Login(oAuth2Login?: OAuth2Login, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<OAuth2Login>>;
+    public oauth2Login(oAuth2Login?: OAuth2Login, observe?: 'body', reportProgress?: boolean): Observable<User>;
+    public oauth2Login(oAuth2Login?: OAuth2Login, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<User>>;
+    public oauth2Login(oAuth2Login?: OAuth2Login, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<User>>;
     public oauth2Login(oAuth2Login?: OAuth2Login, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
         let headers = this.defaultHeaders;
@@ -122,7 +122,7 @@ export class UsersService {
             headers = headers.set('Content-Type', httpContentTypeSelected);
         }
 
-        return this.httpClient.post<OAuth2Login>(`${this.configuration.basePath}/oauth2Login`,
+        return this.httpClient.post<User>(`${this.configuration.basePath}/oauth2Login`,
             oAuth2Login,
             {
                 withCredentials: this.configuration.withCredentials,

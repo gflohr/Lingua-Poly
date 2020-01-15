@@ -18,8 +18,9 @@ use strict;
 sub new {
 	bless {
 		INSERT_SESSION => <<EOF,
-INSERT INTO sessions(sid, fingerprint)
-  VALUES(?, ?)
+INSERT INTO sessions(sid, fingerprint, identity_provider_id)
+  VALUES(?, ?,
+    (SELECT id FROM identity_providers WHERE name = ?))
 EOF
 		DELETE_SESSION => <<EOF,
 DELETE FROM sessions
@@ -41,7 +42,9 @@ UPDATE sessions
 EOF
 		UPDATE_SESSION_SID => <<EOF,
 UPDATE sessions
-   SET sid = ?, user_id = ?, last_seen = NOW()
+   SET sid = ?, user_id = ?, last_seen = NOW(),
+       identity_provider_id
+           = (SELECT id FROM identity_providers WHERE name = ?)
  WHERE sid = ?
 EOF
 		DELETE_TOKEN_STALE => <<EOF,
@@ -74,9 +77,8 @@ SELECT t.token FROM tokens t, users u
 	AND NOT u.confirmed
 EOF
 		INSERT_USER => <<EOF,
-INSERT INTO users(email, password, identity_provider_id)
-  VALUES(?, ?,
-    (SELECT id FROM identity_providers WHERE name = ?))
+INSERT INTO users(email, password)
+  VALUES(?, ?)
 EOF
 		UPDATE_USER => <<EOF,
 UPDATE users

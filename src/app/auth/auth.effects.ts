@@ -67,10 +67,21 @@ export class AuthEffects {
 		tap(() => this.router.navigate(['/']))
 	), { dispatch: false });
 
-	oauth2Login$ = createEffect(() => this.actions$.pipe(
+	oauth2LoginRequest$ = createEffect(() => this.actions$.pipe(
 		ofType(LoginPageActions.socialLoginRequest),
 		map(action => this.oauth2Service.signIn(action.provider))
 	), { dispatch: false });
+
+	oauth2Login$ = createEffect(() => this.actions$.pipe(
+		ofType(AuthActions.socialLogin),
+		map(action => { console.log('effect called'); return action }),
+		map(action => ({ token: action.socialUser.authToken, provider:action.provider })),
+		exhaustMap(payload =>
+			this.usersService.oauth2Login(payload).pipe(
+				map(user => AuthApiActions.loginSuccess({ user, provider: payload.provider })),
+				catchError(error => of(AuthApiActions.loginFailure({ error })))
+		))
+	));
 
 	oauth2Logout$ = createEffect(() => this.actions$.pipe(
 		ofType(AuthActions.socialLogout),

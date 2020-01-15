@@ -1,4 +1,5 @@
 import { TestBed, async } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { OAuth2Service } from './oauth2.service';
 
 import { SocialLoginModule, AuthServiceConfig, FacebookLoginProvider } from 'angularx-social-login';
@@ -28,7 +29,8 @@ describe('OAuth2Service', () => {
 						strictStateImmutability: true,
 						strictStateSerializability: true
 					}
-				})
+				}),
+				HttpClientTestingModule
 			],
 			declarations: [],
 			providers: [

@@ -52,12 +52,14 @@ sub login {
 sub oauth2Login {
 	my $self = shift->openapi->valid_input or return;
 
+$DB::single = 1;
 	my $request_data = $self->req->json;
 	my $db = $self->app->database;
 
 	my $auth_token = 'abcdef0123456789';
 	my $social_user = {
 		email => 'guido.flohr@cantanea.com',
+		provider => 'FACEBOOK',
 	};
 
 	my $user = $self->app->userService->userByUsernameOrEmail($social_user->{email});
@@ -73,6 +75,7 @@ sub oauth2Login {
 
 	my $session = $self->stash->{session};
 	$session->user($user);
+	$session->provider($social_user->{provider});
 	$self->app->sessionService->renew($session);
 	$self->app->database->commit;
 

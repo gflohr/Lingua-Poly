@@ -103,7 +103,7 @@ sub createUser {
 			$self->app->userService->create(
 				$userDraft->{email},
 				$userDraft->{password},
-				'local');
+			);
 			$token = $tokenService->create(registration => $userDraft->{email});
 		}
 

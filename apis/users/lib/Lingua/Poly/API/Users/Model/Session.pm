@@ -19,6 +19,7 @@ use namespace::autoclean;
 
 has sid => (isa => 'Str', is => 'rw');
 has user => (isa => 'Lingua::Poly::API::Users::Model::User', is => 'rw');
+has provider => (is => 'rw');
 
 __PACKAGE__->meta->make_immutable;
 

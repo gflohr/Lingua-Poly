@@ -3,9 +3,9 @@ import { AuthService, FacebookLoginProvider } from 'angularx-social-login';
 import { Store, select, Action } from '@ngrx/store';
 import { AuthActions } from '../actions';
 import * as fromAuth from '../reducers';
-import { Observable, of } from 'rxjs';
-import { OAuth2Login } from '../../core/openapi/lingua-poly';
-import { tap, map, filter } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { OAuth2Login, UsersService } from '../../core/openapi/lingua-poly';
+import { map, filter } from 'rxjs/operators';
 
 @Injectable({
 	providedIn: 'root'
@@ -15,7 +15,8 @@ export class OAuth2Service {
 
 	constructor(
 		private authService: AuthService,
-		private authStore: Store<fromAuth.State>
+		private authStore: Store<fromAuth.State>,
+		private userService: UsersService
 	) {
 		this.provider$ = this.authStore.pipe(select(fromAuth.selectProvider));
 
