@@ -40,6 +40,12 @@ sub get {
 	return $self->request(GET => $uri, $content, %options);
 }
 
+sub delete {
+	my ($self, $uri, $content, %options) = @_;
+
+	return $self->request(DELETE => $uri, $content, %options);
+}
+
 sub request {
 	my ($self, $method, $uri, $content, %options) = @_;
 
