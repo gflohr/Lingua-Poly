@@ -20,7 +20,19 @@ import { AuthServiceConfig, FacebookLoginProvider, SocialLoginModule } from 'ang
 const config = new AuthServiceConfig([
 	{
 		id: FacebookLoginProvider.PROVIDER_ID,
-		provider: new FacebookLoginProvider('2485272091733885')
+		provider: new FacebookLoginProvider(
+			'2485272091733885',
+			// Login options.
+			{
+				scope: 'email',
+			},
+			// Locale.
+			'en_US',
+			// Fields.
+			'email',
+			// Version.
+			'v5.0',
+		)
 	}
 ]);
 
