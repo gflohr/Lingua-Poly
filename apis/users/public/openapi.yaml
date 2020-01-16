@@ -22,12 +22,10 @@ components:
         username:
           type: string
           description: How the user's  name gets displayed.
-          minLength: 2
           example: JohnDoe
         homepage:
           type: string
           description: The user's web presence.
-          minLength: 11
           example: http://www.example.com/
         description:
           type: string
