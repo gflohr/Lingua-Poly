@@ -58,9 +58,10 @@ export class AuthEffects {
 		ofType(AuthActions.logout),
 		switchMap(() =>
 			this.usersService.userLogout().pipe(
+				tap(() => this.oauth2Service.signOut()),
 				map(() => AuthApiActions.logoutSuccess()),
 				catchError(error => of(AuthApiActions.logoutFailure({ error })))
-			)
+			),
 		)
 	));
 

@@ -3,9 +3,9 @@ import { AuthService, FacebookLoginProvider } from 'angularx-social-login';
 import { Store, select, Action } from '@ngrx/store';
 import { AuthActions } from '../actions';
 import * as fromAuth from '../reducers';
-import { Observable } from 'rxjs';
+import { Observable, VirtualTimeScheduler } from 'rxjs';
 import { OAuth2Login, UsersService } from '../../core/openapi/lingua-poly';
-import { map, filter } from 'rxjs/operators';
+import { map, filter, tap } from 'rxjs/operators';
 
 @Injectable({
 	providedIn: 'root'
@@ -52,7 +52,10 @@ export class OAuth2Service {
 	}
 
 	signOut() {
-		this.authService.signOut();
+		this.provider$.pipe(
+			filter(provider => provider !== null),
+			tap(() => this.authService.signOut()),
+		).subscribe();
 	}
 
 	logout(): Observable<Action> {
