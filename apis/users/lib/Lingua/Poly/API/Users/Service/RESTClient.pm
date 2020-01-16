@@ -46,9 +46,13 @@ sub request {
 	$content = '{}' if !defined $content;
 
 	my @headers = (
-		accept => 'application/json, text/plain, */*',
+		accept => 'application/json',
 		content_type => 'application/json; charset=UTF-8'
 	);
+
+	foreach my $key (keys %{$options{headers} || {}}) {
+		push @headers, $key, $options{headers}->{$key};
+	}
 
 	#$self->info("sending request with method '$method' to '$uri'");
 	my $request = HTTP::Request->new($method, $uri, \@headers, $content);
@@ -56,10 +60,10 @@ sub request {
 	my $response = $self->ua->request($request);
 
 	my $ct = $response->content_type;
-	die "expected 'application/json', not '$ct'"
-                if $ct !~ m{^application/json};
+	my $response_content = $response->content;
+	return $response_content, $response if $ct !~ m{^application/json};
 
-	my $payload = JSON->new->decode($response->content);
+	my $payload = JSON->new->decode($response_content);
 
 	return $payload, $response;
 }

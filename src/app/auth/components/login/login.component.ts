@@ -43,6 +43,14 @@ export class LoginComponent {
 		));
 	}
 
+	signInWithGoogle(): void {
+		this.authStore.dispatch(LoginPageActions.socialLoginRequest(
+			{
+				provider: OAuth2Login.ProviderEnum.GOOGLE
+			}
+		));
+	}
+
 	loginForm = this.fb.group({
 		id: ['', Validators.required],
 		password: ['', Validators.required],

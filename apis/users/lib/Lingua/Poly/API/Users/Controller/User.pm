@@ -21,6 +21,11 @@ use Lingua::Poly::API::Users::Util qw(empty crypt_password check_password);
 
 use Mojo::Base qw(Lingua::Poly::API::Users::Controller);
 
+my $google_oid_configuration;
+
+use constant GOOGLE_OID_CONFIGURATION_URL =>
+	'https://accounts.google.com/.well-known/openid-configuration';
+
 sub login {
 	my $self = shift->openapi->valid_input or return;
 
@@ -56,26 +61,47 @@ sub oauth2Login {
 	my $payload = $self->req->json;
 	my $db = $self->app->database;
 
-	my $auth_url;
+	# FIXME! This must go into a separate OAuth2Service!
+	my ($social_user, $response);
 	if ('FACEBOOK' eq $payload->{provider}) {
-		$auth_url = URI->new('https://graph.facebook.com/v4.0/me/');
+		my $auth_url = URI->new('https://graph.facebook.com/v5.0/me/');
 		$auth_url->query_form(
 			access_token => $payload->{token},
 			fields => 'email,name',
 			method => 'get',
 		);
+		($social_user, $response) = $self->app->restService->get($auth_url);
+		return $self->errorResponse(HTTP_UNAUTHORIZED, {
+			message => $social_user->{error}->{message}
+		}) if $social_user->{error};
+		return $self->errorResponse(HTTP_UNAUTHORIZED, {
+			message => "lingua-poly-error:no-email"
+		}) if !$social_user->{email};
+	} elsif ('GOOGLE' eq $payload->{provider}) {
+		if (!$google_oid_configuration) {
+			($google_oid_configuration) =
+				$self->app->restService->get(GOOGLE_OID_CONFIGURATION_URL, '');
+		}
+		die "cannot get Google openid configuration\n"
+			if !$google_oid_configuration;
+		my $url = URI->new($google_oid_configuration->{userinfo_endpoint});
+		($social_user, $response) = $self->app->restService->get($url, '',
+			headers => {
+				authorization => "Bearer $payload->{token}",
+			}
+		);
+		return $self->errorResponse(HTTP_UNAUTHORIZED, {
+			message => $social_user->{error_description}
+		}) if $social_user->{error};
+		return $self->errorResponse(HTTP_UNAUTHORIZED, {
+			message => "lingua-poly-error:no-email"
+		}) if !$social_user->{email};
+		return $self->errorResponse(HTTP_UNAUTHORIZED, {
+			message => "lingua-poly-error:email-not-verified"
+		}) if !$social_user->{email_verified};
 	} else {
 		die "Identity provider '$payload->{provider}' is not supported.\n";
 	}
-
-	my ($social_user, $response) = $self->app->restService->get($auth_url);
-	return $self->errorResponse(HTTP_UNAUTHORIZED, {
-		message => $social_user->{error}->{message}
-	}) if $social_user->{error};
-	return $self->errorResponse(HTTP_UNAUTHORIZED, {
-		message => "no valid email address available"
-	}) if !$social_user->{email};
-
 
 	my $user = $self->app->userService->userByUsernameOrEmail($social_user->{email});
 	if (!$user) {

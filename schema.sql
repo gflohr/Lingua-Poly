@@ -13,6 +13,10 @@ INSERT INTO identity_providers(name) SELECT 'FACEBOOK'
   WHERE NOT EXISTS (
     SELECT 1 FROM identity_providers WHERE name  = 'FACEBOOK'
   );
+INSERT INTO identity_providers(name) SELECT 'GOOGLE'
+  WHERE NOT EXISTS (
+    SELECT 1 FROM identity_providers WHERE name  = 'GOOGLE'
+  );
 
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,

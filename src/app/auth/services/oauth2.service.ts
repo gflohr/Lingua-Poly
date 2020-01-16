@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AuthService, FacebookLoginProvider } from 'angularx-social-login';
+import { AuthService, FacebookLoginProvider, GoogleLoginProvider } from 'angularx-social-login';
 import { Store, select, Action } from '@ngrx/store';
 import { AuthActions } from '../actions';
 import * as fromAuth from '../reducers';
@@ -47,7 +47,8 @@ export class OAuth2Service {
 				this.authService.signIn(FacebookLoginProvider.PROVIDER_ID);
 				break;
 			case OAuth2Login.ProviderEnum.GOOGLE:
-				throw new Error('Google login not yet implemented');
+				this.authService.signIn(GoogleLoginProvider.PROVIDER_ID);
+				break;
 		}
 	}
 

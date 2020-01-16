@@ -15,7 +15,7 @@ import { ROOT_REDUCERS, metaReducers } from './app.reducers';
 import { EffectsModule } from '@ngrx/effects';
 import { UserEffects, RouterEffects } from './core/effects';
 import { UserModule } from './user/user.module';
-import { AuthServiceConfig, FacebookLoginProvider, SocialLoginModule } from 'angularx-social-login';
+import { AuthServiceConfig, FacebookLoginProvider, SocialLoginModule, GoogleLoginProvider } from 'angularx-social-login';
 
 const config = new AuthServiceConfig([
 	{
@@ -33,6 +33,10 @@ const config = new AuthServiceConfig([
 			// Version.
 			'v5.0',
 		)
+	},
+	{
+		id: GoogleLoginProvider.PROVIDER_ID,
+		provider: new GoogleLoginProvider('166256393295-o8umcgjqf2q04lknkpp3cjbsk61jub2b.apps.googleusercontent.com')
 	}
 ]);
 

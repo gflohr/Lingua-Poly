@@ -43,3 +43,13 @@
 .btn-facebook:hover {
 	background-color: #2d4373;
 }
+
+.btn-google {
+	margin-top: 1.5rem;
+	background-color: #dd4b39;
+	border: rgba(0, 0, 0, 0.2);
+}
+
+.btn-google:hover {
+	background-color: #c23321;
+}
