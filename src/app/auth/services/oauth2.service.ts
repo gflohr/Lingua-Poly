@@ -20,20 +20,6 @@ export class OAuth2Service {
 	) {
 		this.provider$ = this.authStore.pipe(select(fromAuth.selectProvider));
 
-		/*
-		this.authService.authState.pipe(
-			switchMap(socialUser => {
-				return this.provider$.pipe(
-					tap(provider => {
-						console.log('state change');
-						console.log(socialUser);
-						console.log(provider);
-					})
-				);
-			})
-		).subscribe();
-		*/
-
 		this.authService.authState.subscribe(socialUser => {
 			if (socialUser === null) {
 				this.authStore.dispatch(AuthActions.socialLogout());
@@ -53,36 +39,6 @@ export class OAuth2Service {
 				}))
 			}
 		})
-
-		/*
-		this.authService.authState.subscribe((socialUser) => {
-			console.log('auth state change');
-			console.log(this.provider$);
-
-			if (socialUser === null) {
-				// FIXME! Only log the user out if the auth provider is
-				// *not* null.
-				console.log('auth provider has logged out the user');
-				this.authStore.dispatch(AuthActions.logout());
-			} else if (socialUser !== null) {
-				// FIXME! Send API request to /socialLogin with the authToken
-				// instead of logging the user in immediately.
-				const user = {
-					username: 'Humpty Dumpty',
-					email: 'humpty@dumpty.com',
-					homepage: 'http://humpty.dumpty.com',
-					description: 'Humpty dumpties.'
-				};
-
-				this.authStore.dispatch(AuthApiActions.loginSuccess(
-					{
-						user,
-						provider: 'FACEBOOK'
-					}
-				));
-			}
-		});
-		*/
 	}
 
 	signIn(provider: OAuth2Login.ProviderEnum) {
@@ -93,6 +49,10 @@ export class OAuth2Service {
 			case OAuth2Login.ProviderEnum.GOOGLE:
 				throw new Error('Google login not yet implemented');
 		}
+	}
+
+	signOut() {
+		this.authService.signOut();
 	}
 
 	logout(): Observable<Action> {

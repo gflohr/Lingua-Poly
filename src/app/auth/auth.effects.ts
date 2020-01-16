@@ -8,8 +8,9 @@ import { Router } from '@angular/router';
 import { UserActions } from '../core/actions';
 import { LogoutConfirmationComponent } from '../layout/components/logout-confirmation/logout-confirmation.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-
 import { OAuth2Service } from './services/oauth2.service';
+import * as fromAuth from './reducers';
+import { Store } from '@ngrx/store';
 
 @Injectable()
 export class AuthEffects {
@@ -19,7 +20,8 @@ export class AuthEffects {
 		private usersService: UsersService,
 		private router: Router,
 		private modalService: NgbModal,
-		private oauth2Service: OAuth2Service
+		private oauth2Service: OAuth2Service,
+		private authStore: Store<fromAuth.State>,
 	) {
 	}
 
@@ -63,7 +65,7 @@ export class AuthEffects {
 	));
 
 	logoutSuccess$ = createEffect(() => this.actions$.pipe(
-		ofType(AuthApiActions.loginSuccess),
+		ofType(AuthApiActions.logoutSuccess),
 		tap(() => this.router.navigate(['/']))
 	), { dispatch: false });
 
@@ -74,7 +76,6 @@ export class AuthEffects {
 
 	oauth2Login$ = createEffect(() => this.actions$.pipe(
 		ofType(AuthActions.socialLogin),
-		map(action => { console.log('effect called'); return action }),
 		map(action => ({ token: action.socialUser.authToken, provider:action.provider })),
 		exhaustMap(payload =>
 			this.usersService.oauth2Login(payload).pipe(
