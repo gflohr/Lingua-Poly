@@ -117,6 +117,7 @@ sub oauth2Login {
 	my $session = $self->stash->{session};
 	$session->user($user);
 	$session->provider($payload->{provider});
+	$session->token($payload->{token});
 	$self->app->sessionService->renew($session);
 	$self->app->database->commit;
 
@@ -129,14 +130,40 @@ sub logout {
 
 	my $app = $self->app;
 
+	my $session = $self->stash->{session};
+
+	# Make a copy of the provider and the access token so that we can revoke
+	# permissions.
+	my $provider = $session->provider;
+	my $token = $session->token;
+
 	# Downgrade the session.  This is an authenticated request.  So we don't
 	# get here if the user does not have a valid session.
-	$app->sessionService->delete($self->stash->{session});
+	$app->sessionService->delete($session);
+
 	my $fingerprint = $app->requestContextService->fingerprint($self);
 	my $session_id = $app->requestContextService->sessionID($self);
 	$self->stash->{session}
 		= $app->sessionService->refreshOrCreate($session_id, $fingerprint);
 	$app->database->commit;
+
+	# FIXME! Move that into an oauth2 service.
+	if ('FACEBOOK' eq $provider) {
+		my $url = URI->new('https://graph.facebook.com/');
+		$url->path('/me/permissions');
+		my ($data, $response) = $self->app->restService->delete(
+			$url,
+			'',
+			headers => {
+				Authorize => "Bearer $token"
+			}
+		);
+		if (!$response->is_success) {
+			$self->warn("cannot revoke access token, code: " . $response->code);
+		} elsif (!$data->{success}) {
+			$self->warn("cannot revoke access token: " . $data->{error}->{message});
+		}
+	}
 
 	$self->render(json => '', status => HTTP_NO_CONTENT);
 }

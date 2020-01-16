@@ -61,9 +61,9 @@ sub refreshOrCreate {
 	    $homepage, $description);
 	my $database = $self->database;
 
-	my $provider = 'local';
+	my ($provider, $token);
 
-	if (defined $sid && (($user_id) = $database->getRow(
+	if (defined $sid && (($user_id, $provider, $token) = $database->getRow(
 			SELECT_SESSION => $sid, $fingerprint
 		))) {
 		$self->debug('updating session');
@@ -81,6 +81,7 @@ sub refreshOrCreate {
 			}
 		}
 	} else {
+		$provider = 'local';
 		$self->debug('creating fresh session');
 		$sid = Session::Token->new(entropy => 256)->get;
 		$database->execute(INSERT_SESSION => $sid, $fingerprint, $provider);
@@ -88,7 +89,7 @@ sub refreshOrCreate {
 
 	$database->commit;
 
-	my %args = (sid => $sid, provider => $provider);
+	my %args = (sid => $sid, provider => $provider, token => $token);
 	if (defined $user_id) {
 		$args{user} = Lingua::Poly::API::Users::Model::User->new(
 			id => $user_id,
@@ -112,7 +113,8 @@ sub renew {
 	# FIXME! It is safer to first delete the old session, and create
 	# a new one.  Otherwise there might be a race with the auto-cleanup.
 	$self->database->execute(
-		UPDATE_SESSION_SID => $sid, $user_id, $session->provider, $session->sid);
+		UPDATE_SESSION_SID
+		=> $sid, $user_id, $session->provider, $session->token, $session->sid);
 	$session->sid($sid);
 
 	return $self;

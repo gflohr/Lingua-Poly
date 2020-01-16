@@ -57,6 +57,7 @@ CREATE TABLE sessions (
     user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
     fingerprint TEXT,
     identity_provider_id INTEGER NOT NULL REFERENCES identity_providers(id) ON DELETE CASCADE,
+    token TEXT,
     last_seen TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 

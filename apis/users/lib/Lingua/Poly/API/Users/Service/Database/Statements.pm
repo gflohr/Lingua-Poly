@@ -31,8 +31,9 @@ DELETE FROM sessions
   WHERE EXTRACT(EPOCH FROM(NOW() - last_seen)) > ?
 EOF
 		SELECT_SESSION => <<EOF,
-SELECT user_id FROM sessions
+SELECT s.user_id, p.name, s.token FROM sessions s, identity_providers p
   WHERE sid = ?
+    AND s.identity_provider_id = p.id
     AND fingerprint = ?
 EOF
 		UPDATE_SESSION => <<EOF,
@@ -44,7 +45,8 @@ EOF
 UPDATE sessions
    SET sid = ?, user_id = ?, last_seen = NOW(),
        identity_provider_id
-           = (SELECT id FROM identity_providers WHERE name = ?)
+           = (SELECT id FROM identity_providers WHERE name = ?),
+       token = ?
  WHERE sid = ?
 EOF
 		DELETE_TOKEN_STALE => <<EOF,
