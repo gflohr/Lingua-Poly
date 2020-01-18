@@ -13,10 +13,10 @@ use strict;
 
 use Test::More;
 
-use Lingua::Poly::API::UM::Validator::Homepage;
-use Lingua::Poly::API::UM::Util qw(parse_ipv4);
+use Lingua::Poly::API::Users::Validator::Homepage;
+use Lingua::Poly::API::Users::Util qw(parse_ipv4);
 
-my $checker = Lingua::Poly::API::UM::Validator::Homepage->new;
+my $checker = Lingua::Poly::API::Users::Validator::Homepage->new;
 
 ok $checker;
 
@@ -92,7 +92,7 @@ ok $check->('http://[89ab::1234]:1234'), 'valid IPv6 with port';
 ok $check->('http://[89ab::1234]:1234/'), 'valid IPv6 with port and slash';
 ok $check->('http://[89ab::1234]:1234/foo/bar'), 'valid IPv6 with port and path';
 
-my $convert = \&Lingua::Poly::API::UM::Validator::Homepage::__uncompressIPv6;
+my $convert = \&Lingua::Poly::API::Users::Validator::Homepage::__uncompressIPv6;
 
 is_deeply(
 	[$convert->('89ab::1234')],
