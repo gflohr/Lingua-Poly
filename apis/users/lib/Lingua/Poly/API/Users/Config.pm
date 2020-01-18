@@ -32,7 +32,7 @@ sub new {
 		die(<<EOF);
 
 $args{filename}:
-configuration variable "secrets" missing.  Try:
+Configuration variable "secrets" missing.  Try:
 
 secrets:
 - $secret
@@ -69,7 +69,7 @@ EOF
 		die (<<EOF);
 
 $args{filename}:
-configuration variable "smtp.sender" missing.  Try something like:
+Configuration variable "smtp.sender" missing.  Try something like:
 
 smtp:
   sender: Lingua::Poly <do_not_reply\@yourdomain.com>
@@ -78,7 +78,48 @@ Replace "yourdomain.com" with a suitable domain name.
 EOF
 	}
 
+	$self->{oauth} //= {};
+	$self->{oauth}->{facebook} //= {};
+
+	if (empty $self->{oauth}->{facebook}->{client_id}
+	    || empty  $self->{oauth}->{facebook}->{client_secret}) {
+		warn <<EOF;
+
+$args{filename}:
+Configuration variable "oauth.facebook.client_id" respectively
+"oauth.facebook.client_secret" missing.  The Login with Facebook will
+not work.  If you have a facebook app for logging in, try:
+
+oauth:
+  facebook:
+    client_id: CLIENT_ID
+    client_secret: CLIENT_SECRET
+EOF
+	}
+
+	$self->{oauth}->{google} //= {};
+
+	if (empty $self->{oauth}->{google}->{client_id}
+	    || empty  $self->{oauth}->{google}->{client_secret}) {
+		warn <<EOF;
+
+$args{filename}:
+Configuration variable "oauth.google.client_id" respectively
+"oauth.google.client_secret" missing.  The Login with Google OpenID Connect
+will not work.  If you have a Google OAuth application, you  can try this:
+
+oauth:
+  google:
+    client_id: CLIENT_ID
+    client_secret: CLIENT_SECRET
+EOF
+	}
+
 	bless $self, $class;
+}
+
+sub secret {
+	shift->{secrets}->[0];
 }
 
 1;
