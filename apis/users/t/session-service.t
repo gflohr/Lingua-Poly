@@ -16,6 +16,7 @@ use Test::More;
 use Lingua::Poly::API::Users::Model::User;
 use Lingua::Poly::API::Users::Model::Session;
 use Lingua::Poly::API::Users::Service::Session;
+use Lingua::Poly::API::Users::Config;
 
 my $user = Lingua::Poly::API::Users::Model::User->new(id => 1);
 ok $user;
@@ -26,11 +27,15 @@ my $session = Lingua::Poly::API::Users::Model::Session->new(
 );
 ok $session;
 
+my $config = bless {
+	secrets => ['MZvl5lxqpxYanaMidLFdWui2TsegLmaA1O8lNMHRgCz']
+}, 'Lingua::Poly::API::Users::Config';
+
 my $sessionService = Lingua::Poly::API::Users::Service::Session->new(
-	configuration => {
-		secrets => ['MZvl5lxqpxYanaMidLFdWui2TsegLmaA1O8lNMHRgCz']
-	}
+	configuration => $config,
 );
 ok $sessionService;
+
+
 
 done_testing;

@@ -26,7 +26,11 @@ use base qw(Lingua::Poly::API::Users::Logging);
 
 has logger => (is => 'ro');
 has database => (is => 'ro');
-has configuration => (is => 'ro', required => 1);
+has configuration => (
+	is => 'ro',
+	isa => 'Lingua::Poly::API::Users::Config',
+	required => 1
+);
 has userService => (is => 'ro');
 
 my $last_cleanup = 0;
