@@ -56,4 +56,5 @@ like $state, $base64url_re;
 
 ok $sessionService;
 
+warn $state;
 done_testing;

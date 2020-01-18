@@ -48,8 +48,11 @@ sub logger {
 	return $self->{_logger} if exists $self->{_logger};
 	my $app = $self->app;
 
+	my $context = ref $self;
+	$context =~ s/.*::Controller::/Controller::/;
+
 	# FIXME! Can we use the SmartLogger constructor here?
-	return $self->{_logger} = $app->log->context('[FIXME! Controller base class!]');
+	return $self->{_logger} = $app->log->context("[$context]");
 }
 
 sub fingerprint {

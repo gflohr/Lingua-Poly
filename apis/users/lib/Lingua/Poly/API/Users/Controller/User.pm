@@ -32,13 +32,25 @@ sub login {
 	my $login_data = $self->req->json;
 	my $db = $self->app->database;
 
+	$self->info("user '$login_data->{id}' trying to log in");
+
 	my $user = $self->app->userService->userByUsernameOrEmail($login_data->{id});
-	return $self->errorResponse(HTTP_UNAUTHORIZED, {
-		message => 'invalid username or password'
-	}) if !$user || !$user->confirmed;
-	return $self->errorResponse(HTTP_UNAUTHORIZED, {
-		message => 'invalid username or password'
-	}) if !check_password $login_data->{password}, $user->password;
+	if (!$user || !$user->confirmed) {
+		if (!$user) {
+			$self->debug("user '$login_data->{id}' is unknown");
+		} elsif (!$user->confirmed) {
+			$self->debug("user '$login_data->{id}' is unconfirmed");
+		}
+		return $self->errorResponse(HTTP_UNAUTHORIZED, {
+			message => 'invalid username or password'
+		});
+	}
+	if (!check_password $login_data->{password}, $user->password) {
+		$self->debug("user '$login_data->{id}': invalid credentials");
+		return $self->errorResponse(HTTP_UNAUTHORIZED, {
+			message => 'invalid username or password'
+		})
+	}
 
 	# Upgrade the session with a valid user.
 	my $session = $self->stash->{session};
