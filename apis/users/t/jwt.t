@@ -30,12 +30,37 @@ $jwt = Mojo::JWT->new(
 	algorithm => 'none',
 	claims => $claims_in,
 )->encode;
-
 $claims_out = decode_jwt $jwt;
-
 is $claims_out->{sub}, $claims_in->{sub}, 'sub';
-is $claims_out->{aud}, $claims_in->{aud}, 'sub';
-is $claims_out->{iss}, $claims_in->{iss}, 'sub';
-is $claims_out->{name}, $claims_in->{name}, 'sub';
+is $claims_out->{aud}, $claims_in->{aud}, 'aud';
+is $claims_out->{iss}, $claims_in->{iss}, 'iss';
+is $claims_out->{name}, $claims_in->{name}, 'name';
+
+$claims_in->{name} = 'not expired';
+$jwt = Mojo::JWT->new(
+	algorithm => 'none',
+	claims => $claims_in,
+	expires => 7200 + time,
+)->encode;
+$claims_out = decode_jwt $jwt;
+is $claims_out->{name}, 'not expired', 'not expired';
+
+$claims_in->{name} = 'not expired';
+$jwt = Mojo::JWT->new(
+	algorithm => 'none',
+	claims => $claims_in,
+	expires => 7200 + time,
+)->encode;
+$claims_out = decode_jwt $jwt;
+is $claims_out->{name}, 'not expired', 'not expired';
+
+$claims_in->{name} = 'expired';
+$jwt = Mojo::JWT->new(
+	algorithm => 'none',
+	claims => $claims_in,
+	expires => -1 + time,
+)->encode;
+eval { $claims_out = decode_jwt $jwt };
+like $@, qr/expired/, 'expired';
 
 done_testing;
