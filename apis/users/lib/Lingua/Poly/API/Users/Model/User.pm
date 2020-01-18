@@ -17,7 +17,7 @@ use strict;
 use Moose;
 use namespace::autoclean;
 
-has id => (isa => 'Int', is => 'ro');
+has id => (isa => 'Int', is => 'ro', required => 1);
 has username => (isa => 'Maybe[Str]', is => 'rw');
 has email => (isa => 'Maybe[Str]', is => 'rw');
 has password => (isa => 'Maybe[Str]', is => 'rw');

@@ -26,7 +26,7 @@ use base qw(Lingua::Poly::API::Users::Logging);
 
 has logger => (is => 'ro');
 has database => (is => 'ro');
-has configuration => (is => 'ro');
+has configuration => (is => 'ro', required => 1);
 has userService => (is => 'ro');
 
 my $last_cleanup = 0;
@@ -144,6 +144,12 @@ sub getNonce {
 		SELECT_SESSION_NONCE => $session->sid);
 
 	return $nonce;
+}
+
+sub getState {
+	my ($self, $session) = @_;
+
+	return 'no idea';
 }
 
 __PACKAGE__->meta->make_immutable;

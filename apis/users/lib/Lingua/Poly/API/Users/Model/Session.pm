@@ -17,8 +17,12 @@ use strict;
 use Moose;
 use namespace::autoclean;
 
-has sid => (isa => 'Str', is => 'rw');
-has user => (isa => 'Lingua::Poly::API::Users::Model::User', is => 'rw');
+has sid => (isa => 'Str', is => 'rw', required => 1);
+has user => (
+	isa => 'Lingua::Poly::API::Users::Model::User',
+	is => 'rw',
+	required => 1,
+);
 has provider => (is => 'rw');
 has token => (is => 'rw');
 
