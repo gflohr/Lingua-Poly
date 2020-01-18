@@ -18,6 +18,8 @@ use Moose;
 use namespace::autoclean;
 
 use Session::Token;
+use Digest::SHA qw(hmac_sha256);
+use MIME::Base64 qw(encode_base64url);
 
 use Lingua::Poly::API::Users::Model::User;
 use Lingua::Poly::API::Users::Model::Session;
@@ -153,7 +155,9 @@ sub getNonce {
 sub getState {
 	my ($self, $session) = @_;
 
-	return 'no idea';
+	my $secret = $self->configuration->secret;
+
+	return encode_base64url hmac_sha256 $session->sid, $secret;
 }
 
 __PACKAGE__->meta->make_immutable;

@@ -34,8 +34,26 @@ my $config = bless {
 my $sessionService = Lingua::Poly::API::Users::Service::Session->new(
 	configuration => $config,
 );
+
+my $base64url_re = qr/^[-_a-zA-Z0-9]+$/;
+
+my $state = $sessionService->getState($session);
+ok length $state;
+isnt $state, $session->sid;
+like $state, $base64url_re;
+
+my $old_state = $state;
+$session->sid('new session id');
+$state = $sessionService->getState($session);
+isnt $state, $old_state;
+like $state, $base64url_re;
+
+$old_state = $state;
+$config->{secrets}->[0] = 'abcdefabcdef';
+$state = $sessionService->getState($session);
+isnt $state, $old_state;
+like $state, $base64url_re;
+
 ok $sessionService;
-
-
 
 done_testing;
