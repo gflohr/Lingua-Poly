@@ -16,13 +16,15 @@ use strict;
 
 use Password::OWASP::Argon2;
 use List::Util qw(max);
+use JSON;
+use MIME::Base64 qw(decode_base64url);
 
 use base qw(Exporter);
 
 our @EXPORT_OK = qw(
 	empty crypt_password check_password
 	format_headers format_request_line format_response_line
-	parse_ipv4
+	parse_ipv4 decode_jwt
 );
 
 sub empty($) {
@@ -141,6 +143,60 @@ sub parse_ipv4 {
 	}
 
 	return @parts;
+}
+
+# There is no CPAN module that is able to verify JWTs.  We therefore use it
+# without verification.  This is okay because we communicate directly with
+# the issuer and use a secret.  For inter-service communication, we generate
+# our own JWTs.
+sub decode_jwt {
+	my ($token) = @_;
+
+	# We cannot use the result of split() here because it would also return
+	# three parts for ".header.claims.signature.".
+	die "invalid or corrupted token\n" if $token !~ /^([^.]+)\.([^.]+)\.[^.]*$/;
+
+	my ($header_str, $claims_str) = ($1, $2);
+
+	my $json = JSON->new;
+
+	my $header = $json->decode(decode_base64url $header_str);
+	my $claims = $json->decode(decode_base64url $claims_str);
+
+	if (exists $claims->{exp}) {
+		my $exp = $claims->{exp};
+		die "invalid expiry date\n" if $exp !~ /^(-)?(?:0|[1-9][0-9]*)$/;
+
+		die "token expired\n" if $1;
+
+		my $now = time;
+		my $lnow = length $now;
+		my $lexp = length $exp;
+
+		# Check avoiding overflow.
+		die "token expired\n" if $lnow > $lexp;
+		die "token expired\n" if $now > $exp;
+	}
+
+	if (exists $claims->{nbf}) {
+		my $nbf = $claims->{nbf};
+		die "invalid not-before date\n" if $nbf !~ /^(-)?(?:0|[1-9][0-9]*)$/;
+
+		if (!$1) {
+			my $now = time;
+			my $lnow = length $now;
+			my $lnbf = length $nbf;
+
+			# Check avoiding overflow.
+			if ($lnow eq $lnbf) {
+				die "token not yet valid\n" if $lnow lt $lnbf;
+			} elsif ($lnow lt $lnbf) {
+				die "token not yet valid\n";
+			}
+		}
+	}
+
+	return $claims;
 }
 
 1;
