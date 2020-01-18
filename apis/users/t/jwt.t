@@ -63,4 +63,23 @@ $jwt = Mojo::JWT->new(
 eval { $claims_out = decode_jwt $jwt };
 like $@, qr/expired/, 'expired';
 
+$claims_in->{name} = 'not before';
+delete $claims_in->{exp};
+$jwt = Mojo::JWT->new(
+	algorithm => 'none',
+	claims => $claims_in,
+	not_before => -7200 + time,
+)->encode;
+$claims_out = decode_jwt $jwt;
+is $claims_out->{name}, 'not before', 'not before';
+
+$claims_in->{name} = 'not yet valid';
+$jwt = Mojo::JWT->new(
+	algorithm => 'none',
+	claims => $claims_in,
+	not_before => 7200 + time,
+)->encode;
+eval { $claims_out = decode_jwt $jwt };
+like $@, qr/not yet valid/, 'not yet valid';
+
 done_testing;

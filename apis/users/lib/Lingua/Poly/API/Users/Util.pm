@@ -189,7 +189,7 @@ sub decode_jwt {
 
 			# Check avoiding overflow.
 			if ($lnow eq $lnbf) {
-				die "token not yet valid\n" if $lnow lt $lnbf;
+				die "token not yet valid\n" if $now < $nbf;
 			} elsif ($lnow lt $lnbf) {
 				die "token not yet valid\n";
 			}
