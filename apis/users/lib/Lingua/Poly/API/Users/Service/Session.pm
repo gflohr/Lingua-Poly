@@ -128,6 +128,24 @@ sub delete {
 	return $self;
 }
 
+sub updateNonce {
+	my ($self, $session) = @_;
+
+	$self->database->execute(
+		UPDATE_SESSION_NONCE => $session->nonce, $session->sid);
+
+	return $self;
+}
+
+sub getNonce {
+	my ($self, $session) = @_;
+
+	my ($nonce) = $self->database->getRow(
+		SELECT_SESSION_NONCE => $session->sid);
+
+	return $nonce;
+}
+
 __PACKAGE__->meta->make_immutable;
 
 1;

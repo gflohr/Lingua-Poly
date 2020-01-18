@@ -78,6 +78,8 @@ sub startup {
 	my $config = $self->config;
 	$self->hook(before_dispatch => sub { $self->__beforeDispatch(@_) });
 	$self->hook(after_dispatch => sub { $self->__afterDispatch(@_) });
+
+	$self->info("application ready");
 }
 
 sub __beforeDispatch {

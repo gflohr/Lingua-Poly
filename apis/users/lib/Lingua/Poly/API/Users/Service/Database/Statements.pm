@@ -49,6 +49,17 @@ UPDATE sessions
        token = ?
  WHERE sid = ?
 EOF
+
+		UPDATE_SESSION_NONCE => <<EOF,
+UPDATE sessions
+   SET nonce = ?
+ WHERE sid = ?
+EOF
+
+		SELECT_SESSION_NONCE => <<EOF,
+SELECT nonce FROM sessions WHERE sid = ?
+EOF
+
 		DELETE_TOKEN_STALE => <<EOF,
 DELETE FROM tokens
   WHERE EXTRACT(EPOCH FROM(NOW() - created)) > ?
