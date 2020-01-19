@@ -3,7 +3,9 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { UserLogin, OAuth2Login } from '../../../../app/core/openapi/lingua-poly';
 import { Store, select } from '@ngrx/store';
 import * as fromAuth from '../../reducers';
+import * as fromConfig from '../../../core/reducers';
 import { LoginPageActions } from '../../actions';
+import { Observable } from 'rxjs';
 
 @Component({
 	selector: 'app-login',
@@ -13,6 +15,8 @@ import { LoginPageActions } from '../../actions';
 export class LoginComponent {
 	pending$ = this.authStore.pipe(select(fromAuth.selectLoginPagePending));
 	error$ = this.authStore.pipe(select(fromAuth.selectLoginPageError));
+	facebookClientId$: Observable<string>;
+	googleClientId$: Observable<string>;
 
 	@Input()
 	set pending(isPending: boolean) {
@@ -31,8 +35,11 @@ export class LoginComponent {
 
 	constructor(
 		private fb: FormBuilder,
-		private authStore: Store<fromAuth.State>
+		private authStore: Store<fromAuth.State>,
+		private configStore: Store<fromConfig.State>,
 	) {
+		this.facebookClientId$ = this.configStore.pipe(select(fromConfig.selectFacebookClientId));
+		this.googleClientId$ = this.configStore.pipe(select(fromConfig.selectGoogleClientId));
 	}
 
 	signInWithFacebook(): void {
@@ -41,6 +48,8 @@ export class LoginComponent {
 				provider: OAuth2Login.ProviderEnum.FACEBOOK
 			}
 		));
+
+
 	}
 
 	signInWithGoogle(): void {

@@ -1,6 +1,7 @@
 import * as fromRoot from '../../app.reducers';
 import * as fromConfig from './config.reducer';
 import { createFeatureSelector, createSelector, Action, combineReducers } from '@ngrx/store';
+import { config } from 'rxjs';
 
 export const coreFeatureKey = 'core';
 
@@ -27,3 +28,10 @@ export const selectCoreConfigState = createSelector(
 	(state: CoreState) => state[fromConfig.configFeatureKey]
 );
 
+export const selectFacebookClientId = createSelector(
+	selectCoreConfigState, config => config.facebookClientId
+);
+
+export const selectGoogleClientId = createSelector(
+	selectCoreConfigState, config => config.googleClientId
+);
