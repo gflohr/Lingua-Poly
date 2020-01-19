@@ -20,4 +20,4 @@ export abstract class Model<T> {
 	getValue(value: any, defaultValue: any): any {
 		return Model.getValue(value, defaultValue);
 	}
-	}
+}
