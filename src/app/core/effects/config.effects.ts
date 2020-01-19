@@ -9,7 +9,6 @@ import { CoreService } from '../openapi/lingua-poly';
 export class ConfigEffects {
 	getConfig$ = createEffect(() => this.actions$.pipe(
 		ofType(ConfigActions.configRequest),
-		tap(() => console.log('get config effect')),
 		exhaustMap(() =>
 			this.coreService.configGet().pipe(
 				map(config => ConfigActions.configSuccess({ config })),
@@ -17,6 +16,7 @@ export class ConfigEffects {
 			)
 		)
 	));
+
 	constructor(
 		private actions$: Actions,
 		private coreService: CoreService,
