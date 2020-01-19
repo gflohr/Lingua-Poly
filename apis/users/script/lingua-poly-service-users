@@ -128,13 +128,24 @@ my $c = container App => ['Env'] => as {
 	};
 
 	container Logging => as {
-		service 'logger' => (
+		service logger => (
 			class => 'Lingua::Poly::API::Users::SmartLogger',
 			parameters => {
 				realm => { isa => 'Str' }
 			}
 		);
-	}
+	};
+
+	container OAuth => as {
+		service google => (
+			class => 'Lingua::Poly::API::Users::Service::OAuth::Google',
+			lifecycle => 'Singleton',
+			dependencies => {
+				logger => { '/Logging/logger' => { realm => 'session' } },
+				configuration => '/Configuration/provider',
+			}
+		);
+	};
 };
 
 # FIXME! Check the value of the --mode option instead!
