@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { TranslateModule } from '@ngx-translate/core';
 import { TranslateService, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -14,6 +13,8 @@ import { EffectsModule } from '@ngrx/effects';
 import { UserDomainService } from './services/domain/user.domain.service';
 import { AuthEffects } from '../auth/auth.effects';
 import { ConnectFormDirective } from './directives/connect-form.directive';
+import { StoreModule } from '@ngrx/store';
+import * as fromCore from './reducers';
 
 export function HttpLoaderFactory(httpClient: HttpClient) {
 	return new TranslateHttpLoader(httpClient, './assets/i18n/', '.json');
@@ -34,7 +35,8 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
 			useDefaultLang: true
 		}),
 		HttpClientModule,
-		ApiModule
+		ApiModule,
+		StoreModule.forFeature(fromCore.coreFeatureKey, fromCore.coreReducers),
 	],
 		exports: [
 		TranslateModule,
