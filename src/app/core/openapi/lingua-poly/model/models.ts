@@ -1,3 +1,4 @@
+export * from './config';
 export * from './empty';
 export * from './oAuth2Login';
 export * from './profile';

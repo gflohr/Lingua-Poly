@@ -106,6 +106,16 @@ components:
       required:
         - token
       additionalProperties: false
+    Config:
+      title: Config
+      properties:
+        googleClientId:
+          type: string
+          example: abc-def.apps.googleusercontent.com
+        facebookClientId:
+          type: string
+          example: Abcabc
+      additionalProperties: false
   requestBodies:
     EmptyRequest:
       content:
@@ -141,6 +151,19 @@ tags:
   - name: users
     description: User management
 paths:
+  /config:
+    get:
+      tags:
+      - core
+      summary: Get dynamic configuration
+      x-mojo-to: 'config#get'
+      responses:
+        200:
+          description: Dynamic cofiguration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Config'
   /login:
     post:
       tags:
@@ -269,4 +292,3 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
-
