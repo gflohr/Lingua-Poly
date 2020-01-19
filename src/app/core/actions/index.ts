@@ -1,3 +1,4 @@
+import * as ConfigActions  from './config.actions';
 import * as UserActions from './user.actions';
 
-export { UserActions };
+export { ConfigActions, UserActions };

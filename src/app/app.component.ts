@@ -1,12 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { Router, ActivatedRoute, Event, NavigationEnd } from '@angular/router';
 import { applicationConfig } from './app.config';
-
 import * as fromAuth from './auth/reducers';
 import * as fromRoot from './app.reducers';
 import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
+import { ConfigActions } from './core/actions';
 
 @Component({
 	selector: 'app-root',
@@ -28,6 +27,7 @@ export class AppComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit() {
+		this.store.dispatch(ConfigActions.configRequest());
 	}
 
 	ngOnDestroy() {
