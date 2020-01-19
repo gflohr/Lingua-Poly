@@ -20,7 +20,12 @@ use namespace::autoclean;
 use base qw(Lingua::Poly::API::Users::Logging);
 
 has logger => (is => 'ro', required => 1);
-has configuration => (id => 'ro', required  => 1);
+has configuration => (is => 'ro', required  => 1);
+has database => (
+	is => 'ro',
+	required => 1,
+	isa => 'Lingua::Poly::API::Users::Service::Database'
+);
 
 __PACKAGE__->meta->make_immutable;
 

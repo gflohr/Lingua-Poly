@@ -40,6 +40,7 @@ my $c = container App => ['Env'] => as {
 			requestContextService => 'RequestContext',
 			tokenService => 'Token',
 			restService => 'REST',
+			googleOAuthService => '/OAuth/Google'
 		},
 	);
 
@@ -137,12 +138,13 @@ my $c = container App => ['Env'] => as {
 	};
 
 	container OAuth => as {
-		service google => (
+		service Google => (
 			class => 'Lingua::Poly::API::Users::Service::OAuth::Google',
 			lifecycle => 'Singleton',
 			dependencies => {
 				logger => { '/Logging/logger' => { realm => 'session' } },
 				configuration => '/Configuration/provider',
+				database  => '/Storage/database',
 			}
 		);
 	};

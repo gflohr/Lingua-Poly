@@ -38,16 +38,27 @@ use Lingua::Poly::API::Users::Util qw(
 
 use Moose;
 
-has configuration => (is => 'ro');
-has database => (is => 'ro');
-has logger => (is => 'rw');
-has userService => (is => 'ro');
-has sessionService => (is => 'ro');
-has requestContextService => (is => 'ro');
-has tokenService => (isa => 'Lingua::Poly::API::Users::Service::Token',
-                     is => 'ro');
-has restService => (isa => 'Lingua::Poly::API::Users::Service::RESTClient',
-                    is => 'ro');
+has configuration => (is => 'ro', required => 1);
+has database => (is => 'ro', required => 1);
+has logger => (is => 'rw', required => 1);
+has userService => (is => 'ro', required => 1);
+has sessionService => (is => 'ro', required => 1);
+has requestContextService => (is => 'ro', required => 1);
+has tokenService => (
+	isa => 'Lingua::Poly::API::Users::Service::Token',
+	is => 'ro',
+	required => 1,
+);
+has restService => (
+	isa => 'Lingua::Poly::API::Users::Service::RESTClient',
+	is => 'ro',
+	required => 1,
+);
+has googleOAuthService => (
+	isa => 'Lingua::Poly::API::Users::Service::OAuth::Google',
+	is => 'ro',
+	required => 1
+);
 
 sub startup {
 	my ($self) = @_;

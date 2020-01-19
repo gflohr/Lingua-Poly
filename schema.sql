@@ -123,3 +123,10 @@ CREATE TABLE translations (
     translation TEXT NOT NULL,
     PRIMARY KEY(meaning_id, lingua_id)
 );
+
+CREATE TABLE configs (
+    id BIGSERIAL PRIMARY KEY,
+    name TEXT NOT NULL UNIQUE,
+    value TEXT,
+    expires TIMESTAMP WITH TIME ZONE NOT NULL
+);

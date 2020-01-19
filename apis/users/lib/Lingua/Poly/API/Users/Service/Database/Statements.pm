@@ -124,6 +124,20 @@ UPDATE users
    SET confirmed = 't'
  WHERE id = ?
 EOF
+
+		SELECT_CONFIG => <<EOF,
+SELECT value, expires
+  FROM configs
+ WHERE name = ?
+   AND expires < NOW()
+EOF
+
+		UPSERT_CONFIG => <<EOF,
+INSERT INTO configs(name, value, expires)
+  VALUES(?, ?, ?)
+  ON CONFLICT(name) DO UPDATE
+    SET value = EXCLUDED.value, expires = EXCLUDED.value
+EOF
 	}, shift;
 };
 
