@@ -17,6 +17,7 @@ export class LoginComponent {
 	error$ = this.authStore.pipe(select(fromAuth.selectLoginPageError));
 	facebookClientId$: Observable<string>;
 	googleClientId$: Observable<string>;
+	hasOauthLogin$: Observable<boolean>;
 
 	@Input()
 	set pending(isPending: boolean) {
@@ -38,6 +39,7 @@ export class LoginComponent {
 		private authStore: Store<fromAuth.State>,
 		private configStore: Store<fromConfig.State>,
 	) {
+		this.hasOauthLogin$ = this.configStore.pipe(select(fromConfig.selectHasOauthLogin));
 		this.facebookClientId$ = this.configStore.pipe(select(fromConfig.selectFacebookClientId));
 		this.googleClientId$ = this.configStore.pipe(select(fromConfig.selectGoogleClientId));
 	}

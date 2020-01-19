@@ -28,6 +28,16 @@ export const selectCoreConfigState = createSelector(
 	(state: CoreState) => state[fromConfig.configFeatureKey]
 );
 
+export const selectHasOauthLogin = createSelector(
+	selectCoreConfigState, config => {
+		if (config.googleClientId != null || config.googleClientId != null) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+);
+
 export const selectFacebookClientId = createSelector(
 	selectCoreConfigState, config => config.facebookClientId
 );
