@@ -16,6 +16,8 @@ import { EffectsModule } from '@ngrx/effects';
 import { ConfigEffects, UserEffects, RouterEffects } from './core/effects';
 import { UserModule } from './user/user.module';
 import { AuthServiceConfig, FacebookLoginProvider, SocialLoginModule, GoogleLoginProvider } from 'angularx-social-login';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { environment } from '../environments/environment';
 
 const config = new AuthServiceConfig([
 	{
@@ -61,7 +63,8 @@ export function provideConfig() {
 			routerState: RouterState.Minimal
 		}),
 		EffectsModule.forRoot([ConfigEffects, UserEffects, RouterEffects]),
-		SocialLoginModule
+		SocialLoginModule,
+		StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production })
 	],
 	providers: [
 		{
