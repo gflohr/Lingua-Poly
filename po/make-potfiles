@@ -1,4 +1,4 @@
 #! /bin/sh
 
-git ls-files ../perl | grep '\.pm$'
+git ls-files ../apis | grep '\.pm$'
 echo js.pot
