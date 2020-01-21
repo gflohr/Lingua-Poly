@@ -292,3 +292,45 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
+  /oauth/google:
+    get:
+      tags:
+      - oauth
+      summary: Google OpenID Connect Redirect URL
+      x-mojo-to: 'oauth/google/redirect'
+      parameters:
+        - name: error
+          in: query
+          description: An error occured.
+          schema:
+            type: string
+        - name: code
+          in: query
+          description: Code for access token.
+          schema:
+            type: string
+        - name: client_id
+          in: query
+          description: The Google Client ID.
+          schema:
+            type: string
+        - name: client_secret
+          in: query
+          description: The Google Client secret.
+          schema:
+            type: string
+        - name: redirect_uri
+          in: query
+          description: The redirect URI used
+          schema:
+            type: string
+        - name: grant_type
+          in: query
+          description: Always "authorization_code".
+          schema:
+            type: string
+            enum: [authorization_code]
+      responses:
+        302:
+          description: Redirect to application
+      

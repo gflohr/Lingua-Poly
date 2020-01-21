@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 
 
 import { CoreService } from './api/core.service';
+import { OauthService } from './api/oauth.service';
 import { UsersService } from './api/users.service';
 
 @NgModule({
@@ -12,6 +13,7 @@ import { UsersService } from './api/users.service';
   exports:      [],
   providers: [
     CoreService,
+    OauthService,
     UsersService ]
 })
 export class ApiModule {
