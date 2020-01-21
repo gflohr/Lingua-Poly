@@ -18,13 +18,14 @@ use Password::OWASP::Argon2;
 use List::Util qw(max);
 use JSON;
 use MIME::Base64 qw(decode_base64url);
+use URI;
 
 use base qw(Exporter);
 
 our @EXPORT_OK = qw(
 	empty crypt_password check_password
 	format_headers format_request_line format_response_line
-	parse_ipv4 decode_jwt
+	parse_ipv4 decode_jwt encode_post_data
 );
 
 sub empty($) {
@@ -197,6 +198,23 @@ sub decode_jwt {
 	}
 
 	return $claims;
+}
+
+sub encode_post_data {
+	my (@content) = @_;
+
+	if (!@content || ref $content[0]) {
+		require Carp;
+		Carp::croak('usage: encode_post_data(KEY, VALUE, KEY, VALUE, ...');
+	}
+
+	my $url = URI->new('http:');
+	$url->query_form(@content);
+	my $content = $url->query;
+
+	$content =~ s/(?<!%0D)%0A/%0D%0A/g if defined($content);
+
+	return $content;
 }
 
 1;
