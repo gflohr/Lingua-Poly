@@ -6,7 +6,7 @@
 				<label for="email" translate>Email address</label>
 				<input formControlName="email" type="email"
 				       class="form-control" id="email"
-				       placeholder="{{ 'Enter email' | translate }}">
+				       placeholder="{{ 'Enter email address' | translate }}">
 				<small *ngIf="registrationForm.get('email').touched && registrationForm.get('email').errors && registrationForm.get('email').errors.email"
 					   class="form-text alert alert-danger"
 					   translate>Invalid or missing email address.</small>

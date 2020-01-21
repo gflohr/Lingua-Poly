@@ -129,7 +129,34 @@ msgid ""
 "disclosures online - http://www.muster-vorlagen.net</a><br/><br/>"
 msgstr ""
 
-msgid "<p>Are you sure to logout?</p>"
+msgid ""
+"<span class=\"fab fa-facebook-f\"\n"
+"\t\t\t\t\t  title=\"{{ 'Login with Facebook' | translate}}\"\n"
+"\t\t\t\t\t  aria-hidden=\"true\"></span>\n"
+"\t\t\t\t&nbsp;\n"
+"\t\t\t\t<span translate>Login with Facebook</span>"
+msgstr ""
+
+msgid ""
+"<span class=\"fab fa-google\"\n"
+"\t\t\t\t\t\ttitle=\"{{ 'Login with Google' | translate}}\"\n"
+"\t\t\t\t\t\taria-hidden=\"true\"></span>\n"
+"\t\t\t\t\t&nbsp;\n"
+"\t\t\t\t\t<span translate>Login with Google</span>"
+msgstr ""
+
+msgid ""
+"<span class=\"fas fa-user\" title=\"{{ 'Profile' | translate}}\" "
+"aria-hidden=\"true\"></span>\n"
+"\t\t\t\t{{ username$ | async }}"
+msgstr ""
+
+msgid "About Me"
+msgstr ""
+
+msgid ""
+"All of this information is optional.  You can delete it at any point by\n"
+"saving an empty value."
 msgstr ""
 
 msgid ""
@@ -140,6 +167,12 @@ msgstr ""
 
 msgid "Analyze text"
 msgstr "Analyze text"
+
+msgid "Are you sure to logout?"
+msgstr ""
+
+msgid "Cancel"
+msgstr ""
 
 msgid "Confirmation being sent ..., please wait!"
 msgstr ""
@@ -159,7 +192,7 @@ msgstr ""
 msgid "Email address or username"
 msgstr ""
 
-msgid "Enter email"
+msgid "Enter email address"
 msgstr ""
 
 msgid "Enter email or username"
@@ -171,10 +204,16 @@ msgstr ""
 msgid "Finnish"
 msgstr ""
 
+msgid "Homepage"
+msgstr ""
+
 msgid "Invalid or missing email address."
 msgstr ""
 
 msgid "Invalid username or password!"
+msgstr ""
+
+msgid "Leading or trailing space is not allowed."
 msgstr ""
 
 msgid "Legal"
@@ -192,6 +231,12 @@ msgid ""
 msgstr ""
 
 msgid "Login"
+msgstr ""
+
+msgid "Login with Facebook"
+msgstr ""
+
+msgid "Login with Google"
 msgstr ""
 
 msgid "Logout"
@@ -215,6 +260,12 @@ msgstr ""
 msgid "Password too weak!"
 msgstr ""
 
+msgid "Preferences"
+msgstr ""
+
+msgid "Profile"
+msgstr ""
+
 msgid "Register"
 msgstr ""
 
@@ -233,6 +284,9 @@ msgstr ""
 msgid "Report a bug"
 msgstr ""
 
+msgid "Save"
+msgstr ""
+
 msgid "Search word"
 msgstr "Search word"
 
@@ -248,14 +302,29 @@ msgstr "Start"
 msgid "Test"
 msgstr ""
 
+msgid "The homepage must start with \"https://\" or \"http://\"."
+msgstr ""
+
 msgid "The passwords do not match."
 msgstr ""
 
 msgid "This field is required."
 msgstr ""
 
-msgid "Why register?"
+msgid "This is not a valid URL or it is not allowed."
 msgstr ""
 
-msgid "{{ username$ | async }}"
+msgid "This name is already taken."
+msgstr ""
+
+msgid "Username"
+msgstr ""
+
+msgid "You cannot use a slash in your username."
+msgstr ""
+
+msgid "You cannot use an at sign in your username."
+msgstr ""
+
+msgid "or"
 msgstr ""

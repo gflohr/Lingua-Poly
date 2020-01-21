@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Lingua-Poly\n"
 "Report-Msgid-Bugs-To: Guido Flohr <guido.flohr@cantanea.com>\n"
-"POT-Creation-Date: 2019-11-11 13:21+0200\n"
-"PO-Revision-Date: 2018-09-16 14:55+0300\n"
+"POT-Creation-Date: 2020-01-21 12:52+0200\n"
+"PO-Revision-Date: 2020-01-21 12:53+0200\n"
 "Last-Translator: Guido Flohr <guido.flohr@cantanea.com>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -16,31 +16,16 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n != 1);\n"
+"X-Generator: Poedit 2.0.7\n"
 
-#: ../perl/lib/Lingua/Poly/FI/Word/Verb.pm:48
-#, perl-brace-format
-msgid "Unrecognized verb '{verb}'!\n"
+msgid ""
+"<div *ngIf=\"this.success; then successBlock else errorBlock\"></div>\n"
+"\t\t<ng-template #successBlock translate>Registration completed successfully!"
+"</ng-template>\n"
+"\t\t<ng-template #errorBlock translate>Registration failed!  Most probably\n"
+"\t\t\tthe link from the email has expired.  Please try again!\n"
+"\t\t</ng-template>"
 msgstr ""
-
-#: ../perl/lib/Lingua/Poly/FI/Word/Verb.pm:59
-msgid "Present"
-msgstr "Präsens"
-
-#: ../perl/lib/Lingua/Poly/FI/Word/Verb.pm:60
-msgid "Imperfect"
-msgstr "Imperfekt"
-
-#: ../perl/lib/Lingua/Poly/FI/Word/Verb.pm:61
-msgid "Perfect"
-msgstr "Perfekt"
-
-#: ../perl/lib/Lingua/Poly/FI/Word/Verb.pm:62
-msgid "Pluperfect"
-msgstr "Plusquamperfekt"
-
-#: ../perl/lib/Lingua/Poly/Word/Verb.pm:20
-msgid "Verb"
-msgstr "Verb"
 
 msgid ""
 "<h1>Privacy Statement</h1><h2>General</h2>Your personal data (e.g. title, "
@@ -294,6 +279,36 @@ msgstr ""
 "\" target=\"_blank\">Impressum Vorlagen online erstellen - http://www.muster-"
 "vorlagen.net</a><br/><br/>\n"
 
+msgid ""
+"<span class=\"fab fa-facebook-f\"\n"
+"\t\t\t\t\t  title=\"{{ 'Login with Facebook' | translate}}\"\n"
+"\t\t\t\t\t  aria-hidden=\"true\"></span>\n"
+"\t\t\t\t&nbsp;\n"
+"\t\t\t\t<span translate>Login with Facebook</span>"
+msgstr ""
+
+msgid ""
+"<span class=\"fab fa-google\"\n"
+"\t\t\t\t\t\ttitle=\"{{ 'Login with Google' | translate}}\"\n"
+"\t\t\t\t\t\taria-hidden=\"true\"></span>\n"
+"\t\t\t\t\t&nbsp;\n"
+"\t\t\t\t\t<span translate>Login with Google</span>"
+msgstr ""
+
+msgid ""
+"<span class=\"fas fa-user\" title=\"{{ 'Profile' | translate}}\" aria-hidden="
+"\"true\"></span>\n"
+"\t\t\t\t{{ username$ | async }}"
+msgstr ""
+
+msgid "About Me"
+msgstr ""
+
+msgid ""
+"All of this information is optional.  You can delete it at any point by\n"
+"saving an empty value."
+msgstr ""
+
 #, perl-brace-format
 msgid ""
 "An email with further instructions has been sent to {email}.\n"
@@ -304,10 +319,19 @@ msgstr ""
 msgid "Analyze text"
 msgstr "Text analysieren"
 
-msgid "Data Privacy Statement"
+msgid "Are you sure to logout?"
 msgstr ""
 
-msgid "Disabled"
+msgid "Cancel"
+msgstr ""
+
+msgid "Confirmation being sent ..., please wait!"
+msgstr ""
+
+msgid "Data Privacy"
+msgstr ""
+
+msgid "Data Privacy Statement"
 msgstr ""
 
 msgid "Disclaimer"
@@ -316,7 +340,13 @@ msgstr ""
 msgid "Email address"
 msgstr ""
 
-msgid "Enter email"
+msgid "Email address or username"
+msgstr ""
+
+msgid "Enter email address"
+msgstr "E-Mail-Adresse eingeben"
+
+msgid "Enter email or username"
 msgstr ""
 
 msgid "Features"
@@ -325,10 +355,16 @@ msgstr ""
 msgid "Finnish"
 msgstr ""
 
-msgid "Home <span class=\"sr-only\" translate>(current)</span>"
+msgid "Homepage"
 msgstr ""
 
 msgid "Invalid or missing email address."
+msgstr ""
+
+msgid "Invalid username or password!"
+msgstr ""
+
+msgid "Leading or trailing space is not allowed."
 msgstr ""
 
 msgid "Legal"
@@ -345,10 +381,22 @@ msgid ""
 "languages. Get started by selecting a language on the left."
 msgstr ""
 
-msgid "Link"
+msgid "Login"
 msgstr ""
 
-msgid "Login"
+msgid "Login with Facebook"
+msgstr ""
+
+msgid "Login with Google"
+msgstr ""
+
+msgid "Logout"
+msgstr ""
+
+msgid "Missing password."
+msgstr ""
+
+msgid "Missing username or email address."
 msgstr ""
 
 msgid "My Lingua::Poly"
@@ -364,10 +412,19 @@ msgstr ""
 msgid "Password too weak!"
 msgstr ""
 
+msgid "Preferences"
+msgstr ""
+
+msgid "Profile"
+msgstr ""
+
 msgid "Register"
 msgstr ""
 
 msgid "Registration"
+msgstr ""
+
+msgid "Registration Confirmed"
 msgstr ""
 
 msgid "Remember me!"
@@ -377,6 +434,9 @@ msgid "Repeat password"
 msgstr ""
 
 msgid "Report a bug"
+msgstr ""
+
+msgid "Save"
 msgstr ""
 
 msgid "Search word"
@@ -391,14 +451,50 @@ msgstr ""
 msgid "Start"
 msgstr "Start"
 
+msgid "Test"
+msgstr ""
+
+msgid "The homepage must start with \"https://\" or \"http://\"."
+msgstr ""
+
 msgid "The passwords do not match."
 msgstr ""
 
 msgid "This field is required."
 msgstr ""
 
-msgid "Why register?"
+msgid "This is not a valid URL or it is not allowed."
 msgstr ""
+
+msgid "This name is already taken."
+msgstr ""
+
+msgid "Username"
+msgstr ""
+
+msgid "You cannot use a slash in your username."
+msgstr ""
+
+msgid "You cannot use an at sign in your username."
+msgstr ""
+
+msgid "or"
+msgstr ""
+
+#~ msgid "Present"
+#~ msgstr "Präsens"
+
+#~ msgid "Imperfect"
+#~ msgstr "Imperfekt"
+
+#~ msgid "Perfect"
+#~ msgstr "Perfekt"
+
+#~ msgid "Pluperfect"
+#~ msgstr "Plusquamperfekt"
+
+#~ msgid "Verb"
+#~ msgstr "Verb"
 
 #, fuzzy
 #~ msgid ""

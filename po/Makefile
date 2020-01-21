@@ -1,6 +1,7 @@
 # Makefile for various po files.
 
 srcdir = .
+top_srcdir = ..
 libdir = ../perl/lib
 jsi18ndir = ../src/assets/i18n
 
@@ -9,6 +10,9 @@ MSGFMT    = msgfmt
 XGETTEXT  = xgettext
 CATOBJEXT = .po
 PERL      = perl
+NODE      = node
+GIT       = git
+EGREP     = grep -E
 
 include PACKAGE
 
@@ -31,18 +35,22 @@ help:
 POTFILES = $(srcdir)/POTFILES \
 	$(shell cat $(srcdir)/POTFILES)
 
+JSPOTFILES = $(shell $(srcdir)/make-jspotfiles)
+
 pot: $(TD).pot
 
 clean:
 	rm -f *~ *.bak *.gmo
 
-js.pot: ../src/assets/i18n/en.po
-	$(srcdir)/make-js-pot
+js.pot: $(top_srcdir)/src/assets/i18n/en.po
+	$(srcdir)/make-js-pot >$@
 
-$(TD).pot: $(POTFILES)
-	node ../node_modules/@biesbjerg/ngx-translate-extract/bin/cli.js \
+$(top_srcdir)/src/assets/i18n/en.po: $(JSPOTFILES)
+	$(NODE) ../node_modules/@biesbjerg/ngx-translate-extract/bin/cli.js \
 		--input=../src --output=../src/assets/i18n/en.po --clean --sort \
 		--format=pot --marker=_ ; \
+
+$(TD).pot: $(POTFILES)
 	$(XGETTEXT) --output=$(srcdir)/$(TD).pox --from-code=utf-8 \
 		--add-comments=TRANSLATORS: --files-from=$(srcdir)/POTFILES \
 		--copyright-holder="$(COPYRIGHT_HOLDER)" \
