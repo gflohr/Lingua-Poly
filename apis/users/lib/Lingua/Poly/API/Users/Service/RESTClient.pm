@@ -21,6 +21,8 @@ use LWP::UserAgent;
 use HTTP::Request;
 use JSON;
 
+use Lingua::Poly::API::Users::Util qw(encode_post_data);
+
 use base qw(Lingua::Poly::API::Users::Logging);
 
 has logger => (is => 'ro');
@@ -40,6 +42,12 @@ sub get {
 	return $self->request(GET => $uri, $content, %options);
 }
 
+sub post {
+	my ($self, $uri, $content, %options) = @_;
+
+	return $self->request(POST => $uri, $content, %options);
+}
+
 sub delete {
 	my ($self, $uri, $content, %options) = @_;
 
@@ -49,11 +57,23 @@ sub delete {
 sub request {
 	my ($self, $method, $uri, $content, %options) = @_;
 
-	$content = '{}' if !defined $content;
+	$content = '' if !defined $content;
+
+	my $accept = delete $options{headers}->{accept} || 'application/json';
+	my $content_type = delete $options{headers}->{content_type}
+		|| 'application/json; charset=UTF-8';
+
+	if (ref $content) {
+		if ('application/x-www-form-urlencoded' eq $content_type) {
+			$content = encode_post_data %$content;
+		} else {
+			$content = JSON->new->utf8->encode($content);
+		}
+	}
 
 	my @headers = (
-		accept => 'application/json',
-		content_type => 'application/json; charset=UTF-8'
+		accept => $accept,
+		content_type => $content_type,
 	);
 
 	foreach my $key (keys %{$options{headers} || {}}) {
@@ -62,6 +82,7 @@ sub request {
 
 	#$self->info("sending request with method '$method' to '$uri'");
 	my $request = HTTP::Request->new($method, $uri, \@headers, $content);
+
 	my $ua = $self->ua;
 	my $response = $self->ua->request($request);
 
