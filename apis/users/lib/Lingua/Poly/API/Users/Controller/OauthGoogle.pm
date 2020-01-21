@@ -10,31 +10,30 @@
 # to Public License, Version 2, as published by Sam Hocevar. See
 # http://www.wtfpl.net/ for more details.
 
-package Lingua::Poly::API::Users::Controller::Config;
+package Lingua::Poly::API::Users::Controller::OauthGoogle;
 
 use strict;
 
 use HTTP::Status qw(:constants);
 
-use Lingua::Poly::API::Users::Util qw(empty crypt_password);
-
 use Mojo::Base qw(Lingua::Poly::API::Users::Controller);
 
-sub get {
+sub redirect {
 	my $self = shift->openapi->valid_input or return;
 
-	my $api_config = $self->app->configuration;
+	eval {
+		my $params = $self->req->query_params->to_hash;
+		my $session = $self->stash->{session};
+		my $googleOauthService = $self->app->googleOAuthService;
+		$googleOauthService->authenticate($self, %$params);
+	};
 
-	my $google_oauth_service = $self->app->googleOAuthService;
-	my $google_auth_url = $self->app->googleOAuthService->authorizationUrl(
-		$self);
+	if ($@) {
+		# FIXME! Redirect with error message?
+		die $@;
+	}
 
-	my %config;
-	$config{googleAuthorizationUrl} = $google_auth_url
-		if !empty $google_auth_url;
-	$config{facebookAuthorizationUrl} = 'FIXME!';
-
-	return $self->render(openapi => \%config, status => HTTP_OK);
+	die;
 }
 
 1;

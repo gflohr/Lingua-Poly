@@ -297,7 +297,7 @@ paths:
       tags:
       - oauth
       summary: Google OpenID Connect Redirect URL
-      x-mojo-to: 'oauth/google/redirect'
+      x-mojo-to: 'oauth_google#redirect'
       parameters:
         - name: error
           in: query

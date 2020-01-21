@@ -50,6 +50,11 @@ has sessionService => (
 	required => 1,
 	isa => 'Lingua::Poly::API::Users::Service::Session',
 );
+has restService => (
+	isa => 'Lingua::Poly::API::Users::Service::RESTClient',
+	is => 'ro',
+	required => 1,
+);
 
 sub __getDiscoveryConfig {
 	my ($self) = @_;
@@ -81,6 +86,18 @@ sub __getDiscoveryConfig {
 	return $d->config;
 }
 
+sub redirectUri {
+	my ($self, $ctx) = @_;
+
+	my $redirect_url = $self->requestContextService->origin($ctx)->clone;
+
+	my $config = $self->configuration;
+
+	$redirect_url->path("$config->{prefix}/oauth/google");
+
+	return $redirect_url;
+}
+
 sub authorizationUrl {
 	my ($self, $ctx) = @_;
 
@@ -91,8 +108,7 @@ sub authorizationUrl {
 	my $client_secret = $config->{oauth}->{google}->{client_secret};
 	return if empty $client_secret;
 
-	my $redirect_url = $self->requestContextService->origin($ctx)->clone;
-	$redirect_url->path("$config->{prefix}/oauth/google");
+	my $redirect_uri = $self->redirectUri($ctx);
 
 	my $session = $ctx->stash->{session};
 
@@ -104,12 +120,58 @@ sub authorizationUrl {
 		client_id => $client_id,
 		response_type => 'code',
 		scope => 'openid email',
-		redirect_uri => $redirect_url,
+		redirect_uri => $redirect_uri,
 		state => $self->sessionService->getState($session),
 		nonce => $session->nonce,
 	);
 
 	return $authorization_url;
+}
+
+sub authenticate {
+	my ($self, $ctx, %params) = @_;
+
+	my $discovery = $self->__getDiscoveryConfig
+		or die "no discover document\n";
+
+	my $config = $self->configuration;
+
+	my $client_id = $config->{oauth}->{google}->{client_id}
+		or die "no google client id\n";
+	my $client_secret = $config->{oauth}->{google}->{client_secret}
+		or die "no google client secret\n";
+
+	my $session = $ctx->stash->{session};
+	my $state = $self->sessionService->getState($session);
+	die "state mismatch\n" if $params{state} ne $state;
+
+	my $redirect_uri = $self->redirectUri($ctx);
+
+	my $form = {
+		code => $params{code},
+		client_id => $client_id,
+		client_secret => $client_secret,
+		redirect_uri => $redirect_uri->to_string,
+		grant_type => 'authorization_code',
+	};
+
+use Data::Dumper;
+warn Dumper $form;
+
+	my $token_endpoint = $discovery->{token_endpoint};
+
+$DB::single = 1;
+	my ($payload, $response) = $self->restService->post($token_endpoint, $form,
+		headers => {
+			content_type => 'application/x-www-form-urlencoded'
+		}
+	);
+warn $response->decoded_content;
+	die $response->status_line if !$response->is_success;
+
+	use Data::Dumper;
+	warn Dumper $payload;
+
 }
 
 __PACKAGE__->meta->make_immutable;

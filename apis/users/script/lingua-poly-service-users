@@ -147,7 +147,8 @@ my $c = container App => ['Env'] => as {
 				database  => '/Storage/database',
 				requestContextService => '/RequestContext',
 				sessionService => '/User/session',
-				apiPrefix => '/Configuration/apiPrefix'
+				apiPrefix => '/Configuration/apiPrefix',
+				restService => '/REST',
 			}
 		);
 	};
