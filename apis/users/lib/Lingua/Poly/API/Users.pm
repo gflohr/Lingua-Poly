@@ -21,8 +21,6 @@ use Mojo::Base ('Mojolicious', 'Lingua::Poly::API::Users::Logging');
 use Time::HiRes qw(gettimeofday);
 use YAML;
 use HTTP::Status qw(:constants);
-use Locale::TextDomain qw(Lingua-Poly-API-User);
-use Locale::Messages qw(turn_utf_8_off);
 use CGI::Cookie;
 
 # FIXME! RandomString no longer needed?
