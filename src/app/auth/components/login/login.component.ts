@@ -40,8 +40,8 @@ export class LoginComponent {
 		private configStore: Store<fromConfig.State>,
 	) {
 		this.hasOauthLogin$ = this.configStore.pipe(select(fromConfig.selectHasOauthLogin));
-		this.facebookClientId$ = this.configStore.pipe(select(fromConfig.selectFacebookClientId));
-		this.googleClientId$ = this.configStore.pipe(select(fromConfig.selectGoogleClientId));
+		this.facebookClientId$ = this.configStore.pipe(select(fromConfig.selectFacebookAuthorizationUrl));
+		this.googleClientId$ = this.configStore.pipe(select(fromConfig.selectGoogleAuthorizationUrl));
 	}
 
 	signInWithFacebook(): void {

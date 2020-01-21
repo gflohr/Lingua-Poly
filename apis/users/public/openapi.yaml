@@ -109,12 +109,12 @@ components:
     Config:
       title: Config
       properties:
-        googleClientId:
+        googleAuthorizationUrl:
           type: string
-          example: abc-def.apps.googleusercontent.com
-        facebookClientId:
+          example: https://account.google.com/path?query
+        facebookAuthorizationUrl:
           type: string
-          example: Abcabc
+          example: https://www.facebook.com/path?query
       additionalProperties: false
   requestBodies:
     EmptyRequest:

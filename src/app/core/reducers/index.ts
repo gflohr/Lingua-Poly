@@ -30,7 +30,7 @@ export const selectCoreConfigState = createSelector(
 
 export const selectHasOauthLogin = createSelector(
 	selectCoreConfigState, config => {
-		if (config.googleClientId != null || config.googleClientId != null) {
+		if (config.googleAuthorizationUrl != null || config.facebookAuthorizationUrl != null) {
 			return true;
 		} else {
 			return false;
@@ -38,10 +38,10 @@ export const selectHasOauthLogin = createSelector(
 	}
 );
 
-export const selectFacebookClientId = createSelector(
-	selectCoreConfigState, config => config.facebookClientId
+export const selectFacebookAuthorizationUrl = createSelector(
+	selectCoreConfigState, config => config.facebookAuthorizationUrl
 );
 
-export const selectGoogleClientId = createSelector(
-	selectCoreConfigState, config => config.googleClientId
+export const selectGoogleAuthorizationUrl = createSelector(
+	selectCoreConfigState, config => config.googleAuthorizationUrl
 );

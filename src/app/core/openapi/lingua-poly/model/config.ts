@@ -12,7 +12,7 @@
 
 
 export interface Config { 
-    googleClientId?: string;
-    facebookClientId?: string;
+    googleAuthorizationUrl?: string;
+    facebookAuthorizationUrl?: string;
 }
 

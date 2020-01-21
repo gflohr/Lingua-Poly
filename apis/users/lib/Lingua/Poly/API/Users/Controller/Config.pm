@@ -30,20 +30,9 @@ sub get {
 		$self);
 
 	my %config;
-	if (exists $api_config->{oauth}) {
-		if (exists $api_config->{oauth}->{google}) {
-			if (!empty $api_config->{oauth}->{google}->{client_id}) {
-				$config{googleClientId} =
-					$api_config->{oauth}->{google}->{client_id};
-			}
-		}
-		if (exists $api_config->{oauth}->{facebook}) {
-			if (!empty $api_config->{oauth}->{facebook}->{client_id}) {
-				$config{facebookClientId} =
-					$api_config->{oauth}->{facebook}->{client_id};
-			}
-		}
-	}
+	$config{googleAuthorizationUrl} = $google_auth_url
+		if !empty $google_auth_url;
+	$config{facebookAuthorizationUrl} = 'FIXME!';
 
 	return $self->render(openapi => \%config, status => HTTP_OK);
 }
