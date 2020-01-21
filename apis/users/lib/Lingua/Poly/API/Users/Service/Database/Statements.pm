@@ -18,9 +18,8 @@ use strict;
 sub new {
 	bless {
 		INSERT_SESSION => <<EOF,
-INSERT INTO sessions(sid, fingerprint, identity_provider_id)
-  VALUES(?, ?,
-    (SELECT id FROM identity_providers WHERE name = ?))
+INSERT INTO sessions(sid, fingerprint, identity_provider_id, nonce)
+  VALUES(?, ?, (SELECT id FROM identity_providers WHERE name = ?), ?)
 EOF
 		DELETE_SESSION => <<EOF,
 DELETE FROM sessions
@@ -31,10 +30,11 @@ DELETE FROM sessions
   WHERE EXTRACT(EPOCH FROM(NOW() - last_seen)) > ?
 EOF
 		SELECT_SESSION => <<EOF,
-SELECT s.user_id, p.name, s.token FROM sessions s, identity_providers p
-  WHERE sid = ?
-    AND s.identity_provider_id = p.id
-    AND fingerprint = ?
+SELECT s.user_id, p.name, s.token, s.nonce
+  FROM sessions s, identity_providers p
+ WHERE sid = ?
+   AND s.identity_provider_id = p.id
+   AND fingerprint = ?
 EOF
 		UPDATE_SESSION => <<EOF,
 UPDATE sessions
@@ -46,18 +46,9 @@ UPDATE sessions
    SET sid = ?, user_id = ?, last_seen = NOW(),
        identity_provider_id
            = (SELECT id FROM identity_providers WHERE name = ?),
-       token = ?
+       token = ?,
+	   nonce = ?
  WHERE sid = ?
-EOF
-
-		UPDATE_SESSION_NONCE => <<EOF,
-UPDATE sessions
-   SET nonce = ?
- WHERE sid = ?
-EOF
-
-		SELECT_SESSION_NONCE => <<EOF,
-SELECT nonce FROM sessions WHERE sid = ?
 EOF
 
 		DELETE_TOKEN_STALE => <<EOF,

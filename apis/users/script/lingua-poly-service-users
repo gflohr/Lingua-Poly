@@ -145,6 +145,8 @@ my $c = container App => ['Env'] => as {
 				logger => { '/Logging/logger' => { realm => 'session' } },
 				configuration => '/Configuration/provider',
 				database  => '/Storage/database',
+				requestContextService => '/RequestContext',
+				sessionService => '/User/session',
 			}
 		);
 	};

@@ -25,6 +25,10 @@ sub get {
 
 	my $api_config = $self->app->configuration;
 
+	my $google_oauth_service = $self->app->googleOAuthService;
+	my $google_auth_url = $self->app->googleOAuthService->authorizationUrl(
+		$self);
+
 	my %config;
 	if (exists $api_config->{oauth}) {
 		if (exists $api_config->{oauth}->{google}) {

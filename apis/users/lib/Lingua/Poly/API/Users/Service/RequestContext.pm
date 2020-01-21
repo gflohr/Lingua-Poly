@@ -16,6 +16,9 @@ use strict;
 
 use Moose;
 use namespace::autoclean;
+use Mojo::URL;
+
+use Lingua::Poly::API::Users::Util qw(empty);
 
 use base qw(Lingua::Poly::API::Users::Logging);
 
@@ -56,6 +59,21 @@ sub sessionCookie {
 	}
 
 	return $self;
+}
+
+sub origin {
+	my ($self, $ctx) = @_;
+
+	my $origin = $self->configuration->{origin};
+	return $origin if !empty $origin;
+
+	my $request_url = $ctx->req->url->to_abs;
+	$origin = Mojo::URL->new
+		->host($request_url->host)
+		->port($request_url->port)
+		->scheme($request_url->scheme);
+
+	return $origin;
 }
 
 __PACKAGE__->meta->make_immutable;

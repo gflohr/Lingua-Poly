@@ -16,6 +16,7 @@ use strict;
 
 use Moose;
 use namespace::autoclean;
+use Session::Token;
 
 has sid => (isa => 'Str', is => 'rw', required => 1);
 has user => (
@@ -24,6 +25,11 @@ has user => (
 );
 has provider => (is => 'rw');
 has token => (is => 'rw');
+has nonce => (is => 'ro', required => 1, builder => '__build_nonce');
+
+sub __build_nonce {
+	return Session::Token->new(entropy => 128)->get;
+}
 
 __PACKAGE__->meta->make_immutable;
 

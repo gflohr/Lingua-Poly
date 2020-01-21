@@ -43,7 +43,10 @@ has database => (is => 'ro', required => 1);
 has logger => (is => 'rw', required => 1);
 has userService => (is => 'ro', required => 1);
 has sessionService => (is => 'ro', required => 1);
-has requestContextService => (is => 'ro', required => 1);
+has requestContextService => (
+	isa => 'Lingua::Poly::API::Users::Service::RequestContext',
+	is => 'ro',
+	required => 1);
 has tokenService => (
 	isa => 'Lingua::Poly::API::Users::Service::Token',
 	is => 'ro',

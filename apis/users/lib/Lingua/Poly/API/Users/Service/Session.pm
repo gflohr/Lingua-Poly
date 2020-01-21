@@ -67,9 +67,9 @@ sub refreshOrCreate {
 	    $homepage, $description);
 	my $database = $self->database;
 
-	my ($provider, $token);
+	my ($provider, $token, $nonce);
 
-	if (defined $sid && (($user_id, $provider, $token) = $database->getRow(
+	if (defined $sid && (($user_id, $provider, $token, $nonce) = $database->getRow(
 			SELECT_SESSION => $sid, $fingerprint
 		))) {
 		$self->debug('updating session');
@@ -90,7 +90,8 @@ sub refreshOrCreate {
 		$provider = 'local';
 		$self->debug('creating fresh session');
 		$sid = Session::Token->new(entropy => 256)->get;
-		$database->execute(INSERT_SESSION => $sid, $fingerprint, $provider);
+		$nonce = Session::Token->new(entropy => 128)->get;
+		$database->execute(INSERT_SESSION => $sid, $fingerprint, $provider, $nonce);
 	}
 
 	$database->commit;
@@ -120,7 +121,7 @@ sub renew {
 	# a new one.  Otherwise there might be a race with the auto-cleanup.
 	$self->database->execute(
 		UPDATE_SESSION_SID
-		=> $sid, $user_id, $session->provider, $session->token, $session->sid);
+		=> $sid, $user_id, $session->provider, $session->token, $session->nonce, $session->sid);
 	$session->sid($sid);
 
 	return $self;

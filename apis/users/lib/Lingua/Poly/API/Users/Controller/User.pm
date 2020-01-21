@@ -55,6 +55,7 @@ sub login {
 	# Upgrade the session with a valid user.
 	my $session = $self->stash->{session};
 	$session->user($user);
+	$session->nonce(undef);
 	$self->app->sessionService->renew($session);
 	$self->app->database->commit;
 
@@ -128,6 +129,7 @@ sub oauth2Login {
 
 	my $session = $self->stash->{session};
 	$session->user($user);
+	$session->nonce(undef);
 	$session->provider($payload->{provider});
 	$session->token($payload->{token});
 	$self->app->sessionService->renew($session);

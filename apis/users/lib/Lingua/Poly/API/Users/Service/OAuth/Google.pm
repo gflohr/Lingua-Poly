@@ -20,6 +20,7 @@ use LWP::UserAgent;
 use HTTP::Request;
 use JSON;
 
+use Lingua::Poly::API::Users::Util qw(empty);
 use Lingua::Poly::API::Users::Service::OAuth::Google::Discovery;
 
 use base qw(Lingua::Poly::API::Users::Logging);
@@ -38,6 +39,16 @@ has discovery  => (
 	is => 'rw',
 	required => 0,
 	isa => 'Lingua::Poly::API::Users::Service::OAuth::Google::Discovery',
+);
+has requestContextService => (
+	is => 'ro',
+	required => 1,
+	isa => 'Lingua::Poly::API::Users::Service::RequestContext',
+);
+has sessionService => (
+	is => 'ro',
+	required => 1,
+	isa => 'Lingua::Poly::API::Users::Service::Session',
 );
 
 sub __getDiscoveryConfig {
@@ -68,6 +79,37 @@ sub __getDiscoveryConfig {
 	$self->discovery($d);
 
 	return $d->config;
+}
+
+sub authorizationUrl {
+	my ($self, $ctx) = @_;
+
+	my $config = $self->configuration;
+	my $client_id = $config->{oauth}->{google}->{client_id};
+	return if empty $client_id;
+
+	my $client_secret = $config->{oauth}->{google}->{client_secret};
+	return if empty $client_secret;
+
+	my $redirect_url = $self->requestContextService->origin($ctx)->clone;
+	$redirect_url->path('/oauth/google');
+
+	my $session = $ctx->stash->{session};
+
+	my $discovery = $self->__getDiscoveryConfig or return;
+
+	my $authorization_url = $discovery->{authorization_endpoint};
+	$authorization_url = URI->new($authorization_url);
+	$authorization_url->query_form(
+		client_id => $client_id,
+		response_type => 'code',
+		scope => 'openid email',
+		redirect_uri => $redirect_url,
+		state => $self->sessionService->getState($session),
+		nonce => $session->nonce,
+	);
+
+	return $authorization_url;
 }
 
 __PACKAGE__->meta->make_immutable;

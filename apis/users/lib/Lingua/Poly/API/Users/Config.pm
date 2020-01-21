@@ -16,6 +16,7 @@ use strict;
 
 use YAML::XS;
 use Session::Token 1.503;
+use Mojo::URL;
 
 use Lingua::Poly::API::Users::Util qw(empty);
 
@@ -34,8 +35,8 @@ sub new {
 $args{filename}:
 Configuration variable "secrets" missing.  Try:
 
-secrets:
-- $secret
+    secrets:
+    - $secret
 EOF
 
 		exit 1;
@@ -71,11 +72,43 @@ EOF
 $args{filename}:
 Configuration variable "smtp.sender" missing.  Try something like:
 
-smtp:
-  sender: Lingua::Poly <do_not_reply\@yourdomain.com>
+    smtp:
+      sender: Lingua::Poly <do_not_reply\@yourdomain.com>
 
 Replace "yourdomain.com" with a suitable domain name.
+
 EOF
+	}
+
+
+	if (empty $self->{origin}) {
+		delete $self->{origin};
+		warn <<EOF;
+$args{filename}:
+Configuration variable "origin" missing.  Redirect URLs to this server will be
+based on the value of the host header.  This is not recommended for production!
+
+Try something like:
+
+    origin: http://localhost:8080/
+
+EOF
+	} else {
+		# Check and normalize the origin.
+		my $origin = Mojo::URL->new($self->{origin});
+		my $scheme = $origin->scheme;
+		die "$args{filename}: origin must contain a scheme (e. g. 'https:')!\n"
+			if empty $scheme;
+		if ('https' ne $scheme && 'http' ne $scheme) {
+			die "$args{filename}: origin must be an http or https URL!\n";
+		}
+		die "$args{filename}: origin must have a hostname!\n"
+			if empty $origin->host;
+
+		$self->{origin} = Mojo::URL->new;
+		$self->{origin}->host($origin->host);
+		$self->{origin}->scheme($origin->scheme);
+		$self->{origin}->port($origin->port);
 	}
 
 	$self->{oauth} //= {};
@@ -83,17 +116,19 @@ EOF
 
 	if (empty $self->{oauth}->{facebook}->{client_id}
 	    || empty  $self->{oauth}->{facebook}->{client_secret}) {
+		delete $self->{oauth}->{facebook}->{client_id};
+		delete $self->{oauth}->{facebook}->{client_secret};
 		warn <<EOF;
-
 $args{filename}:
 Configuration variable "oauth.facebook.client_id" respectively
 "oauth.facebook.client_secret" missing.  The Login with Facebook will
 not work.  If you have a facebook app for logging in, try:
 
-oauth:
-  facebook:
-    client_id: CLIENT_ID
-    client_secret: CLIENT_SECRET
+    oauth:
+      facebook:
+        client_id: CLIENT_ID
+        client_secret: CLIENT_SECRET
+
 EOF
 	}
 
@@ -101,17 +136,19 @@ EOF
 
 	if (empty $self->{oauth}->{google}->{client_id}
 	    || empty  $self->{oauth}->{google}->{client_secret}) {
+		delete $self->{oauth}->{google}->{client_id};
+		delete $self->{oauth}->{google}->{client_secret};
 		warn <<EOF;
-
 $args{filename}:
 Configuration variable "oauth.google.client_id" respectively
 "oauth.google.client_secret" missing.  The Login with Google OpenID Connect
 will not work.  If you have a Google OAuth application, you  can try this:
 
-oauth:
-  google:
-    client_id: CLIENT_ID
-    client_secret: CLIENT_SECRET
+  oauth:
+    google:
+      client_id: CLIENT_ID
+      client_secret: CLIENT_SECRET
+
 EOF
 	}
 

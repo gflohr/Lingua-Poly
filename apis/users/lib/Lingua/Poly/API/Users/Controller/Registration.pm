@@ -180,6 +180,7 @@ sub confirm {
 
 	my $session = $self->stash->{session};
 	$session->user($user);
+	$session->nonce(undef);
 
 	$self->app->userService->activate($user);
 	$self->app->tokenService->delete($token);
