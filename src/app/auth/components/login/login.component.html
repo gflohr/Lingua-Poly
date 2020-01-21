@@ -38,9 +38,9 @@
 			class="row">
 		<div class="col-12 login-or">
 			<hr class="login-hr-or">
-			<span *ngIf="facebookClientId$ | async"
+			<span *ngIf="facebookAuthorizationUrl$ | async"
 				class="login-span-or" translate>or</span>
-			<button *ngIf="facebookClientId$ | async" type="submit" class="btn btn-primary btn-facebook btn-block"
+			<button *ngIf="facebookAuthorizationUrl$ | async" type="submit" class="btn btn-primary btn-facebook btn-block"
 				(click)="signInWithFacebook()" translate>
 				<span class="fab fa-facebook-f"
 					  title="{{ 'Login with Facebook' | translate}}"
@@ -48,15 +48,18 @@
 				&nbsp;
 				<span translate>Login with Facebook</span>
 			</button>
-			<button *ngIf="googleClientId$ | async"
-				type="submit" class="btn btn-primary btn-google btn-block"
-				(click)="signInWithGoogle()" translate>
-				<span class="fab fa-google"
-					  title="{{ 'Login with Google' | translate}}"
-					  aria-hidden="true"></span>
-				&nbsp;
-				<span translate>Login with Google</span>
-			</button>
+			<a *ngIf="googleAuthorizationUrl$ | async"
+				href="{{ googleAuthorizationUrl$ | async }}"
+				class="button">
+				<button class="btn btn-primary btn-google btn-block"
+					translate>
+					<span class="fab fa-google"
+						title="{{ 'Login with Google' | translate}}"
+						aria-hidden="true"></span>
+					&nbsp;
+					<span translate>Login with Google</span>
+				</button>
+			</a>
 		</div>
 	</div>
 </div>

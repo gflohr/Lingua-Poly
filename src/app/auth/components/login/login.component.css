@@ -53,3 +53,7 @@
 .btn-google:hover {
 	background-color: #c23321;
 }
+
+.button:hover {
+	text-decoration: none;
+}
