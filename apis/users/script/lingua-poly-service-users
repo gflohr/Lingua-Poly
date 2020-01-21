@@ -96,13 +96,13 @@ my $c = container App => ['Env'] => as {
 	# FIXME! This should be a regular service.
 	container Configuration => as {
 		service config_file => $basedir . '/lingua-poly-service-users.yaml';
-		service api_prefix => '/api/lingua-poly/users/v1';
+		service apiPrefix => '/api/lingua-poly/users/v1';
 		service provider => (
 			class => 'Lingua::Poly::API::Users::Config',
 			lifecycle => 'Singleton',
 			dependencies => {
 				filename => 'config_file',
-				apiPrefix => 'api_prefix',
+				apiPrefix => 'apiPrefix',
 			}
 		);
 	};
@@ -147,6 +147,7 @@ my $c = container App => ['Env'] => as {
 				database  => '/Storage/database',
 				requestContextService => '/RequestContext',
 				sessionService => '/User/session',
+				apiPrefix => '/Configuration/apiPrefix'
 			}
 		);
 	};

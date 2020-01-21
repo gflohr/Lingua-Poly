@@ -92,7 +92,7 @@ sub authorizationUrl {
 	return if empty $client_secret;
 
 	my $redirect_url = $self->requestContextService->origin($ctx)->clone;
-	$redirect_url->path('/oauth/google');
+	$redirect_url->path("$config->{prefix}/oauth/google");
 
 	my $session = $ctx->stash->{session};
 

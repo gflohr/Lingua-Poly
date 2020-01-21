@@ -50,17 +50,7 @@ EOF
 	$self->{session}->{timeout} ||= 2 * 60 * 60;
 	$self->{session}->{cookieName} //= 'id';
 
-	if (empty $self->{prefix}) {
-		my @all = split /::/, __PACKAGE__;
-		pop @all;
-		my @prefix;
-		while (@all) {
-			my $curr = pop @all;
-			last if 'api' eq lc $curr;
-			unshift @prefix, lc $curr;
-		}
-		$self->{prefix} = join '/', '', 'api', 'lingua-poly', @prefix, 'v1';
-	}
+	$self->{prefix} = $args{apiPrefix};
 
 	$self->{smtp} //= {};
 	$self->{smtp}->{host} //= 'localhost';
