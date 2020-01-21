@@ -73,7 +73,7 @@ msgstr ""
 msgid "Email address or username"
 msgstr ""
 
-msgid "Enter email address"
+msgid "Enter email"
 msgstr ""
 
 msgid "Enter email or username"

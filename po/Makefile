@@ -88,7 +88,7 @@ update-po:
           lang=`echo $$cat | sed 's/\$(CATOBJEXT)$$//'`; \
           mv $$lang.po $$lang.old.po; \
           echo "$$lang:"; \
-          if $(MSGMERGE) $$lang.old.po $(TD).pot -o $$lang.po; then \
+          if $(MSGMERGE) --previous $$lang.old.po $(TD).pot -o $$lang.po; then \
             rm -f $$lang.old.po; \
           else \
             echo "msgmerge for $$cat failed!"; \
