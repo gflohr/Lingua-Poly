@@ -164,8 +164,16 @@ sub authenticate {
 	);
 	die $response->status_line if !$response->is_success;
 
+	my $now = time;
+
 	my $claims = decode_jwt $payload->{id_token};
+	die "client_id mismatch\n" if $claims->{aud} ne $client_id;
 	die "issuer mismatch\n" if $claims->{iss} ne $discovery->{issuer};
+	die "missing exp claim\n" if !exists $claims->{exp};
+	die "missing iat claim\n" if !exists $claims->{iat};
+	$self->warn('clock skew detected (Google)') if $now < $claims->{iat};
+warn "$now <=> $claims->{iat}: @{[$now - $claims->{iat}]}";
+	$self->warn('clock lag detected (Google)') if ($now - 60) > $claims->{iat};
 
 	use Data::Dumper;
 	warn Dumper $claims;
