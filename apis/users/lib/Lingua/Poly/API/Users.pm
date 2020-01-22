@@ -60,6 +60,11 @@ has googleOAuthService => (
 	is => 'ro',
 	required => 1
 );
+has emailService => (
+	isa => 'Lingua::Poly::API::Users::Service::Email',
+	is => 'ro',
+	required => 1
+);
 
 sub startup {
 	my ($self) = @_;

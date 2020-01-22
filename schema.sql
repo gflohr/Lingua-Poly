@@ -59,6 +59,7 @@ CREATE TABLE sessions (
     identity_provider_id INTEGER NOT NULL REFERENCES identity_providers(id) ON DELETE CASCADE,
     nonce TEXT,
     token TEXT,
+    token_expires TIMESTAMP WITH TIME ZONE,
     last_seen TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 

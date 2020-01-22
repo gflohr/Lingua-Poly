@@ -16,7 +16,6 @@ use strict;
 
 use HTTP::Status qw(:constants);
 use Data::Password::zxcvbn 1.0.4 qw(password_strength);
-use Email::Address 1.912;
 use Email::Simple 2.216;
 use Email::Sender::Simple 1.300031 qw(sendmail);
 
@@ -32,21 +31,15 @@ sub createUser {
 	my @errors;
 
 	# Valid email address?
-	my @addresses = Email::Address->parse($userDraft->{email});
-	if (!@addresses) {
+	my $email = $self->app->emailService->parseAddress($userDraft->{email});
+	if (!$email) {
 		delete $userDraft->{email};
 		push @errors, {
 			message => 'Invalid email address specified.',
 			path => '/body/email',
 		};
-	} elsif (@addresses != 1) {
-		delete $userDraft->{email};
-		push @errors, {
-			message => 'More than one email address specified.',
-			path => '/body/email',
-		};
 	} else {
-		$userDraft->{email} = $addresses[0]->address;
+		$userDraft->{email} = $email;
 	}
 
 	my $suggest_recover;

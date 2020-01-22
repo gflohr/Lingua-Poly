@@ -40,7 +40,8 @@ my $c = container App => ['Env'] => as {
 			requestContextService => 'RequestContext',
 			tokenService => 'Token',
 			restService => 'REST',
-			googleOAuthService => '/OAuth/Google'
+			googleOAuthService => '/OAuth/Google',
+			emailService => '/Email'
 		},
 	);
 
@@ -66,6 +67,13 @@ my $c = container App => ['Env'] => as {
 	service REST => (
 		class => 'Lingua::Poly::API::Users::Service::RESTClient',
 		lifecycle => 'Singleton'
+	);
+
+	service Email => (
+		class => 'Lingua::Poly::API::Users::Service::Email',
+		dependencies => {
+			logger => { '/Logging/logger' => { realm => 'request' }},
+		}
 	);
 
 	container Storage => as {

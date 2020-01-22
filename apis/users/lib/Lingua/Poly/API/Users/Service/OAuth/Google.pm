@@ -20,7 +20,7 @@ use LWP::UserAgent;
 use HTTP::Request;
 use JSON;
 
-use Lingua::Poly::API::Users::Util qw(empty);
+use Lingua::Poly::API::Users::Util qw(empty decode_jwt);
 use Lingua::Poly::API::Users::Service::OAuth::Google::Discovery;
 
 use base qw(Lingua::Poly::API::Users::Logging);
@@ -155,23 +155,20 @@ sub authenticate {
 		grant_type => 'authorization_code',
 	};
 
-use Data::Dumper;
-warn Dumper $form;
-
 	my $token_endpoint = $discovery->{token_endpoint};
 
-$DB::single = 1;
 	my ($payload, $response) = $self->restService->post($token_endpoint, $form,
 		headers => {
 			content_type => 'application/x-www-form-urlencoded'
 		}
 	);
-warn $response->decoded_content;
 	die $response->status_line if !$response->is_success;
 
+	my $claims = decode_jwt $payload->{id_token};
 	use Data::Dumper;
-	warn Dumper $payload;
+	warn Dumper $claims;
 
+	return $self;
 }
 
 __PACKAGE__->meta->make_immutable;
