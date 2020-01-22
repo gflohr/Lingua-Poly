@@ -172,9 +172,18 @@ sub authenticate {
 	die "missing exp claim\n" if !exists $claims->{exp};
 	die "missing iat claim\n" if !exists $claims->{iat};
 	$self->warn('clock skew detected (Google)') if $now < $claims->{iat};
-warn "$now <=> $claims->{iat}: @{[$now - $claims->{iat}]}";
 	$self->warn('clock lag detected (Google)') if ($now - 60) > $claims->{iat};
 
+	# Next: Google recommends to use the 'sub' claim (concatenate that with
+	# "GOOGLE:" in order to satisfy a unique constraint) as the id into the
+	# user database because it never changes.  TODO: Handle all possible
+	# scenarios:
+	#
+	# - same subject is known under a different email address
+	# - email address is not included in the JWT
+	# - ...
+	#
+	# Have to think about that.
 	use Data::Dumper;
 	warn Dumper $claims;
 
