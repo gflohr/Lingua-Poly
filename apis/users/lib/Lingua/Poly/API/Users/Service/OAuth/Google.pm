@@ -165,6 +165,8 @@ sub authenticate {
 	die $response->status_line if !$response->is_success;
 
 	my $claims = decode_jwt $payload->{id_token};
+	die "issuer mismatch\n" if $claims->{iss} ne $discovery->{issuer};
+
 	use Data::Dumper;
 	warn Dumper $claims;
 
