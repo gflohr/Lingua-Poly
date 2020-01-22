@@ -24,6 +24,11 @@ use base qw(Lingua::Poly::API::Users::Logging);
 
 has logger => (is => 'ro');
 has database => (is => 'ro');
+has emailService => (
+	is => 'ro',
+	isa => 'Lingua::Poly::API::Users::Service::Email',
+	required => 1,
+);
 
 sub create {
 	my ($self, $email, $password) = @_;
@@ -39,8 +44,15 @@ sub userByUsernameOrEmail {
 	my ($self, $id) = @_;
 
 	my $db = $self->database;
-	my $statement = $id =~ /@/ ?
-		'SELECT_USER_BY_EMAIL' : 'SELECT_USER_BY_USERNAME';
+	my $statement;
+	if ($id =~ /@/) {
+		# Normalize the address.
+		$id = $self->emailService->parseAddress($id);
+		return if !defined $id;
+		$statement = 'SELECT_USER_BY_EMAIL',
+	} else {
+		$statement = 'SELECT_USER_BY_USERNAME',
+	}
 
 	my ($user_id, $username, $email, $password, $confirmed,
 	    $homepage, $description) = $db->getRow(

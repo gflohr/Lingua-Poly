@@ -121,7 +121,8 @@ my $c = container App => ['Env'] => as {
 			lifecycle => 'Singleton',
 			dependencies => {
 				database  => '/Storage/database',
-				llogger => { '/Logging/logger' => { realm => 'user' } },
+				logger => { '/Logging/logger' => { realm => 'user' } },
+				emailService => '/Email',
 			}
 		);
 		service session => (
