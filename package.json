@@ -15,7 +15,7 @@
     "test": "ng test",
     "lint": "ng lint --exclude=./src/app/core/openapi/**/*.ts",
     "e2e": "ng e2e",
-    "extract": "node node_modules/@biesbjerg/ngx-translate-extract/bin/cli.js --input=./src --output=src/assets/i18n/en.po --clean --sort --format=pot --marker=_",
+    "xgettext": "node node_modules/@biesbjerg/ngx-translate-extract/bin/cli.js --input=./src --output=src/assets/i18n/en.po --clean --sort --format=pot --marker=_",
     "openapi-generate": "openapi-generator generate -i apis/users/public/openapi.yaml -g typescript-angular -o src/app/core/openapi/lingua-poly"
   },
   "private": true,
