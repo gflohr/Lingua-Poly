@@ -43,7 +43,7 @@ clean:
 	rm -f *~ *.bak *.gmo
 
 js.pot: $(top_srcdir)/src/assets/i18n/en.po
-	$(srcdir)/make-js-pot >$@
+	$(srcdir)/make-js-pot
 
 $(top_srcdir)/src/assets/i18n/en.po: $(JSPOTFILES)
 	$(NODE) ../node_modules/@biesbjerg/ngx-translate-extract/bin/cli.js \
