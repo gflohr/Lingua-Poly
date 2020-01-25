@@ -23,6 +23,7 @@ CREATE TABLE users (
     email CITEXT NOT NULL UNIQUE,
     username CITEXT UNIQUE,
     password TEXT,
+    external_id TEXT UNIQUE,
     confirmed BOOLEAN NOT NULL DEFAULT 'f',
     homepage TEXT,
     description TEXT
