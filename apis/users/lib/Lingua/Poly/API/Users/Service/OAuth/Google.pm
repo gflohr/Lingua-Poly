@@ -176,14 +176,11 @@ sub authenticate {
 
 	# Next: Google recommends to use the 'sub' claim (concatenate that with
 	# "GOOGLE:" in order to satisfy a unique constraint) as the id into the
-	# user database because it never changes.  TODO: Handle all possible
-	# scenarios:
-	#
-	# - same subject is known under a different email address
-	# - email address is not included in the JWT
-	# - ...
-	#
-	# Have to think about that.
+	# user database because it never changes.  This does not satisfy our
+	# requirements.  The purpose of the OAuth flow for us is to have a
+	# reliable email address.  We use the 'sub' claim only as a fallback to
+	# find an old email of that user.
+
 	use Data::Dumper;
 	warn Dumper $claims;
 
