@@ -31,11 +31,14 @@ has emailService => (
 );
 
 sub create {
-	my ($self, $email, $password) = @_;
+	my ($self, $email, %options) = @_;
 
 	my $db = $self->database;
-	my $digest = empty $password ? undef : crypt_password $password;
-	$db->execute(INSERT_USER => $email, $digest);
+	my $digest = empty $options{password}
+		? undef : crypt_password $options{password};
+
+	$db->execute(INSERT_USER
+		=>$email, $digest, $options{confirmed}, $options{external_id});
 
 	return $db->lastInsertId('users');
 }

@@ -95,7 +95,7 @@ sub createUser {
 			# Create the  user.
 			$self->app->userService->create(
 				$userDraft->{email},
-				$userDraft->{password},
+				password => $userDraft->{password},
 			);
 			$token = $tokenService->create(registration => $userDraft->{email});
 		}
