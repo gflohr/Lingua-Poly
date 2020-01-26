@@ -8,6 +8,7 @@ import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { LogoutConfirmationComponent } from './components/logout-confirmation/logout-confirmation.component';
+import { ErrorMessageComponent } from './components/error-message/error-message.component';
 
 @NgModule({
 	imports: [
@@ -25,7 +26,8 @@ import { LogoutConfirmationComponent } from './components/logout-confirmation/lo
 		HeaderComponent,
 		FooterComponent,
 	SidebarComponent,
-	LogoutConfirmationComponent
+	LogoutConfirmationComponent,
+	ErrorMessageComponent
 	],
 	entryComponents: [
 		LogoutConfirmationComponent
