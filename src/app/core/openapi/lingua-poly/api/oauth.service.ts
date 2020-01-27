@@ -17,6 +17,7 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
+import { AuthorizationURL } from '../model/authorizationURL';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
@@ -97,6 +98,42 @@ export class OauthService {
         return this.httpClient.get<any>(`${this.configuration.basePath}/oauth/google`,
             {
                 params: queryParameters,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Get the authorzation URL of an OAuth provider
+     * @param provider The name of an OAuth provider (lowercase)
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public oauthProviderAuthorizationURLGet(provider: string, observe?: 'body', reportProgress?: boolean): Observable<AuthorizationURL>;
+    public oauthProviderAuthorizationURLGet(provider: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<AuthorizationURL>>;
+    public oauthProviderAuthorizationURLGet(provider: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<AuthorizationURL>>;
+    public oauthProviderAuthorizationURLGet(provider: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+        if (provider === null || provider === undefined) {
+            throw new Error('Required parameter provider was null or undefined when calling oauthProviderAuthorizationURLGet.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        const httpHeaderAccepts: string[] = [
+            'application/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        return this.httpClient.get<AuthorizationURL>(`${this.configuration.basePath}/oauth/${encodeURIComponent(String(provider))}/authorizationURL`,
+            {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,

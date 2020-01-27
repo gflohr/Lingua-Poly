@@ -110,10 +110,10 @@ components:
     Config:
       title: Config
       properties:
-        OAuthGoogle:
+        hasOAuthGoogle:
           type: boolean
           example: true
-        OAuthFacebook:
+        hasOAuthFacebook:
           type: boolean
           example: false
       additionalProperties: false

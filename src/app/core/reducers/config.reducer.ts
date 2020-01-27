@@ -4,13 +4,13 @@ import { ConfigActions } from '../actions';
 export const configFeatureKey = 'config';
 
 export interface State {
-	googleAuthorizationUrl: string | null;
-	facebookAuthorizationUrl: string | null;
+	hasOAuthGoogle: boolean;
+	hasOAuthFacebook: boolean;
 }
 
 export const initialState:State = {
-	googleAuthorizationUrl: null,
-	facebookAuthorizationUrl: null
+	hasOAuthGoogle: false,
+	hasOAuthFacebook: false,
 };
 
 export const configReducer = createReducer(
@@ -18,8 +18,8 @@ export const configReducer = createReducer(
 	on(ConfigActions.configSuccess, (state, config) => {
 		return {
 			...state,
-			googleAuthorizationUrl: config.config.googleAuthorizationUrl,
-			facebookAuthorizationUrl: config.config.facebookAuthorizationUrl
+			hasOAuthGoogle: config.config.hasOAuthGoogle,
+			hasOAuthFacebook: config.config.hasOAuthFacebook,
 		};
 	}),
 	// At a later point we may choose to refresh the configuration.  In case
@@ -32,6 +32,6 @@ export function reducer(state: State | undefined, action: Action) {
 	return configReducer(state, action);
 }
 
-export const getGoogleAuthorizationUrl = (state: State) => state.googleAuthorizationUrl;
-export const getFacebookAuthorizationUrl = (state: State) => state.facebookAuthorizationUrl;
+export const getHasOAuthGoogle = (state: State) => state.hasOAuthGoogle;
+export const getHasOAuthFacebook = (state: State) => state.hasOAuthFacebook;
 

@@ -15,9 +15,9 @@ import { Observable } from 'rxjs';
 export class LoginComponent {
 	pending$ = this.authStore.pipe(select(fromAuth.selectLoginPagePending));
 	error$ = this.authStore.pipe(select(fromAuth.selectLoginPageError));
-	facebookAuthorizationUrl$: Observable<string>;
-	googleAuthorizationUrl$: Observable<string>;
-	hasOauthLogin$: Observable<boolean>;
+	hasOAuth$: Observable<boolean>;
+	hasOAuthFacebook$: Observable<boolean>;
+	hasOAuthGoogle$: Observable<boolean>;
 
 	@Input()
 	set pending(isPending: boolean) {
@@ -39,12 +39,12 @@ export class LoginComponent {
 		private authStore: Store<fromAuth.State>,
 		private configStore: Store<fromConfig.State>,
 	) {
-		this.hasOauthLogin$ =
-			this.configStore.pipe(select(fromConfig.selectHasOauthLogin));
-		this.facebookAuthorizationUrl$ =
-			this.configStore.pipe(select(fromConfig.selectFacebookAuthorizationUrl));
-		this.googleAuthorizationUrl$ =
-			this.configStore.pipe(select(fromConfig.selectGoogleAuthorizationUrl));
+		this.hasOAuth$ =
+			this.configStore.pipe(select(fromConfig.selectHasOAuth));
+		this.hasOAuthFacebook$ =
+			this.configStore.pipe(select(fromConfig.selectHasOAuthFacebook));
+		this.hasOAuthGoogle$ =
+			this.configStore.pipe(select(fromConfig.selectHasOAuthGoogle));
 	}
 
 	signInWithFacebook(): void {

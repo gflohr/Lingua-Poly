@@ -34,13 +34,13 @@
 			        translate>Login</button>
 		</form>
 	</div>
-	<div *ngIf="hasOauthLogin$ | async"
+	<div *ngIf="hasOAuth$ | async"
 			class="row">
 		<div class="col-12 login-or">
 			<hr class="login-hr-or">
-			<span *ngIf="facebookAuthorizationUrl$ | async"
+			<span *ngIf="hasOAuthFacebook$ | async"
 				class="login-span-or" translate>or</span>
-			<button *ngIf="facebookAuthorizationUrl$ | async" type="submit" class="btn btn-primary btn-facebook btn-block"
+			<button *ngIf="hasOAuthFacebook$ | async" type="submit" class="btn btn-primary btn-facebook btn-block"
 				(click)="signInWithFacebook()" translate>
 				<span class="fab fa-facebook-f"
 					  title="{{ 'Login with Facebook' | translate}}"
@@ -48,8 +48,7 @@
 				&nbsp;
 				<span translate>Login with Facebook</span>
 			</button>
-			<a *ngIf="googleAuthorizationUrl$ | async"
-				href="{{ googleAuthorizationUrl$ | async }}"
+			<a *ngIf="hasOAuthGoogle$ | async"
 				class="button">
 				<button class="btn btn-primary btn-google btn-block"
 					translate>

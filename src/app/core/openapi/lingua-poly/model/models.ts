@@ -1,3 +1,4 @@
+export * from './authorizationURL';
 export * from './config';
 export * from './empty';
 export * from './oAuth2Login';

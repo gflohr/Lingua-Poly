@@ -12,7 +12,7 @@
 
 
 export interface Config { 
-    googleAuthorizationUrl?: string;
-    facebookAuthorizationUrl?: string;
+    hasOAuthGoogle?: boolean;
+    hasOAuthFacebook?: boolean;
 }
 

@@ -32,8 +32,8 @@ sub get {
 	my $facebook_auth_url;
 
 	my %config;
-	$config{OAuthGoogle} = empty $google_auth_url ? JSON::false : JSON::true;
-	$config{OAuthFacebook} = empty $facebook_auth_url ? JSON::false : JSON::true;;
+	$config{hasOAuthGoogle} = empty $google_auth_url ? JSON::false : JSON::true;
+	$config{hasOAuthFacebook} = empty $facebook_auth_url ? JSON::false : JSON::true;;
 
 	return $self->render(openapi => \%config, status => HTTP_OK);
 }

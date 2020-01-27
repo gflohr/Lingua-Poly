@@ -1,7 +1,6 @@
 import * as fromRoot from '../../app.reducers';
 import * as fromConfig from './config.reducer';
 import { createFeatureSelector, createSelector, Action, combineReducers } from '@ngrx/store';
-import { config } from 'rxjs';
 
 export const coreFeatureKey = 'core';
 
@@ -28,20 +27,16 @@ export const selectCoreConfigState = createSelector(
 	(state: CoreState) => state[fromConfig.configFeatureKey]
 );
 
-export const selectHasOauthLogin = createSelector(
+export const selectHasOAuth= createSelector(
 	selectCoreConfigState, config => {
-		if (config.googleAuthorizationUrl != null || config.facebookAuthorizationUrl != null) {
-			return true;
-		} else {
-			return false;
-		}
+		return config.hasOAuthGoogle || config.hasOAuthFacebook;
 	}
 );
 
-export const selectFacebookAuthorizationUrl = createSelector(
-	selectCoreConfigState, config => config.facebookAuthorizationUrl
+export const selectHasOAuthFacebook = createSelector(
+	selectCoreConfigState, config => config.hasOAuthFacebook
 );
 
-export const selectGoogleAuthorizationUrl = createSelector(
-	selectCoreConfigState, config => config.googleAuthorizationUrl
+export const selectHasOAuthGoogle = createSelector(
+	selectCoreConfigState, config => config.hasOAuthGoogle
 );
