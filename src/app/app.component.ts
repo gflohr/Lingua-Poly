@@ -6,11 +6,13 @@ import * as fromRoot from './app.reducers';
 import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { ConfigActions } from './core/actions';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import { switchMap, tap } from 'rxjs/operators';
 
 @Component({
 	selector: 'app-root',
 	templateUrl: './app.component.html',
-	styleUrls: ['./app.component.css']
+	styleUrls: ['./app.component.css'],
 })
 
 export class AppComponent implements OnInit, OnDestroy {
@@ -18,7 +20,9 @@ export class AppComponent implements OnInit, OnDestroy {
 
 	constructor(
 		private translate: TranslateService,
-		private store: Store<fromRoot.State & fromAuth.State>
+		private store: Store<fromRoot.State & fromAuth.State>,
+		private route: ActivatedRoute,
+		private router: Router
 	) {
 		this.translate.setDefaultLang(applicationConfig.defaultLocale);
 		this.translate.use(applicationConfig.defaultLocale);
@@ -28,6 +32,14 @@ export class AppComponent implements OnInit, OnDestroy {
 
 	ngOnInit() {
 		this.store.dispatch(ConfigActions.configRequest());
+
+		this.route.queryParamMap.subscribe((params: ParamMap) => {
+			if (params.get('error') !== null) {
+				console.log('error:' + params.get('error'));
+			}  else {
+				console.log('no error');
+			}
+		});
 	}
 
 	ngOnDestroy() {
