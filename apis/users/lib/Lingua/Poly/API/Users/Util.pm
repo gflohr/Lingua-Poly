@@ -23,7 +23,7 @@ use URI;
 use base qw(Exporter);
 
 our @EXPORT_OK = qw(
-	empty crypt_password check_password
+	empty equals crypt_password check_password
 	format_headers format_request_line format_response_line
 	parse_ipv4 decode_jwt encode_post_data
 );
@@ -32,6 +32,27 @@ sub empty($) {
     return if defined $_[0] && length $_[0];
 
     return 1;
+}
+
+# Like eq but without stupid warnings.
+sub equals($$) {
+	my ($first, $second) = @_;
+
+	if (defined $first) {
+		if (defined $second) {
+			return $first eq $second;
+		} else {
+			return if length $first;
+			return 1;
+		}
+	} else {
+		if (defined $second) {
+			return if length $second;
+			return 1;
+		} else {
+			return $first eq $second;
+		}
+	}
 }
 
 sub crypt_password($) {
