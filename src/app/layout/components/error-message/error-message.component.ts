@@ -8,11 +8,14 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 })
 export class ErrorMessageComponent implements OnInit {
 
-  constructor(
-	  public activeModal: NgbActiveModal
-  ) { }
+	title = 'Hello, world!';
+	message = 'It\'s a sad and beautiful world!';
 
-  ngOnInit() {
-  }
+	constructor(
+		public activeModal: NgbActiveModal
+	) {}
+
+	ngOnInit() {
+	}
 
 }

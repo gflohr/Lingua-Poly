@@ -13,7 +13,7 @@ import { StoreModule } from '@ngrx/store';
 import { StoreRouterConnectingModule, RouterState } from '@ngrx/router-store';
 import { ROOT_REDUCERS, metaReducers } from './app.reducers';
 import { EffectsModule } from '@ngrx/effects';
-import { ConfigEffects, UserEffects, RouterEffects } from './core/effects';
+import { ConfigEffects, UserEffects, RouterEffects, MessageEffects } from './core/effects';
 import { UserModule } from './user/user.module';
 import { AuthServiceConfig, FacebookLoginProvider, SocialLoginModule, GoogleLoginProvider } from 'angularx-social-login';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
@@ -62,7 +62,12 @@ export function provideConfig() {
 		StoreRouterConnectingModule.forRoot({
 			routerState: RouterState.Minimal
 		}),
-		EffectsModule.forRoot([ConfigEffects, UserEffects, RouterEffects]),
+		EffectsModule.forRoot([
+			ConfigEffects,
+			UserEffects,
+			RouterEffects,
+			MessageEffects
+		]),
 		SocialLoginModule,
 		StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production })
 	],

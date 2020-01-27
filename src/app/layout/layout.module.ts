@@ -25,12 +25,13 @@ import { ErrorMessageComponent } from './components/error-message/error-message.
 	declarations: [
 		HeaderComponent,
 		FooterComponent,
-	SidebarComponent,
-	LogoutConfirmationComponent,
-	ErrorMessageComponent
+		SidebarComponent,
+		LogoutConfirmationComponent,
+		ErrorMessageComponent
 	],
 	entryComponents: [
-		LogoutConfirmationComponent
+		LogoutConfirmationComponent,
+		ErrorMessageComponent
 	]
 })
 export class LayoutModule { }

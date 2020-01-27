@@ -11,6 +11,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { OAuth2Service } from './services/oauth2.service';
 import * as fromAuth from './reducers';
 import { Store } from '@ngrx/store';
+import { ModalDialogService } from '../core/services/modal-dialog.service';
 
 @Injectable()
 export class AuthEffects {
@@ -19,7 +20,7 @@ export class AuthEffects {
 		private actions$: Actions,
 		private usersService: UsersService,
 		private router: Router,
-		private modalService: NgbModal,
+		private dialogService: ModalDialogService,
 		private oauth2Service: OAuth2Service,
 		private authStore: Store<fromAuth.State>,
 	) {
@@ -48,7 +49,7 @@ export class AuthEffects {
 
 	logoutConfirmation$ = createEffect(() => this.actions$.pipe(
 		ofType(AuthActions.logoutConfirmation),
-		exhaustMap(() => this.runDialog(LogoutConfirmationComponent).pipe(
+		exhaustMap(() => this.dialogService.runDialog(LogoutConfirmationComponent).pipe(
 			map(() => AuthActions.logout()),
 			catchError(() => of(AuthActions.logoutConfirmationDismiss()))
 		))
@@ -89,11 +90,4 @@ export class AuthEffects {
 		ofType(AuthActions.socialLogout),
 		map(() => this.oauth2Service.logout())
 	), { dispatch: false });
-
-	/* FIXME! This should maybe go into a separate service.	*/
-	runDialog = function(content) {
-		const modalRef = this.modalService.open(content, { centered: true });
-
-		return from(modalRef.result);
-	};
 }
