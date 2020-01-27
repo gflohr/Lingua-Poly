@@ -11,7 +11,6 @@ import { EMPTY } from 'rxjs';
 export class MessageEffects {
 	displayMessage$ = createEffect(() => this.actions$.pipe(
 		ofType(MessageActions.displayError),
-		tap(() => console.log('display message?')),
 		filter((action) => this.errorCodesService.message(action.code) != null),
 		tap((action) => this.errorCodesService.changeCode(action.code)),
 		exhaustMap(() => this.dialogService.runDialog(ErrorMessageComponent).pipe(
