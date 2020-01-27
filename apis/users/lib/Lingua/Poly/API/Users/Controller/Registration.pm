@@ -158,7 +158,7 @@ sub confirm {
 	}
 	my $token = $in->{token};
 
-	my $user = $self->app->userService->byToken(registration => $token);
+	my $user = $self->app->userService->userByToken(registration => $token);
 	if (!$user) {
 		$self->app->database->rollback;
 		return $self->errorResponse(HTTP_GONE, {

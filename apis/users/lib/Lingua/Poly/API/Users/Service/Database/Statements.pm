@@ -67,8 +67,8 @@ EOF
 		DELETE_TOKEN => <<EOF,
 DELETE FROM tokens WHERE token = ?
 EOF
-		SELECT_TOKEN => <<EOF,
-SELECT u.id, u.username, u.email, u.password, u.confirmed FROM tokens t, users u
+		SELECT_USER_BY_TOKEN => <<EOF,
+SELECT u.id, u.username, u.email, u.external_id, u.password, u.confirmed FROM tokens t, users u
   WHERE t.purpose = ?
     AND t.token = ?
 	AND t.user_id = u.id
@@ -81,16 +81,23 @@ SELECT t.token FROM tokens t, users u
 	AND NOT u.confirmed
 EOF
 		INSERT_USER => <<EOF,
-INSERT INTO users(email, password)
-  VALUES(?, ?)
+INSERT INTO users(email, password, confirmed, external_id)
+  VALUES(?, ?, ?, ?)
 EOF
 		UPDATE_USER => <<EOF,
 UPDATE users
-   SET username = ?,
+   SET email = ?,
+       external_id = ?,
+       username = ?,
        homepage = ?,
 	   description = ?
  WHERE id = ?
 EOF
+
+		DELETE_USER => <<EOF,
+DELETE FROM users where id = ?
+EOF
+
 		DELETE_USER_STALE => <<EOF,
 DELETE FROM users u
   USING tokens t
@@ -98,18 +105,30 @@ DELETE FROM users u
     AND u.id = t.user_id
 	AND EXTRACT(EPOCH FROM(NOW() - t.created)) > ?
 EOF
+
 		SELECT_USER_BY_ID => <<EOF,
 SELECT username, email, password, confirmed, homepage, description
   FROM users WHERE id = ?
 EOF
+
 		SELECT_USER_BY_USERNAME => <<EOF,
-SELECT id, username, email, password, confirmed, homepage, description
+SELECT id, username, email, external_id,
+       password, confirmed, homepage, description
   FROM users WHERE username = ?
 EOF
+
 		SELECT_USER_BY_EMAIL => <<EOF,
-SELECT id, username, email, password, confirmed, homepage, description
+SELECT id, username, email, external_id,
+       password, confirmed, homepage, description
   FROM users WHERE email = ?
 EOF
+
+		SELECT_USER_BY_EXTERNAL_ID => <<EOF,
+SELECT id, username, email, external_id,
+       password, confirmed, homepage, description
+  FROM users WHERE external_id = ?
+EOF
+
 		UPDATE_USER_ACTIVATE => <<EOF,
 UPDATE users
    SET confirmed = 't'

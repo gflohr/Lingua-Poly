@@ -31,7 +31,7 @@ sub parseAddress {
 	return if !@addresses;
 	return if @addresses != 1;
 
-	return $addresses[0]->address;
+	return lc $addresses[0]->address;
 }
 
 __PACKAGE__->meta->make_immutable;

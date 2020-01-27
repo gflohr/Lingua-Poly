@@ -17,23 +17,19 @@ use strict;
 use HTTP::Status qw(:constants);
 
 use Mojo::Base qw(Lingua::Poly::API::Users::Controller);
+use Mojo::URL;
 
 sub redirect {
 	my $self = shift->openapi->valid_input or return;
 
-	eval {
-		my $params = $self->req->query_params->to_hash;
-		my $session = $self->stash->{session};
-		my $googleOauthService = $self->app->googleOAuthService;
-		$googleOauthService->authenticate($self, %$params);
-	};
+	my $params = $self->req->query_params->to_hash;
+	my $session = $self->stash->{session};
+	my $googleOauthService = $self->app->googleOAuthService;
+	my $location = $googleOauthService->authenticate($self, %$params);
 
-	if ($@) {
-		# FIXME! Redirect with error message?
-		die $@;
-	}
+	$self->redirect_to($location);
 
-	die;
+	return $self->render(text => '');
 }
 
 1;

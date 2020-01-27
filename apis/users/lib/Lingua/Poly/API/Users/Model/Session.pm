@@ -25,7 +25,7 @@ has user => (
 );
 has provider => (is => 'rw');
 has token => (is => 'rw');
-has nonce => (is => 'ro', required => 1, builder => '__build_nonce');
+has nonce => (is => 'rw', required => 1, builder => '__build_nonce');
 
 sub __build_nonce {
 	return Session::Token->new(entropy => 128)->get;

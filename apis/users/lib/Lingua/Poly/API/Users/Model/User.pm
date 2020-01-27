@@ -20,6 +20,7 @@ use namespace::autoclean;
 has id => (isa => 'Int', is => 'ro', required => 1);
 has username => (isa => 'Maybe[Str]', is => 'rw');
 has email => (isa => 'Maybe[Str]', is => 'rw');
+has externalId => (isa => 'Maybe[Str]', is => 'rw');
 has password => (isa => 'Maybe[Str]', is => 'rw');
 has confirmed => (isa => 'Bool', is => 'rw');
 has homepage => (isa => 'Maybe[Str]', is => 'rw');

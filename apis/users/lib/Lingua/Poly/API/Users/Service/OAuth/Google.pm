@@ -19,8 +19,9 @@ use namespace::autoclean;
 use LWP::UserAgent;
 use HTTP::Request;
 use JSON;
+use Mojo::URL;
 
-use Lingua::Poly::API::Users::Util qw(empty decode_jwt);
+use Lingua::Poly::API::Users::Util qw(empty equals decode_jwt);
 use Lingua::Poly::API::Users::Service::OAuth::Google::Discovery;
 
 use base qw(Lingua::Poly::API::Users::Logging);
@@ -30,7 +31,7 @@ use constant DISCOVERY_DOCUMENT
 
 has logger => (is => 'ro', required => 1);
 has configuration => (is => 'ro', required  => 1);
-has database => (
+has database  => (
 	is => 'ro',
 	required => 1,
 	isa => 'Lingua::Poly::API::Users::Service::Database',
@@ -52,6 +53,16 @@ has sessionService => (
 );
 has restService => (
 	isa => 'Lingua::Poly::API::Users::Service::RESTClient',
+	is => 'ro',
+	required => 1,
+);
+has userService => (
+	isa => 'Lingua::Poly::API::Users::Service::User',
+	is => 'ro',
+	required => 1,
+);
+has emailService => (
+	isa => 'Lingua::Poly::API::Users::Service::Email',
 	is => 'ro',
 	required => 1,
 );
@@ -174,17 +185,78 @@ sub authenticate {
 	$self->warn('clock skew detected (Google)') if $now < $claims->{iat};
 	$self->warn('clock lag detected (Google)') if ($now - 60) > $claims->{iat};
 
+	# The rest of this method should probably go into a dedicated method
+	# of the user service because Facebook login will probably require the
+	# same logic.  It is also easier to test..
+	my $location = Mojo::URL->new($self->configuration->{origin});
+
 	# Next: Google recommends to use the 'sub' claim (concatenate that with
 	# "GOOGLE:" in order to satisfy a unique constraint) as the id into the
 	# user database because it never changes.  This does not satisfy our
 	# requirements.  The purpose of the OAuth flow for us is to have a
 	# reliable email address.  We use the 'sub' claim only as a fallback to
 	# find an old email of that user.
+	#
+	# One particularly nasty case can occur if we have two users that match,
+	# one by email, one by the external id. In this case, we delete the user
+	# with the conflicting external id.
 
-	use Data::Dumper;
-	warn Dumper $claims;
+	my $email = $claims->{email} if $claims->{email_verified};
+	my $email_verified = $claims->{email_verified};
+	$email = $self->emailService->parseAddress($email) if $email;
 
-	return $self;
+	my $user_by_external_id = $self->userService->userByExternalId(
+		GOOGLE => $claims->{sub}
+	);
+	my $user = $self->userService->userByUsernameOrEmail($email) if $email;
+	my $external_id = "GOOGLE:$claims->{sub}";
+
+	if ($user) {
+		if ($user_by_external_id) {
+			if ($user->id ne $user_by_external_id->id) {
+				# Delete the conflicting user.  FIXME! Inform about that?
+				$self->userService->deleteUser($user_by_external_id);
+			} elsif (!equals $external_id, $user->externalId) {
+				# Update the user.
+				$user->externalId($external_id);
+				$self->userService->update($user);
+			}
+		} else {
+			# There is no user with that external id.  That means we have to
+			# update the user that we have found by email.
+			$self->userService->update($user);
+		}
+	} elsif ($user_by_external_id) {
+		# The users email must have changed.  FIXME! Inform about that?
+		$user = $user_by_external_id;
+		$self->userService->update($user);
+	}
+
+	# Not else! Variable $user may have been assiged to!
+	if (!$user) {
+		if (!$email) {
+			$location->query(error => 'ERROR_NO_EMAIL_PROVIDED');
+		} elsif (!$email_verified) {
+			$location->query(error => 'ERROR_GOOGLE_EMAIL_NOT_VERIFIED');
+		} else {
+			$user = $self->userService->create($email,
+				externalId => $external_id,
+				confirmed => 1,
+			);
+		}
+	}
+
+	# Not else! Variable $user may have been assiged to!
+	if ($user) {
+		my $session = $ctx->stash->{session};
+		$session->user($user);
+		$session->nonce(undef);
+		$session->provider('GOOGLE');
+		$self->sessionService->renew($session);
+		$self->database->commit;
+	}
+
+	return $location;
 }
 
 __PACKAGE__->meta->make_immutable;

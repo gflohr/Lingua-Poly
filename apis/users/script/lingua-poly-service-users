@@ -158,6 +158,8 @@ my $c = container App => ['Env'] => as {
 				sessionService => '/User/session',
 				apiPrefix => '/Configuration/apiPrefix',
 				restService => '/REST',
+				userService => '/User/user',
+				emailService => '/Email',
 			}
 		);
 	};

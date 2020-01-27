@@ -87,6 +87,7 @@ sub getIterator {
 	my ($sql, $sth) = $self->preparer->get($statement);
 
 	if (1) {
+		$DB::single = 1;
 		my @params = @args;
 		$sql =~ s/\?/$self->dbh->quote(shift @params)/ge;
 		$self->debug("Execute $statement:\n" . $sql);

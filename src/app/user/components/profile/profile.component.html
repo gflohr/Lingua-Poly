@@ -23,6 +23,9 @@ saving an empty value.
 		<small *ngIf="profileForm.get('username').touched && profileForm.get('username').errors && profileForm.get('username').errors.atSign"
 			class="form-text alert alert-danger"
 			translate>You cannot use an at sign in your username.</small>
+		<small *ngIf="profileForm.get('username').touched && profileForm.get('username').errors && profileForm.get('username').errors.colon"
+			class="form-text alert alert-danger"
+			translate>You cannot use a colon in your username.</small>
 		<small *ngIf="!profileForm.get('username').pristine && profileForm.get('username').errors && profileForm.get('username').errors.unavailable"
 			class="form-text alert alert-danger"
 			translate>This name is already taken.</small>

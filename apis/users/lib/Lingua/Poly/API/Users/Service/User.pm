@@ -38,28 +38,57 @@ sub create {
 		? undef : crypt_password $options{password};
 
 	$db->execute(INSERT_USER
-		=>$email, $digest, $options{confirmed}, $options{external_id});
+		=> $email, $digest, $options{confirmed}, $options{externalId});
 
-	return $db->lastInsertId('users');
+	my $user_id = $db->lastInsertId('users');
+
+	return Lingua::Poly::API::Users::Model::User->new(
+		id => $user_id,
+		email => $email,
+		externalId => $options{externalId},
+		password => $options{password},
+		confirmed => $options{confirmed},
+	);
 }
 
 sub userByUsernameOrEmail {
 	my ($self, $id) = @_;
 
+
 	my $db = $self->database;
-	my $statement;
+	my ($statement, @args);
 	if ($id =~ /@/) {
 		# Normalize the address.
 		$id = $self->emailService->parseAddress($id);
 		return if !defined $id;
-		$statement = 'SELECT_USER_BY_EMAIL',
+		$statement = 'SELECT_USER_BY_EMAIL';
 	} else {
 		$statement = 'SELECT_USER_BY_USERNAME',
 	}
 
-	my ($user_id, $username, $email, $password, $confirmed,
+	return $self->__userByStatement($statement, $id);
+}
+
+sub userByExternalId {
+	my ($self, $provider, $id) = @_;
+
+	return $self->__userByStatement(
+		SELECT_USER_BY_EXTERNAL_ID => "$provider:$id");
+}
+
+sub userByToken {
+	my ($self, $purpose, $token) = @_;
+
+	return $self->__userByStatement(SELECT_USER_BY_TOKEN =>  $purpose, $token);
+}
+
+sub __userByStatement {
+	my ($self, $statement, @args) = @_;
+
+	my $db = $self->database;
+	my ($user_id, $username, $email, $external_id, $password, $confirmed,
 	    $homepage, $description) = $db->getRow(
-		$statement => $id
+		$statement => @args
 	);
 	return if !defined $user_id;
 
@@ -67,27 +96,11 @@ sub userByUsernameOrEmail {
 		id => $user_id,
 		username =>  $username,
 		email => $email,
+		externalId => $external_id,
 		password => $password,
 		confirmed => $confirmed,
 		homepage => $homepage,
 		description => $description,
-	);
-}
-
-sub byToken {
-	my ($self, $purpose, $token) = @_;
-
-	my $db = $self->database;
-	my ($user_id, $username,  $email, $password, $confirmed) = $db->getRow(
-		SELECT_TOKEN => $purpose, $token);
-	return if !defined $user_id;
-
-	return Lingua::Poly::API::Users::Model::User->new(
-		id => $user_id,
-		username =>  $username,
-		email => $email,
-		password => $password,
-		confirmed => $confirmed,
 	);
 }
 
@@ -106,8 +119,8 @@ sub updateUser {
 
 	if (!length $user->username) {
 		$user->username(undef);
-	} elsif ($user->username =~ m{[/@]}) {
-		die "username must not contain a slash or an at-sign.\n";
+	} elsif ($user->username =~ m{[/\@:]}) {
+		die "username must not contain a slash or an at-sign or a colon.\n";
 	}
 
 	my $homepage = $user->homepage;
@@ -118,8 +131,19 @@ sub updateUser {
 	}
 
 	$self->database->execute(
-		UPDATE_USER => $user->username, $homepage, $user->description, $user->id
+		UPDATE_USER => $user->email, $user->externalId, $user->username,
+		               $homepage, $user->description, $user->id
 	);
+
+	return $self;
+}
+
+sub deleteUser {
+	my ($self, $user) = @_;
+
+	$self->database->execute(DELETE_USER => $user->id);
+
+	return $self;
 }
 
 __PACKAGE__->meta->make_immutable;

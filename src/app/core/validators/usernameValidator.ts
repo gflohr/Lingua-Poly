@@ -11,6 +11,7 @@ export class UsernameValidator {
 
 		if (name.includes('/')) return { slash: true };
 		if (name.includes('@')) return { atSign: true };
+		if (name.includes(':')) return { colon: true };
 
 		return null;
 	}

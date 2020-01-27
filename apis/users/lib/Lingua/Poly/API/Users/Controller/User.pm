@@ -119,12 +119,7 @@ sub oauth2Login {
 	my $user = $self->app->userService->userByUsernameOrEmail($social_user->{email});
 	if (!$user) {
 		# Create a new user that is immediately confirmed.
-		my $user_id = $self->app->userService->create($social_user->{email});
-		$user = Lingua::Poly::API::Users::Model::User->new(
-			id => $user_id,
-			email => $social_user->{email},
-		);
-		$self->app->userService->activate($user);
+		$user = $self->app->userService->create($social_user->{email}, confirmed => 1);
 	}
 
 	my $session = $self->stash->{session};

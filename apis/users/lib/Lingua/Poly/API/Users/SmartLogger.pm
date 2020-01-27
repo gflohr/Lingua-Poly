@@ -38,7 +38,7 @@ sub debug {
 
 	# FIXME! The default should be derived from the debugging level but not
 	# hard-coded.
-	my $debug = $ENV{LINGUA_POLY_User_DEBUG};
+	my $debug = $ENV{LINGUA_POLY_USERS_DEBUG};
 	return $self if empty $debug;
 
 	my %debug = map { lc $_ => 1 } split /[ \t:,\|]/, $debug;
