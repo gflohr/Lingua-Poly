@@ -6,18 +6,18 @@ const _ = (msg) => (msg);
 
 const errorCodes = {
 	ERROR_NO_EMAIL_PROVIDED: {
-		msg: _('You did not give access to an email address.'),
 		title: _('No Email Address'),
+		text: _('You did not give access to an email address.'),
 	},
 	ERROR_GOOGLE_EMAIL_NOT_VERIFIED: {
-		msg: _('Your email address is not yet verified. Please verify it in your Google account first.'),
 		title: _('Email Not Verified'),
+		text: _('Your email address is not yet verified. Please verify it in your Google account first.'),
 	},
 };
 
 export interface ErrorMessage {
 	title: string,
-	message: string,
+	text: string,
 };
 
 @Injectable({
