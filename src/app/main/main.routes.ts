@@ -3,8 +3,9 @@ import { LegalDisclosureComponent } from './components/legal-disclosure/legal-di
 import { DisclaimerComponent } from './components/disclaimer/disclaimer.component';
 import { DataPrivacyComponent } from './components/data-privacy/data-privacy.component';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { Routes } from '@angular/router';
 
-export const mainRoutes = [
+export const mainRoutes: Routes = [
 	{
 		path: '',
 		component: StartComponent,
