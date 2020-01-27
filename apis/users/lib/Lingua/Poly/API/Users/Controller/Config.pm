@@ -15,6 +15,7 @@ package Lingua::Poly::API::Users::Controller::Config;
 use strict;
 
 use HTTP::Status qw(:constants);
+use JSON;
 
 use Lingua::Poly::API::Users::Util qw(empty crypt_password);
 
@@ -26,13 +27,13 @@ sub get {
 	my $api_config = $self->app->configuration;
 
 	my $google_oauth_service = $self->app->googleOAuthService;
-	my $google_auth_url = $self->app->googleOAuthService->authorizationUrl(
-		$self);
+	my $google_auth_url = $google_oauth_service->authorizationUrl($self);
+
+	my $facebook_auth_url;
 
 	my %config;
-	$config{googleAuthorizationUrl} = $google_auth_url
-		if !empty $google_auth_url;
-	$config{facebookAuthorizationUrl} = 'FIXME!';
+	$config{OAuthGoogle} = empty $google_auth_url ? JSON::false : JSON::true;
+	$config{OAuthFacebook} = empty $facebook_auth_url ? JSON::false : JSON::true;;
 
 	return $self->render(openapi => \%config, status => HTTP_OK);
 }

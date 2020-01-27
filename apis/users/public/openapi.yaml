@@ -88,6 +88,7 @@ components:
         provider:
           description: Opaque name of an OAuth2 provider
           type: string
+          # FIXME! Change that to lowercase!
           enum: [FACEBOOK, GOOGLE]
         token:
           type: string
@@ -109,12 +110,21 @@ components:
     Config:
       title: Config
       properties:
-        googleAuthorizationUrl:
+        OAuthGoogle:
+          type: boolean
+          example: true
+        OAuthFacebook:
+          type: boolean
+          example: false
+      additionalProperties: false
+    AuthorizationURL:
+      title: AuthorizationURL
+      properties:
+        href:
           type: string
-          example: https://account.google.com/path?query
-        facebookAuthorizationUrl:
-          type: string
-          example: https://www.facebook.com/path?query
+          example: https://accounts.example.com/oauth/auth
+      required:
+      - href
       additionalProperties: false
   requestBodies:
     EmptyRequest:
@@ -333,4 +343,28 @@ paths:
       responses:
         302:
           description: Redirect to application
+  /oauth/{provider}/authorizationURL:
+    get:
+      tags:
+      - oauth
+      summary: Get the authorzation URL of an OAuth provider
+      x-mojo-to: 'oauth#authorizationURL'
+      parameters:
+      - name: provider
+        in: path
+        description: The name of an OAuth provider (lowercase)
+        example: google
+        schema:
+          type: string
+        required: true
+      responses:
+        200:
+          description: The authorization URL
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthorizationURL'
+        404:
+          description: An unknown or unsupported provider was specified
+      
       
