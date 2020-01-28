@@ -11,7 +11,7 @@
  */
 
 
-export interface AuthorizationURL { 
+export interface AuthorizationUrl { 
     href: string;
 }
 

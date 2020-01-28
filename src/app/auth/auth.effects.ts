@@ -1,27 +1,28 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { createEffect, Actions, ofType } from '@ngrx/effects';
 import { exhaustMap, map, catchError, tap, switchMap } from 'rxjs/operators';
-import { UsersService } from '../core/openapi/lingua-poly';
+import { UsersService, OauthService } from '../core/openapi/lingua-poly';
 import { of } from 'rxjs';
 import { LoginPageActions, AuthApiActions, AuthActions } from './actions';
 import { Router } from '@angular/router';
 import { UserActions } from '../core/actions';
 import { LogoutConfirmationComponent } from '../layout/components/logout-confirmation/logout-confirmation.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { OAuth2Service } from './services/oauth2.service';
 import * as fromAuth from './reducers';
 import { Store } from '@ngrx/store';
 import { ModalDialogService } from '../core/services/modal-dialog.service';
+import { DOCUMENT } from '@angular/common';
 
 @Injectable()
 export class AuthEffects {
 
 	constructor(
+		@Inject(DOCUMENT) private document: Document,
 		private actions$: Actions,
 		private usersService: UsersService,
+		private oauthService: OauthService,
 		private router: Router,
 		private dialogService: ModalDialogService,
-		private oauth2Service: OAuth2Service,
 		private authStore: Store<fromAuth.State>,
 	) {
 	}
@@ -72,6 +73,11 @@ export class AuthEffects {
 
 	oauth2LoginRequest$ = createEffect(() => this.actions$.pipe(
 		ofType(LoginPageActions.socialLoginRequest),
-		map(action => this.oauth2Service.signIn(action.provider))
+		switchMap(action =>
+			this.oauthService.oauthProviderAuthorizationUrlGet(action.provider).pipe(
+				tap(url => this.document.location.href = url.href),
+				catchError(error => of(AuthApiActions.logoutFailure({ error })))
+			),
+		)
 	), { dispatch: false });
 }

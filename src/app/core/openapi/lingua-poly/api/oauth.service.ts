@@ -17,7 +17,7 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
-import { AuthorizationURL } from '../model/authorizationURL';
+import { AuthorizationUrl } from '../model/authorizationUrl';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
@@ -108,16 +108,16 @@ export class OauthService {
 
     /**
      * Get the authorzation URL of an OAuth provider
-     * @param provider The name of an OAuth provider (lowercase)
+     * @param provider The name of an OAuth provider (case-insensitive)
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public oauthProviderAuthorizationURLGet(provider: string, observe?: 'body', reportProgress?: boolean): Observable<AuthorizationURL>;
-    public oauthProviderAuthorizationURLGet(provider: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<AuthorizationURL>>;
-    public oauthProviderAuthorizationURLGet(provider: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<AuthorizationURL>>;
-    public oauthProviderAuthorizationURLGet(provider: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public oauthProviderAuthorizationUrlGet(provider: string, observe?: 'body', reportProgress?: boolean): Observable<AuthorizationUrl>;
+    public oauthProviderAuthorizationUrlGet(provider: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<AuthorizationUrl>>;
+    public oauthProviderAuthorizationUrlGet(provider: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<AuthorizationUrl>>;
+    public oauthProviderAuthorizationUrlGet(provider: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
         if (provider === null || provider === undefined) {
-            throw new Error('Required parameter provider was null or undefined when calling oauthProviderAuthorizationURLGet.');
+            throw new Error('Required parameter provider was null or undefined when calling oauthProviderAuthorizationUrlGet.');
         }
 
         let headers = this.defaultHeaders;
@@ -132,7 +132,7 @@ export class OauthService {
         }
 
 
-        return this.httpClient.get<AuthorizationURL>(`${this.configuration.basePath}/oauth/${encodeURIComponent(String(provider))}/authorizationURL`,
+        return this.httpClient.get<AuthorizationUrl>(`${this.configuration.basePath}/oauth/${encodeURIComponent(String(provider))}/authorizationUrl`,
             {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,

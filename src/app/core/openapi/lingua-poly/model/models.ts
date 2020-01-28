@@ -1,4 +1,4 @@
-export * from './authorizationURL';
+export * from './authorizationUrl';
 export * from './config';
 export * from './empty';
 export * from './profile';
