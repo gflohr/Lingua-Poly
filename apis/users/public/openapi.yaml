@@ -100,7 +100,7 @@ components:
           type: boolean
           example: false
       additionalProperties: false
-    AuthorizationURL:
+    AuthorizationUrl:
       title: AuthorizationURL
       properties:
         href:
@@ -305,16 +305,16 @@ paths:
       responses:
         302:
           description: Redirect to application
-  /oauth/{provider}/authorizationURL:
+  /oauth/{provider}/authorizationUrl:
     get:
       tags:
       - oauth
       summary: Get the authorzation URL of an OAuth provider
-      x-mojo-to: 'oauth#authorizationURL'
+      x-mojo-to: 'oauth#authorizationUrl'
       parameters:
       - name: provider
         in: path
-        description: The name of an OAuth provider (lowercase)
+        description: The name of an OAuth provider (case-insensitive)
         example: google
         schema:
           type: string
@@ -325,8 +325,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AuthorizationURL'
+                $ref: '#/components/schemas/AuthorizationUrl'
         404:
-          description: An unknown or unsupported provider was specified
-      
+          description: Invalid or unsupported provider
+          content:
+            application/json:
+              schema:
+                type: object
       
