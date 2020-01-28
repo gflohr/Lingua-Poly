@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { UserLogin, OAuth2Login } from '../../../../app/core/openapi/lingua-poly';
+import { UserLogin } from '../../../../app/core/openapi/lingua-poly';
 import { Store, select } from '@ngrx/store';
 import * as fromAuth from '../../reducers';
 import * as fromConfig from '../../../core/reducers';
@@ -50,7 +50,7 @@ export class LoginComponent {
 	signInWithFacebook(): void {
 		this.authStore.dispatch(LoginPageActions.socialLoginRequest(
 			{
-				provider: OAuth2Login.ProviderEnum.FACEBOOK
+				provider: 'facebook'
 			}
 		));
 
@@ -60,7 +60,7 @@ export class LoginComponent {
 	signInWithGoogle(): void {
 		this.authStore.dispatch(LoginPageActions.socialLoginRequest(
 			{
-				provider: OAuth2Login.ProviderEnum.GOOGLE
+				provider: 'google'
 			}
 		));
 	}

@@ -17,7 +17,6 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
-import { OAuth2Login } from '../model/oAuth2Login';
 import { Profile } from '../model/profile';
 import { Token } from '../model/token';
 import { User } from '../model/user';
@@ -81,49 +80,6 @@ export class UsersService {
 
 
         return this.httpClient.get<Profile>(`${this.configuration.basePath}/profile/${encodeURIComponent(String(name))}`,
-            {
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * Log in to the system via an OAuth2 service
-     * @param oAuth2Login 
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public oauth2Login(oAuth2Login?: OAuth2Login, observe?: 'body', reportProgress?: boolean): Observable<User>;
-    public oauth2Login(oAuth2Login?: OAuth2Login, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<User>>;
-    public oauth2Login(oAuth2Login?: OAuth2Login, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<User>>;
-    public oauth2Login(oAuth2Login?: OAuth2Login, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
-
-        let headers = this.defaultHeaders;
-
-        // to determine the Accept header
-        const httpHeaderAccepts: string[] = [
-            'application/json'
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-
-        // to determine the Content-Type header
-        const consumes: string[] = [
-            'application/json'
-        ];
-        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
-        if (httpContentTypeSelected !== undefined) {
-            headers = headers.set('Content-Type', httpContentTypeSelected);
-        }
-
-        return this.httpClient.post<User>(`${this.configuration.basePath}/oauth2Login`,
-            oAuth2Login,
             {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,

@@ -1,9 +1,9 @@
 import { createAction, props } from '@ngrx/store';
-import { User, OAuth2Login } from '../../core/openapi/lingua-poly';
+import { User } from '../../core/openapi/lingua-poly';
 
 export const loginSuccess = createAction(
 	'[Auth API] Login Success',
-	props<{ user: User, provider: OAuth2Login.ProviderEnum | null }>()
+	props<{ user: User }>()
 );
 
 export const loginFailure = createAction(

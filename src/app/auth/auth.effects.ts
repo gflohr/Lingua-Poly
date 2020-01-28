@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { createEffect, Actions, ofType } from '@ngrx/effects';
 import { exhaustMap, map, catchError, tap, switchMap } from 'rxjs/operators';
 import { UsersService } from '../core/openapi/lingua-poly';
-import { of, from } from 'rxjs';
+import { of } from 'rxjs';
 import { LoginPageActions, AuthApiActions, AuthActions } from './actions';
 import { Router } from '@angular/router';
 import { UserActions } from '../core/actions';
@@ -31,7 +31,7 @@ export class AuthEffects {
 		map(action => action.credentials),
 		exhaustMap((userLogin) =>
 			this.usersService.userLogin(userLogin).pipe(
-				map(user => AuthApiActions.loginSuccess({ user, provider: null })),
+				map(user => AuthApiActions.loginSuccess({ user })),
 				catchError(error => of(AuthApiActions.loginFailure({ error })))
 			)
 		)
@@ -59,7 +59,6 @@ export class AuthEffects {
 		ofType(AuthActions.logout),
 		switchMap(() =>
 			this.usersService.userLogout().pipe(
-				tap(() => this.oauth2Service.signOut()),
 				map(() => AuthApiActions.logoutSuccess()),
 				catchError(error => of(AuthApiActions.logoutFailure({ error })))
 			),
@@ -74,20 +73,5 @@ export class AuthEffects {
 	oauth2LoginRequest$ = createEffect(() => this.actions$.pipe(
 		ofType(LoginPageActions.socialLoginRequest),
 		map(action => this.oauth2Service.signIn(action.provider))
-	), { dispatch: false });
-
-	oauth2Login$ = createEffect(() => this.actions$.pipe(
-		ofType(AuthActions.socialLogin),
-		map(action => ({ token: action.socialUser.authToken, provider:action.provider })),
-		exhaustMap(payload =>
-			this.usersService.oauth2Login(payload).pipe(
-				map(user => AuthApiActions.loginSuccess({ user, provider: payload.provider })),
-				catchError(error => of(AuthApiActions.loginFailure({ error })))
-		))
-	));
-
-	oauth2Logout$ = createEffect(() => this.actions$.pipe(
-		ofType(AuthActions.socialLogout),
-		map(() => this.oauth2Service.logout())
 	), { dispatch: false });
 }

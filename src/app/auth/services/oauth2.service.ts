@@ -1,68 +1,29 @@
 import { Injectable } from '@angular/core';
-import { AuthService, FacebookLoginProvider, GoogleLoginProvider } from 'angularx-social-login';
 import { Store, select, Action } from '@ngrx/store';
 import { AuthActions } from '../actions';
 import * as fromAuth from '../reducers';
-import { Observable, VirtualTimeScheduler } from 'rxjs';
-import { OAuth2Login, UsersService } from '../../core/openapi/lingua-poly';
+import { Observable } from 'rxjs';
+import { UsersService } from '../../core/openapi/lingua-poly';
 import { map, filter, tap } from 'rxjs/operators';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class OAuth2Service {
-	provider$: Observable<OAuth2Login.ProviderEnum>;
-
 	constructor(
-		private authService: AuthService,
 		private authStore: Store<fromAuth.State>,
 		private userService: UsersService
 	) {
-		this.provider$ = this.authStore.pipe(select(fromAuth.selectProvider));
-
-		this.authService.authState.subscribe(socialUser => {
-			if (socialUser === null) {
-				this.authStore.dispatch(AuthActions.socialLogout());
-			} else {
-				let provider: OAuth2Login.ProviderEnum;
-
-				if ('FACEBOOK' === socialUser.provider) {
-					provider = OAuth2Login.ProviderEnum.FACEBOOK;
-				} else if ('GOOGLE' === socialUser.provider) {
-					provider = OAuth2Login.ProviderEnum.GOOGLE
-				} else {
-					return;
-				}
-
-				this.authStore.dispatch(AuthActions.socialLogin({
-					socialUser, provider
-				}))
-			}
-		})
 	}
 
-	signIn(provider: OAuth2Login.ProviderEnum) {
+	signIn(provider: string) {
 		switch (provider) {
-			case OAuth2Login.ProviderEnum.FACEBOOK:
-				this.authService.signIn(FacebookLoginProvider.PROVIDER_ID);
+			case 'facebook':
+				console.log('login with facebook ...');
 				break;
-			case OAuth2Login.ProviderEnum.GOOGLE:
-				this.authService.signIn(GoogleLoginProvider.PROVIDER_ID);
+			case 'google':
+				console.log('login with google ...');
 				break;
 		}
-	}
-
-	signOut() {
-		this.provider$.pipe(
-			filter(provider => provider !== null),
-			tap(() => this.authService.signOut()),
-		).subscribe();
-	}
-
-	logout(): Observable<Action> {
-		return this.provider$.pipe(
-			filter(provider => provider !== null),
-			map(() => AuthActions.logout)
-		);
 	}
 }
