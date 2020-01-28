@@ -180,7 +180,7 @@ sub confirm {
 	$self->app->sessionService->renew($session);
 	$self->app->database->commit;
 
-	$self->render(openapi => \%user, status => HTTP_OK);
+	$self->render(json => \%user, status => HTTP_OK);
 }
 
 1;
