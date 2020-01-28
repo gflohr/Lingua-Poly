@@ -67,11 +67,10 @@ sub refreshOrCreate {
 	    $homepage, $description);
 	my $database = $self->database;
 
-	my ($provider, $token, $nonce);
+	my ($provider, $token, $token_expires, $nonce);
 
-	if (defined $sid && (($user_id, $provider, $token, $nonce) = $database->getRow(
-			SELECT_SESSION => $sid, $fingerprint
-		))) {
+	if (defined $sid && (($user_id, $provider, $token, $token_expires, $nonce)
+			= $database->getRow(SELECT_SESSION => $sid, $fingerprint))) {
 		$self->debug('updating session');
 		$database->execute(UPDATE_SESSION => $sid);
 		if (defined $user_id) {
@@ -96,7 +95,12 @@ sub refreshOrCreate {
 
 	$database->commit;
 
-	my %args = (sid => $sid, provider => $provider, token => $token);
+	my %args = (
+		sid => $sid,
+		provider => $provider,
+		token => $token,
+		token_expires => $token_expires
+	);
 	if (defined $user_id) {
 		$args{user} = Lingua::Poly::API::Users::Model::User->new(
 			id => $user_id,

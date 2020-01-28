@@ -30,7 +30,7 @@ DELETE FROM sessions
   WHERE EXTRACT(EPOCH FROM(NOW() - last_seen)) > ?
 EOF
 		SELECT_SESSION => <<EOF,
-SELECT s.user_id, p.name, s.token, s.nonce
+SELECT s.user_id, p.name, s.token, EXTRACT(EPOCH FROM s.token_expires), s.nonce
   FROM sessions s, identity_providers p
  WHERE sid = ?
    AND s.identity_provider_id = p.id

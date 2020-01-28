@@ -79,6 +79,7 @@ sub logout {
 	# permissions.
 	my $provider = $session->provider;
 	my $token = $session->token;
+	my $token_expires = $session->token_expires;
 
 	# Downgrade the session.  This is an authenticated request.  So we don't
 	# get here if the user does not have a valid session.
@@ -90,22 +91,12 @@ sub logout {
 		= $app->sessionService->refreshOrCreate($session_id, $fingerprint);
 	$app->database->commit;
 
-	# FIXME! Move that into an oauth2 service.
 	if ('FACEBOOK' eq $provider) {
-		my $url = URI->new('https://graph.facebook.com/');
-		$url->path('/me/permissions');
-		my ($data, $response) = $self->app->restService->delete(
-			$url,
-			'',
-			headers => {
-				Authorize => "Bearer $token"
-			}
+	} elsif ('GOOGLE' eq $provider) {
+		$self->app->googleOAuthService->revoke(
+			$session->token,
+			$session->token_expires
 		);
-		if (!$response->is_success) {
-			$self->warn("cannot revoke access token, code: " . $response->code);
-		} elsif (!$data->{success}) {
-			$self->warn("cannot revoke access token: " . $data->{error}->{message});
-		}
 	}
 
 	$self->render(json => '', status => HTTP_NO_CONTENT);

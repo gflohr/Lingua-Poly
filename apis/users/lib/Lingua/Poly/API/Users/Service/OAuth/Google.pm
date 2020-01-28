@@ -262,6 +262,35 @@ sub authenticate {
 	return $location;
 }
 
+sub revoke {
+	my ($self, $token, $token_expires) = @_;
+
+	return $self if $token_expires < time;
+
+	my $discovery = $self->__getDiscoveryConfig
+		or die "no discover document\n";
+
+	my $endpoint = $discovery->{revocation_endpoint};
+	my $form = {
+		token => $token
+	};
+
+	$self->debug("revoking token with endpoint '$endpoint'");
+	my ($payload, $response) = $self->restService->post($endpoint, $form,
+		headers => {
+			content_type => 'application/x-www-form-urlencoded'
+		}
+	);
+	if (!$response->status_line) {
+		my $msg = $response->status_line;
+		$self->warning("token could not be revoked: $msg");
+	}
+
+warn $response->as_string;
+
+	return $self;
+}
+
 __PACKAGE__->meta->make_immutable;
 
 1;
