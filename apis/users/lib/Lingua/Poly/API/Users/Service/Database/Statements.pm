@@ -47,6 +47,7 @@ UPDATE sessions
        identity_provider_id
            = (SELECT id FROM identity_providers WHERE name = ?),
        token = ?,
+	   token_expires = to_timestamp(?),
 	   nonce = ?
  WHERE sid = ?
 EOF

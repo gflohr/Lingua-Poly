@@ -252,9 +252,12 @@ sub authenticate {
 		$session->user($user);
 		$session->nonce(undef);
 		$session->provider('GOOGLE');
+		$session->token($payload->{access_token});
+		$session->token_expires($now + $payload->{expires_in});
 		$self->sessionService->renew($session);
-		$self->database->commit;
 	}
+
+	$self->database->commit;
 
 	return $location;
 }

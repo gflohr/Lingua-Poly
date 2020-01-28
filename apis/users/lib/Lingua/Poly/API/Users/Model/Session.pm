@@ -25,6 +25,7 @@ has user => (
 );
 has provider => (is => 'rw');
 has token => (is => 'rw');
+has token_expires => (is => 'rw', isa => 'Maybe[Int]');
 has nonce => (is => 'rw', required => 1, builder => '__build_nonce');
 
 sub __build_nonce {

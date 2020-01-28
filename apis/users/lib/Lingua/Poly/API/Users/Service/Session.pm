@@ -120,8 +120,15 @@ sub renew {
 	# FIXME! It is safer to first delete the old session, and create
 	# a new one.  Otherwise there might be a race with the auto-cleanup.
 	$self->database->execute(
-		UPDATE_SESSION_SID
-		=> $sid, $user_id, $session->provider, $session->token, $session->nonce, $session->sid);
+		UPDATE_SESSION_SID =>
+			$sid,
+			$user_id,
+			$session->provider,
+			$session->token,
+			$session->token_expires,
+			$session->nonce,
+			$session->sid
+	);
 	$session->sid($sid);
 
 	return $self;
