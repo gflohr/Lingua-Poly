@@ -17,11 +17,42 @@ use strict;
 use Moose;
 use namespace::autoclean;
 
-use Mojo::Base ('Lingua::Poly::API::Users::Logging');
+use base qw(Lingua::Poly::API::Users::Logging);
 
-has context => (isa => 'Mojolicious::Controller', required => 1);
+has context => (
+	is => 'ro',
+	required => 1,
+	isa => 'Mojolicious::Controller',
+);
 
-sub realm { 'identity' }
+sub realm { 'authentication' }
+
+sub authenticate {
+	my ($self, $payload) = @_;
+
+	my $app = $self->context->app;
+
+	my $db = $app->database;
+
+	$self->info("user '$login_data->{id}' trying to log in");
+
+	my $user = $app->userService->userByUsernameOrEmail($login_data->{id});
+	if (!$user || !$user->confirmed) {
+		if (!$user) {
+			$self->debug("user '$login_data->{id}' is unknown");
+		} elsif (!$user->confirmed) {
+			$self->debug("user '$login_data->{id}' is unconfirmed");
+		}
+		return;
+	}
+
+	if (!check_password $login_data->{password}, $user->password) {
+		$self->debug("user '$login_data->{id}': invalid credentials");
+		return;
+	}
+
+	return $user;
+}
 
 __PACKAGE__->meta->make_immutable;
 

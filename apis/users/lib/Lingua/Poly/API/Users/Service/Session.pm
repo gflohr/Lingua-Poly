@@ -60,6 +60,17 @@ sub maintain {
 	return $self;
 }
 
+sub identityProvider {
+	my ($self, $provider, $ctx) = @_;
+
+	$provider = ucfirst lc $provider;
+	my $module = "Lingua/Poly/API/Users/IdentityProvider/$provider.pm";
+
+	require $module;
+
+	return $module->new($ctx);
+}
+
 sub refreshOrCreate {
 	my ($self, $sid, $fingerprint) = @_;
 

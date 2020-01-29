@@ -29,27 +29,17 @@ use constant GOOGLE_OID_CONFIGURATION_URL =>
 sub login {
 	my $self = shift->openapi->valid_input or return;
 
-	my $login_data = $self->req->json;
-	my $db = $self->app->database;
+	my $identity_provider = $self->app->sessionService->identityProvider(
+		local => $self
+	);
 
-	$self->info("user '$login_data->{id}' trying to log in");
+	my $credentials = $self->req->json;
 
-	my $user = $self->app->userService->userByUsernameOrEmail($login_data->{id});
-	if (!$user || !$user->confirmed) {
-		if (!$user) {
-			$self->debug("user '$login_data->{id}' is unknown");
-		} elsif (!$user->confirmed) {
-			$self->debug("user '$login_data->{id}' is unconfirmed");
-		}
+	my $user = $identity_provider->authenticate($credentials);
+	if (!$user) {
 		return $self->errorResponse(HTTP_UNAUTHORIZED, {
 			message => 'invalid username or password'
 		});
-	}
-	if (!check_password $login_data->{password}, $user->password) {
-		$self->debug("user '$login_data->{id}': invalid credentials");
-		return $self->errorResponse(HTTP_UNAUTHORIZED, {
-			message => 'invalid username or password'
-		})
 	}
 
 	# Upgrade the session with a valid user.
