@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { UsersService, Token } from 'src/app/core/openapi/lingua-poly';
+import * as fromAuth from '../../../auth/reducers';
+import { Store } from '@ngrx/store';
+import { AuthApiActions } from '../../actions';
 
 @Component({
 	selector: 'app-registration-confirmed',
@@ -14,7 +17,8 @@ export class RegistrationConfirmedComponent implements OnInit {
 
 	constructor(
 		private route: ActivatedRoute,
-		private usersService: UsersService
+		private usersService: UsersService,
+		private authStore: Store<fromAuth.State>,
 	) { }
 
 	ngOnInit() {
@@ -23,15 +27,14 @@ export class RegistrationConfirmedComponent implements OnInit {
 		} as Token;
 
 		this.usersService.register(token).subscribe(
-			data => {
+			user => {
 				this.pending = false;
 				this.success = true;
-				console.log(data);
+				this.authStore.dispatch(AuthApiActions.loginSuccess({ user }));
 			},
-			err => {
+			() => {
 				this.pending = false;
 				this.error = true;
-				console.log(err);
 			}
 		);
 	}

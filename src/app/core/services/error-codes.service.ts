@@ -4,7 +4,7 @@ import { BehaviorSubject } from 'rxjs';
 // xgettext_noop().
 const _ = (msg) => (msg);
 
-const errorCodes = {
+export const ErrorCodes = {
 	ERROR_NO_EMAIL_PROVIDED: {
 		title: _('No Email Address'),
 		text: _('You did not give access to an email address.'),
@@ -13,6 +13,10 @@ const errorCodes = {
 		title: _('Email Not Verified'),
 		text: _('Your email address is not yet verified. Please verify it in your Google account first.'),
 	},
+	ERROR_REGISTRATION_FAILED: {
+		title: _('Registration Failed'),
+		text: _('Most probably the confirmation link has expired. Please try again!'),
+	}
 };
 
 export interface ErrorMessage {
@@ -31,8 +35,8 @@ export class ErrorCodesService {
 	constructor() { }
 
 	message(code: string): ErrorMessage | null {
-		if (errorCodes.hasOwnProperty(code)) {
-			return errorCodes[code];
+		if (ErrorCodes.hasOwnProperty(code)) {
+			return ErrorCodes[code];
 		} else {
 			return null;
 		}
