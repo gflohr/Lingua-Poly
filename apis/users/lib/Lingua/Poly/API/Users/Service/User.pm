@@ -37,6 +37,8 @@ sub create {
 	my $digest = empty $options{password}
 		? undef : crypt_password $options{password};
 
+	$options{confirmed} ||= 1;
+
 	$db->execute(INSERT_USER
 		=> $email, $digest, $options{confirmed}, $options{externalId});
 
