@@ -33,15 +33,11 @@ export class AuthEffects {
 		exhaustMap((userLogin) =>
 			this.usersService.userLogin(userLogin).pipe(
 				map(user => AuthApiActions.loginSuccess({ user })),
+				tap(() => this.router.navigate(['/'])),
 				catchError(error => of(AuthApiActions.loginFailure({ error })))
 			)
 		)
 	));
-
-	loginSuccess$ = createEffect(() => this.actions$.pipe(
-		ofType(AuthApiActions.loginSuccess),
-		tap(() => this.router.navigate(['/']))
-	), { dispatch: false });
 
 	logoutIdleUser$ = createEffect(() => this.actions$.pipe(
 		ofType(UserActions.idleTimeout),
