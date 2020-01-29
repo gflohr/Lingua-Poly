@@ -17,8 +17,6 @@ use strict;
 use HTTP::Status qw(:constants);
 use URI;
 
-use Lingua::Poly::API::Users::Util qw(empty crypt_password check_password);
-
 use Mojo::Base qw(Lingua::Poly::API::Users::Controller);
 
 my $google_oid_configuration;
@@ -63,31 +61,13 @@ sub logout {
 
 	my $app = $self->app;
 
-	my $session = $self->stash->{session};
+	my $provider = $self->stash->{session}->provider;
+	my $identity_provider = $self->app->sessionService->identityProvider(
+		local => $self
+	);
 
-	# Make a copy of the provider and the access token so that we can revoke
-	# permissions.
-	my $provider = $session->provider;
-	my $token = $session->token;
-	my $token_expires = $session->token_expires;
-
-	# Downgrade the session.  This is an authenticated request.  So we don't
-	# get here if the user does not have a valid session.
-	$app->sessionService->delete($session);
-
-	my $fingerprint = $app->requestContextService->fingerprint($self);
-	my $session_id = $app->requestContextService->sessionID($self);
-	$self->stash->{session}
-		= $app->sessionService->refreshOrCreate($session_id, $fingerprint);
-	$app->database->commit;
-
-	if ('FACEBOOK' eq $provider) {
-	} elsif ('GOOGLE' eq $provider) {
-		$self->app->googleOAuthService->revoke(
-			$session->token,
-			$session->token_expires
-		);
-	}
+	$identity_provider->signOut;
+	$self->app->database->commit;
 
 	$self->render(json => '', status => HTTP_NO_CONTENT);
 }

@@ -23,6 +23,7 @@ use MIME::Base64 qw(encode_base64url);
 
 use Lingua::Poly::API::Users::Model::User;
 use Lingua::Poly::API::Users::Model::Session;
+use Lingua::Poly::API::Users::SmartLogger;
 
 use base qw(Lingua::Poly::API::Users::Logging);
 
@@ -64,11 +65,18 @@ sub identityProvider {
 	my ($self, $provider, $ctx) = @_;
 
 	$provider = ucfirst lc $provider;
-	my $module = "Lingua/Poly/API/Users/IdentityProvider/$provider.pm";
+	my $class = "Lingua::Poly::API::Users::IdentityProvider::$provider";
+	my $module = $class;
+	$module =~ s{::}{/}g;
+	$module .= '.pm';
 
 	require $module;
 
-	return $module->new($ctx);
+	my $logger = Lingua::Poly::API::Users::SmartLogger->new(
+		realm => $class->realm
+	);
+
+	return $class->new(context => $ctx, logger => $logger);
 }
 
 sub refreshOrCreate {

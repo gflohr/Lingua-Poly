@@ -17,6 +17,8 @@ use strict;
 use Moose;
 use namespace::autoclean;
 
+use Lingua::Poly::API::Users::Util qw(check_password);
+
 use base qw(Lingua::Poly::API::Users::Logging);
 
 has context => (
@@ -24,34 +26,58 @@ has context => (
 	required => 1,
 	isa => 'Mojolicious::Controller',
 );
+has logger => (
+	is => 'ro',
+	required => 1,
+	isa => 'Mojo::Log',
+);
 
 sub realm { 'authentication' }
 
 sub authenticate {
-	my ($self, $payload) = @_;
+	my ($self, $credentials) = @_;
 
 	my $app = $self->context->app;
 
 	my $db = $app->database;
 
-	$self->info("user '$login_data->{id}' trying to log in");
+	$self->info("user '$credentials->{id}' trying to log in");
 
-	my $user = $app->userService->userByUsernameOrEmail($login_data->{id});
+	my $user = $app->userService->userByUsernameOrEmail($credentials->{id});
 	if (!$user || !$user->confirmed) {
 		if (!$user) {
-			$self->debug("user '$login_data->{id}' is unknown");
+			$self->debug("user '$credentials->{id}' is unknown");
 		} elsif (!$user->confirmed) {
-			$self->debug("user '$login_data->{id}' is unconfirmed");
+			$self->debug("user '$credentials->{id}' is unconfirmed");
 		}
 		return;
 	}
 
-	if (!check_password $login_data->{password}, $user->password) {
-		$self->debug("user '$login_data->{id}': invalid credentials");
+	if (!check_password $credentials->{password}, $user->password) {
+		$self->debug("user '$credentials->{id}': invalid credentials");
 		return;
 	}
 
 	return $user;
+}
+
+sub signOut {
+	my ($self) = @_;
+
+	my $context = $self->context;
+	my $app = $context->app;
+	my $session = $context->stash->{session};
+
+	# Downgrade the session.  This is an authenticated request.  So we don't
+	# get here if the user does not have a valid session.
+	$app->sessionService->delete($session);
+
+	my $fingerprint = $app->requestContextService->fingerprint($context);
+	my $session_id = $app->requestContextService->sessionID($context);
+	$context->stash->{session}
+		= $app->sessionService->refreshOrCreate($session_id, $fingerprint);
+
+	return $self;
 }
 
 __PACKAGE__->meta->make_immutable;
