@@ -18,6 +18,7 @@ export const authReducer = createReducer(
 	on(AuthApiActions.loginSuccess, (state, { user }) => ({ ...state, user })),
 	on(UserApiActions.profileSuccess, (state, { user }) => ({ ...state, user })),
 	on(AuthApiActions.logoutSuccess, () => initialState),
+	on(AuthApiActions.logoutFailure, () => initialState),
 );
 
 export function reducer(state: State | undefined, action: Action) {
