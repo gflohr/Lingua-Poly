@@ -12,7 +12,7 @@
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
       "version" : 2
    },
-   "name" : "Lingua-Poly-API-UM",
+   "name" : "Lingua-Poly-API-User",
    "no_index" : {
       "directory" : [
          "t",
@@ -36,14 +36,21 @@
             "CGI::Cookie" : "0",
             "DBI" : "0",
             "Data::Password::zxcvbn" : "v1.0.4",
+            "Digest::SHA" : "0",
             "Email::Address" : "1.912",
             "Email::Sender::Simple" : "1.300031",
             "Email::Sender::Transport::SMTP" : "1.300031",
             "Email::Simple" : "2.216",
+            "Encode" : "0",
             "Exporter" : "0",
+            "HTTP::Request" : "0",
             "HTTP::Status" : "0",
+            "JSON" : "0",
+            "LWP::UserAgent" : "0",
+            "List::Util" : "0",
             "Locale::Messages" : "0",
             "Locale::TextDomain" : "0",
+            "MIME::Base64" : "0",
             "Mojo::Base" : "0",
             "Mojo::Log" : "0",
             "Mojo::URL" : "0",
@@ -53,11 +60,19 @@
             "Password::OWASP::Argon2" : "0",
             "Session::Token" : "1.503",
             "Time::HiRes" : "0",
+            "URI" : "0",
             "YAML" : "0",
             "YAML::XS" : "0",
             "base" : "0",
+            "constant" : "0",
             "namespace::autoclean" : "0",
             "strict" : "0"
+         }
+      },
+      "test" : {
+         "requires" : {
+            "Mojo::JWT" : "0",
+            "Test::More" : "0"
          }
       }
    },

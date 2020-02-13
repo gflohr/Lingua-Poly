@@ -31,17 +31,11 @@ has configuration => (is => 'ro', required  => 1);
 has database  => (
 	is => 'ro',
 	required => 1,
-	isa => 'Lingua::Poly::API::Users::Service::Database',
-);
-has discovery  => (
-	is => 'rw',
-	required => 0,
-	isa => 'Lingua::Poly::API::Users::Service::OAuth::Google::Discovery',
 );
 has requestContextService => (
 	is => 'ro',
 	required => 1,
-	isa => 'Lingua::Poly::API::Users::Service::RequestContext',
+	#isa => 'Lingua::Poly::API::Users::Service::RequestContext',
 );
 has sessionService => (
 	is => 'ro',
