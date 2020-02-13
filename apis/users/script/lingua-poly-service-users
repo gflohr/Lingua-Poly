@@ -41,6 +41,7 @@ my $c = container App => ['Env'] => as {
 			tokenService => 'Token',
 			restService => 'REST',
 			googleOAuthService => '/OAuth/Google',
+			facebookOAuthService => '/OAuth/Facebook',
 			emailService => '/Email'
 		},
 	);
@@ -149,6 +150,21 @@ my $c = container App => ['Env'] => as {
 	container OAuth => as {
 		service Google => (
 			class => 'Lingua::Poly::API::Users::Service::OAuth::Google',
+			lifecycle => 'Singleton',
+			dependencies => {
+				logger => { '/Logging/logger' => { realm => 'session' } },
+				configuration => '/Configuration/provider',
+				database  => '/Storage/database',
+				requestContextService => '/RequestContext',
+				sessionService => '/User/session',
+				apiPrefix => '/Configuration/apiPrefix',
+				restService => '/REST',
+				userService => '/User/user',
+				emailService => '/Email',
+			}
+		);
+		service Facebook => (
+			class => 'Lingua::Poly::API::Users::Service::OAuth::Facebook',
 			lifecycle => 'Singleton',
 			dependencies => {
 				logger => { '/Logging/logger' => { realm => 'session' } },

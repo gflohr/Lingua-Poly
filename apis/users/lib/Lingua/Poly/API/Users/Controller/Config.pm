@@ -29,7 +29,8 @@ sub get {
 	my $google_oauth_service = $self->app->googleOAuthService;
 	my $google_auth_url = $google_oauth_service->authorizationUrl($self);
 
-	my $facebook_auth_url;
+	my $facebook_oauth_service = $self->app->facebookOAuthService;
+	my $facebook_auth_url = $facebook_oauth_service->authorizationUrl($self);
 
 	my %config;
 	$config{hasOAuthGoogle} = empty $google_auth_url ? JSON::false : JSON::true;
