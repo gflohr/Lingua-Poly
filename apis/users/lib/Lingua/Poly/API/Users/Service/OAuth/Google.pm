@@ -208,48 +208,35 @@ sub authenticate {
 	# are merged, and the information from the social login has precedence.
 
 	my $email = $claims->{email} if $claims->{email_verified};
-	my $email_verified = $claims->{email_verified};
-	$email = $self->emailService->parseAddress($email) if $email;
+	$email = $self->emailService->parseAddress($email) if !empty $email;
 
-	my $user_by_external_id = $self->userService->userByExternalId(
+	my $user = $self->userService->userByExternalId(
 		GOOGLE => $claims->{sub}
 	);
-	my $user = $self->userService->userByUsernameOrEmail($email) if $email;
+	my $user_by_email = $self->userService->userByUsernameOrEmail($email)
+		if !empty $email;
 	my $external_id = "GOOGLE:$claims->{sub}";
 
 	if ($user) {
-		if ($user_by_external_id) {
-			if ($user->id ne $user_by_external_id->id) {
-				# Delete the conflicting user.  FIXME! Inform about that?
-				$self->userService->deleteUser($user_by_external_id);
-			} elsif (!equals $external_id, $user->externalId) {
-				# Update the user.
-				$user->externalId($external_id);
-				$self->userService->update($user);
-			}
-		} else {
-			# There is no user with that external id.  That means we have to
-			# update the user that we have found by email.
-			$self->userService->update($user);
+		if ($user_by_email && $user_by_email->id ne $user->id) {
+			# We have to delete the conflicting user in the database and
+			# merge the data.
+			$user->merge($user_by_email);
+			$self->userService->deleteUser($user_by_email);
+			$self->userService->updateUser($user);
 		}
-	} elsif ($user_by_external_id) {
-		# The users email must have changed.  FIXME! Inform about that?
-		$user = $user_by_external_id;
-		$self->userService->update($user);
-	}
-
-	# Not else! Variable $user may have been assiged to!
-	if (!$user) {
-		if (!$email) {
-			$location->query(error => 'ERROR_NO_EMAIL_PROVIDED');
-		} elsif (!$email_verified) {
-			$location->query(error => 'ERROR_GOOGLE_EMAIL_NOT_VERIFIED');
-		} else {
-			$user = $self->userService->create($email,
-				externalId => $external_id,
-				confirmed => 1,
-			);
+	} elsif ($user_by_email) {
+		# User had logged in before but in another way.
+		$user = $user_by_email;
+		if (!equals $user->externalId, $user_by_email->externalId) {
+			$user->externalId($external_id);
 		}
+	} else {
+		# New user.
+		$user = $self->userService->create($email,
+			externalId => $external_id,
+			confirmed => 1,
+		);
 	}
 
 	# Not else! Variable $user may have been assiged to!
