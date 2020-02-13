@@ -22,7 +22,6 @@ use Mojo::URL;
 sub authorizationUrl {
 	my $self = shift->openapi->valid_input or return;
 
-$DB::single = 1;
 	my $provider = $self->param('provider');
 
 	my $url;

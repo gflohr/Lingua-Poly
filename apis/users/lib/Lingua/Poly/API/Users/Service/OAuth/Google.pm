@@ -279,8 +279,6 @@ sub revoke {
 		$self->warning("token could not be revoked: $msg");
 	}
 
-warn $response->as_string;
-
 	return $self;
 }
 
