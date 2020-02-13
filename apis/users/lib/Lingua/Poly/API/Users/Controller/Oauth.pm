@@ -25,7 +25,9 @@ sub authorizationUrl {
 	my $provider = $self->param('provider');
 
 	my $url;
-	if ('google' eq lc $provider) {
+	if ('facebook' eq lc $provider) {
+		$url = $self->app->facebookOAuthService->authorizationUrl($self);
+	} elsif ('google' eq lc $provider) {
 		$url = $self->app->googleOAuthService->authorizationUrl($self);
 	}
 

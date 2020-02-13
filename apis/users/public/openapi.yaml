@@ -264,6 +264,26 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
+  /oauth/facebook:
+    get:
+      tags:
+      - oauth
+      summary: Facebook OAuth Login Redirect URL
+      x-mojo-to: 'oauth_facebook#redirect'
+      parameters:
+      - name: code
+        in: query
+        description: Code for access token
+        schema:
+          type: string
+      - name: state
+        in: query
+        description: CSRF token
+        schema:
+          type: string
+      responses:
+        302:
+          description: Redirect to the application
   /oauth/google:
     get:
       tags:
@@ -332,4 +352,3 @@ paths:
             application/json:
               schema:
                 type: object
-      

@@ -106,15 +106,12 @@ sub authorizationUrl {
 sub authenticate {
 	my ($self, $ctx, %params) = @_;
 
-	my $discovery = $self->__getDiscoveryConfig
-		or die "no discover document\n";
-
 	my $config = $self->configuration;
 
-	my $client_id = $config->{oauth}->{google}->{client_id}
-		or die "no google client id\n";
-	my $client_secret = $config->{oauth}->{google}->{client_secret}
-		or die "no google client secret\n";
+	my $client_id = $config->{oauth}->{facebook}->{client_id}
+		or die "no facebook client id\n";
+	my $client_secret = $config->{oauth}->{facebook}->{client_secret}
+		or die "no facebook client secret\n";
 
 	my $session = $ctx->stash->{session};
 	my $state = $self->sessionService->getState($session);
@@ -127,55 +124,42 @@ sub authenticate {
 		client_id => $client_id,
 		client_secret => $client_secret,
 		redirect_uri => $redirect_uri->to_string,
-		grant_type => 'authorization_code',
 	};
 
-	my $token_endpoint = $discovery->{token_endpoint};
-
-	my ($payload, $response) = $self->restService->post($token_endpoint, $form,
-		headers => {
-			content_type => 'application/x-www-form-urlencoded'
-		}
+	my $token_endpoint = URI->new(
+		'https://graph.facebook.com/v6.0/oauth/access_token'
 	);
+	$token_endpoint->query_form($form);
+
+	my ($payload, $response) = $self->restService->get($token_endpoint);
+	my $now = time;
 	die $response->status_line if !$response->is_success;
 
-	my $now = time;
+	die "facebook did not send an access token"
+		if empty $payload->{access_token};
+	my $access_token = $payload->{access_token};
+	my $expires_in = $payload->{expires_in};
+	# Verify the access token.
+	my $debug_endpoint = URI->new('https://graph.facebook.com/debug_token');
+	$debug_endpoint->query_form(
+		input_token => $access_token,
+		access_token => $client_id,
+	);
 
-	my $claims = decode_jwt $payload->{id_token};
-	die "client_id mismatch\n" if $claims->{aud} ne $client_id;
-	die "issuer mismatch\n" if $claims->{iss} ne $discovery->{issuer};
-	die "missing exp claim\n" if !exists $claims->{exp};
-	die "missing iat claim\n" if !exists $claims->{iat};
-	$self->warn('clock skew detected (Google)') if $now < $claims->{iat};
-	$self->warn('clock lag detected (Google)') if ($now - 60) > $claims->{iat};
+	($payload, $response) = $self->restService->get($debug_endpoint);
+	die $response->status_line if !$response->is_success;
 
-	# The rest of this method should probably go into a dedicated method
-	# of the user service because Facebook login will probably require the
-	# same logic.  It is also easier to test..
+	use Data::Dumper;
+	die Dumper $payload;
+
 	my $location = Mojo::URL->new($self->configuration->{origin});
 
-	# Next: Google recommends to use the "sub" claim (concatenate that with
-	# "GOOGLE:" in order to satisfy a unique constraint) as the id into the
-	# user database because it never changes.  But additionally, we may receive
-	# an email address which may or may not exist in our database.  The strategy
-	# followed here is:
-	#
-	# 1. The "sub" claim is enough for us.
-	# 2. If the user has a verified email address, it is saved as well.
-	# 3. If that email address already exists, the user is updated instead of
-	#    being created.
-	#
-	# The 3rd case is more complicated, when the email address exists but is
-	# associated with another user.  The downside of this is that there is
-	# one edge case where we find a user both by external id and by their email
-	# address, and it refers to different users.  In this case the two accounts
-	# are merged, and the information from the social login has precedence.
-
+my $claims = {};
 	my $email = $claims->{email} if $claims->{email_verified};
 	$email = $self->emailService->parseAddress($email) if !empty $email;
 
 	my $user = $self->userService->userByExternalId(
-		GOOGLE => $claims->{sub}
+		FACEBOOK => $claims->{sub}
 	);
 	my $user_by_email = $self->userService->userByUsernameOrEmail($email)
 		if !empty $email;
@@ -224,26 +208,7 @@ sub revoke {
 
 	return $self if $token_expires < time;
 
-	my $discovery = $self->__getDiscoveryConfig
-		or die "no discover document\n";
-
-	my $endpoint = $discovery->{revocation_endpoint};
-	my $form = {
-		token => $token
-	};
-
-	$self->debug("revoking token with endpoint '$endpoint'");
-	my ($payload, $response) = $self->restService->post($endpoint, $form,
-		headers => {
-			content_type => 'application/x-www-form-urlencoded'
-		}
-	);
-	if (!$response->status_line) {
-		my $msg = $response->status_line;
-		$self->warning("token could not be revoked: $msg");
-	}
-
-	return $self;
+	die;
 }
 
 __PACKAGE__->meta->make_immutable;
