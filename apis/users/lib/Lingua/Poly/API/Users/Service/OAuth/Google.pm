@@ -190,16 +190,22 @@ sub authenticate {
 	# same logic.  It is also easier to test..
 	my $location = Mojo::URL->new($self->configuration->{origin});
 
-	# Next: Google recommends to use the 'sub' claim (concatenate that with
+	# Next: Google recommends to use the "sub" claim (concatenate that with
 	# "GOOGLE:" in order to satisfy a unique constraint) as the id into the
-	# user database because it never changes.  This does not satisfy our
-	# requirements.  The purpose of the OAuth flow for us is to have a
-	# reliable email address.  We use the 'sub' claim only as a fallback to
-	# find an old email of that user.
+	# user database because it never changes.  But additionally, we may receive
+	# an email address which may or may not exist in our database.  The strategy
+	# followed here is:
 	#
-	# One particularly nasty case can occur if we have two users that match,
-	# one by email, one by the external id. In this case, we delete the user
-	# with the conflicting external id.
+	# 1. The "sub" claim is enough for us.
+	# 2. If the user has a verified email address, it is saved as well.
+	# 3. If that email address already exists, the user is updated instead of
+	#    being created.
+	#
+	# The 3rd case is more complicated, when the email address exists but is
+	# associated with another user.  The downside of this is that there is
+	# one edge case where we find a user both by external id and by their email
+	# address, and it refers to different users.  In this case the two accounts
+	# are merged, and the information from the social login has precedence.
 
 	my $email = $claims->{email} if $claims->{email_verified};
 	my $email_verified = $claims->{email_verified};
