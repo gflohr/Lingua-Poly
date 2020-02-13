@@ -17,6 +17,8 @@ use strict;
 use Moose;
 use namespace::autoclean;
 
+use Lingua::Poly::API::Users::Util qw(empty);
+
 has id => (isa => 'Int', is => 'ro', required => 1);
 has username => (isa => 'Maybe[Str]', is => 'rw');
 has email => (isa => 'Maybe[Str]', is => 'rw');
@@ -40,6 +42,17 @@ sub toResponse {
 	$user{description} = $self->description if !empty $self->description;
 
 	return %user;
+}
+
+sub merge {
+	my ($self, $other) = @_;
+
+	foreach my $property (qw (username email externalId password confirmed
+	                          homepage description)) {
+		$self->$property($other->$property) if empty $self->$property;
+	}
+
+	return $self;
 }
 
 __PACKAGE__->meta->make_immutable;
