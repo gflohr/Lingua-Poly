@@ -21,6 +21,7 @@ sub new {
 
 	bless {
 		__mockedCalls => [],
+		__mockedMethods => {},
 	}, $class;
 }
 
@@ -34,6 +35,16 @@ sub mockAll {
 	return $self;
 }
 
+sub mockMethod {
+	my ($self, $name, $sub) = @_;
+
+	$sub ||= sub { shift };
+
+	$self->{__mockedMethods}->{$name} = $sub;
+
+	return $self;
+}
+
 sub AUTOLOAD {
 	my ($self, @args) = @_;
 
@@ -42,7 +53,9 @@ sub AUTOLOAD {
 	my $method = $AUTOLOAD;
 	$method =~ s/^${class}:://;
 
-	if ($self->{__mockAll}) {
+	if ($self->{__mockedMethods}->{$method}) {
+		return $self->{__mockedMethods}->{$method}->($self, @args);
+	} if ($self->{__mockAll}) {
 		push @{$self->{__mockedCalls}, $AUTOLOAD, [@args]};
 		return $self;
 	} elsif ('DESTROY' eq $method) {
