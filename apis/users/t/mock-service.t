@@ -21,4 +21,13 @@ my $logger = LPTestLib::MockService->new;
 
 ok $logger->isa('Log::Whatever');
 
+$logger->mockAll;
+
+$logger->info('some information');
+
+my $service = LPTestLib::MockService->new;
+
+eval { $service->undefined('whatever') };
+ok $@;
+
 done_testing;

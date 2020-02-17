@@ -14,12 +14,43 @@ package LPTestLib::MockService;
 
 use strict;
 
+use List::Util '1.29';
+
 sub new {
 	my ($class) = @_;
 
-	bless {}, $class;
+	bless {
+		__mockedCalls => [],
+	}, $class;
 }
 
 sub isa { 1 }
+
+sub mockAll {
+	my ($self) = @_;
+
+	$self->{__mockAll} = 1;
+
+	return $self;
+}
+
+sub AUTOLOAD {
+	my ($self, @args) = @_;
+
+	our $AUTOLOAD;
+	my $class = ref $self;
+	my $method = $AUTOLOAD;
+	$method =~ s/^${class}:://;
+
+	if ($self->{__mockAll}) {
+		push @{$self->{__mockedCalls}, $AUTOLOAD, [@args]};
+		return $self;
+	} elsif ('DESTROY' eq $method) {
+		return;
+	}
+
+	require Carp;
+	Carp::confess("method '$method' is not defined and not being mocked");
+}
 
 1;
