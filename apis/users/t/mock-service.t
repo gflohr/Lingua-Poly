@@ -23,7 +23,7 @@ ok $logger->isa('Log::Whatever');
 
 $logger->mockAll;
 
-$logger->info('some information');
+my $retval = $logger->info('some information');
 
 my $service = LPTestLib::MockService->new;
 
@@ -51,11 +51,22 @@ foreach my $num (1 .. 5) {
 	$service->mockReturn(double => $num << 1);
 }
 
-$DB::single = 1;
 foreach my $num (1 .. 5) {
 	is $service->double($num), $num << 1, "double $num";
 }
 eval { $service->double(2304) };
 ok $@, 'return stack exceeded';
+
+my $memory = LPTestLib::MockService->new
+	->mockAll
+	->once(1)
+	->twice(2)
+	->twice(3);
+
+is_deeply [$memory->mockedCalls], [
+	once => [1],
+	twice => [2],
+	twice => [3],
+], 'all mocked calls';
 
 done_testing;
