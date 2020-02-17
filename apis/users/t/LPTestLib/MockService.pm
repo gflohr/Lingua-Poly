@@ -55,6 +55,19 @@ sub mockMethod {
 	return $self;
 }
 
+sub inherit {
+	my ($self, $class, @args) = @_;
+
+	if ($self->{__mockedInheritance}) {
+		require Carp;
+		Carp::confess("inherit called more than once");
+	}
+
+	$self->{__mockedInheritance} = $class->new(@args);
+
+	return $self;
+}
+
 sub mockedCalls {
 	my ($self, @names) = @_;
 
@@ -97,8 +110,11 @@ sub AUTOLOAD {
 		}
 	} elsif ($self->{__mockedMethods}->{$method}) {
 		return $self->{__mockedMethods}->{$method}->($self, @args);
-	} if ($self->{__mockAll}) {
+	} elsif ($self->{__mockAll}) {
 		return $self;
+	} elsif ($self->{__mockedInheritance}) {
+		$DB::single = 1;
+		return $self->{__mockedInheritance}->$method(@args);
 	} elsif ('DESTROY' eq $method) {
 		return;
 	}
@@ -127,6 +143,9 @@ LPTestLib::MockService - Mocked service with canned behavior
     $service->sequence;    # Returns 1.
     $service->sequence;    # Returns 4.
     $service->sequence;    # Returns 9.
+
+    $service->inherit('Real::Service', name => 'something');
+    $service->realMethod(42);
 
     @calls = $service->mockedCalls;
 
@@ -178,12 +197,18 @@ have precedence over canned behaviors.
 If you omit B<SUB>, the method will just return the instance (resp. class).
 That means that mocked methods can be chained by default.
 
-=item B<inherit SUPERCLASS, ...>
+=item B<inherit SUPERCLASS, ARGS>
 
-Adds B<SUPERCLASS> as a class to inherit method calls from.
+Makes the object behave as it was a subclass of B<SUPERCLASS>.
 
-If neither a canned return value or a method mock was defined, the mock service
-checks whether one of the superclasses defines the method.
+It also calls the constructor of B<SUPERCLASS> with B<ARGS> and remembers
+the object returned.  If a method call neither has canned return values
+or was mocked with a subroutine, a possibly existing method of the superclass
+is called on the underlying object.
+
+Multiple inheritance is not supported.  If you need it, write an
+intermediate superclass that inherits from all classes you need.  Calling
+B<inherit()> twice on the same object throws an exception.
 
 =item B<mockedCalls [NAMES...]>
 

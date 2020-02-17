@@ -84,4 +84,32 @@ is_deeply [$memory->mockedCalls('twice')], [
 	twice => [3],
 ], 'twice mocked calls';
 
+my $inherited = LPTestLib::MockService->new;
+$inherited->inherit(RealService => name => 'foobar');
+
+is $inherited->realMethod('works'), 'works', 'inherited method';
+eval { $inherited->inherit(RealService => name => 'barbaz') };
+ok $@, 'inherit must be called only once';
+
+is_deeply [$inherited->mockedCalls], [
+	realMethod => ['works'],
+];
+
 done_testing;
+
+package RealService;
+
+sub new {
+	my ($class, @args) = @_;
+
+	die if $args[0] ne 'name';
+	die if $args[1] ne 'foobar';
+
+	bless {@args}, $class;
+}
+
+sub realMethod {
+	my ($self, $arg) = @_;
+
+	return $arg;
+}
