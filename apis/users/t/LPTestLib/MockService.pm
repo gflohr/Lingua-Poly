@@ -61,6 +61,15 @@ sub mockedCalls {
 	return @{$self->{__mockedCalls}} if !@names;
 
 	my @calls;
+	my %names = map { $_ => 1 } @names;
+
+	foreach my $pair (pairs @{$self->{__mockedCalls}}) {
+		my ($name, $args) = @$pair;
+
+		push @calls, $name, $args if $names{$name};
+	}
+
+	return @calls;
 }
 
 sub AUTOLOAD {

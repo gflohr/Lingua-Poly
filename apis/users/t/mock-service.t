@@ -69,4 +69,19 @@ is_deeply [$memory->mockedCalls], [
 	twice => [3],
 ], 'all mocked calls';
 
+is_deeply [$memory->mockedCalls('once', 'twice')], [
+	once => [1],
+	twice => [2],
+	twice => [3],
+], 'both mocked calls';
+
+is_deeply [$memory->mockedCalls('once')], [
+	once => [1],
+], 'once mocked calls';
+
+is_deeply [$memory->mockedCalls('twice')], [
+	twice => [2],
+	twice => [3],
+], 'twice mocked calls';
+
 done_testing;
