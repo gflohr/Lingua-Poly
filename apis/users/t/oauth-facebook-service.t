@@ -76,4 +76,10 @@ $redirect_uri->path("$prefix/oauth/facebook");
 
 is $fb_service->redirectUri, $redirect_uri, 'Redirect URIR';
 
+is $fb_service->authorizationUrl, undef, 'no client id';
+$config->{oauth}->{facebook}->{client_id} = 'client_id';
+
+is $fb_service->authorizationUrl, undef, 'no client secret';
+$config->{oauth}->{facebook}->{client_secret} = 'client_secret';
+
 done_testing;

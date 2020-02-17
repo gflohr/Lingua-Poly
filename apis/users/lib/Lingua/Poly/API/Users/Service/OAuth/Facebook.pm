@@ -35,7 +35,7 @@ has database  => (
 has requestContextService => (
 	is => 'ro',
 	required => 1,
-	#isa => 'Lingua::Poly::API::Users::Service::RequestContext',
+	isa => 'Lingua::Poly::API::Users::Service::RequestContext',
 );
 has sessionService => (
 	is => 'ro',
