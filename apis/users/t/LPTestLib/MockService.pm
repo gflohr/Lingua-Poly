@@ -21,6 +21,7 @@ sub new {
 
 	bless {
 		__mockedCalls => [],
+		__mockedReturns => {},
 		__mockedMethods => {},
 	}, $class;
 }
@@ -31,6 +32,15 @@ sub mockAll {
 	my ($self) = @_;
 
 	$self->{__mockAll} = 1;
+
+	return $self;
+}
+
+sub mockReturn {
+	my ($self, $name, @values) = @_;
+
+	$self->{__mockedReturns}->{$name} ||= [];
+	push @{$self->{__mockedReturns}->{$name}}, [@values];
 
 	return $self;
 }
@@ -53,7 +63,20 @@ sub AUTOLOAD {
 	my $method = $AUTOLOAD;
 	$method =~ s/^${class}:://;
 
-	if ($self->{__mockedMethods}->{$method}) {
+	if ($self->{__mockedReturns}->{$method}) {
+		if (!@{$self->{__mockedReturns}->{$method}}) {
+			require Carp;
+			Carp::confess("return stack for '$method' exceeded");
+		}
+		my $values = shift @{$self->{__mockedReturns}->{$method}};
+		if (!@$values) {
+			return;
+		} elsif (@$values == 1) {
+			return $values->[0];
+		} else {
+			return @$values;
+		}
+	} elsif ($self->{__mockedMethods}->{$method}) {
 		return $self->{__mockedMethods}->{$method}->($self, @args);
 	} if ($self->{__mockAll}) {
 		push @{$self->{__mockedCalls}, $AUTOLOAD, [@args]};

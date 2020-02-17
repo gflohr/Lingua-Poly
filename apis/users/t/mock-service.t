@@ -44,4 +44,18 @@ is $service->fortyTwo, 42, 'forty-two';
 is_deeply [$service->echo(qw(Tom Dick Harry))], [qw(Tom Dick Harry)];
 is_deeply $service->self, $service, 'self';
 
+eval { $service->double(1 .. 5) };
+ok $@;
+
+foreach my $num (1 .. 5) {
+	$service->mockReturn(double => $num << 1);
+}
+
+$DB::single = 1;
+foreach my $num (1 .. 5) {
+	is $service->double($num), $num << 1, "double $num";
+}
+eval { $service->double(2304) };
+ok $@, 'return stack exceeded';
+
 done_testing;
