@@ -14,10 +14,11 @@ use strict;
 use lib 't';
 
 use Test::More;
-use Test::MockModule '0.171.0';
 use LPTestLib::MockService;
 
 use Mojo::URL;
+
+use Lingua::Poly::API::Users::Service::OAuth::Facebook;
 
 my $prefix = '/api/prefix';
 
@@ -27,28 +28,13 @@ my $config = {
 my $database = LPTestLib::MockService->new;
 my $email_service = LPTestLib::MockService->new;
 my $logger = LPTestLib::MockService->new;
-#$logger->mockAll;
 my $request_context_service = LPTestLib::MockService->new;
 $request_context_service->mockMethod(origin => sub {
 	return Mojo::URL->new('http://localhost:2304/');
 });
-
-my $rest_service = Test::MockModule->new(
-	'Lingua::Poly::API::Users::Service::RESTClient',
-);
-bless $rest_service, 'Lingua::Poly::API::Users::Service::RESTClient';
-
-my $session_service = Test::MockModule->new(
-	'Lingua::Poly::API::Users::Service::Session',
-);
-bless $session_service, 'Lingua::Poly::API::Users::Service::Session';
-
-my $user_service = Test::MockModule->new(
-	'Lingua::Poly::API::Users::Service::User',
-);
-bless $user_service, 'Lingua::Poly::API::Users::Service::User';
-
-require Lingua::Poly::API::Users::Service::OAuth::Facebook;
+my $rest_service = LPTestLib::MockService->new;
+my $session_service = LPTestLib::MockService->new;
+my $user_service = LPTestLib::MockService->new;
 
 my $fb_service = Lingua::Poly::API::Users::Service::OAuth::Facebook->new(
 	logger => $logger,
