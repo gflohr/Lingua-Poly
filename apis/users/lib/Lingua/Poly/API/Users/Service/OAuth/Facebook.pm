@@ -31,6 +31,7 @@ has configuration => (is => 'ro', required  => 1);
 has database  => (
 	is => 'ro',
 	required => 1,
+	isa => 'Lingua::Poly::API::Users::Service::Database'
 );
 has requestContextService => (
 	is => 'ro',
@@ -208,3 +209,115 @@ sub revoke {
 __PACKAGE__->meta->make_immutable;
 
 1;
+
+
+=head1 NAME
+
+Lingua::Poly::API::Users::Service::OAuth::Facebook; - Facebook OAuth Service
+
+=head1 SYNOPSIS
+
+    $fb_oauth = Lingua::Poly::API::Users::Service::OAuth::Facebook->new(
+        logger => $logger,
+        configuration => $configuration,
+        database => $database,
+        requestContextService => $request_context_service,
+        sessionService => $session_service,
+        resetService => $rest_service,
+        userService => $user_service,
+        emailService => $email_service,
+    );
+
+=head1 DESCRIPTION
+
+This service is responsible for the authentication via
+L<Facebook|https://www.facebook.com/>.
+
+=head1 CONSTRUCTOR
+
+The following services are injected into the constructor:
+
+=over 4
+
+=item B<logger>
+
+A L<Lingua::Poly::API::Users::SmartLogger> service.
+This property is required.  It is read-only.
+
+=item B<configuration>
+
+A configuration hash reference, for example a
+L<Lingua::Poly::API::Users::Config> object.
+
+=item B<requestContextService>
+
+A L<Lingua::Poly::API::Users::Service::RequestContextService>.
+This property is required. It is read-only.
+
+=item B<sessionService>
+
+A L<Lingua::Poly::API::Users::Service::SessionService>.
+This property is required. It is read-only.
+
+=item B<restService>
+
+A L<Lingua::Poly::API::Users::Service::RestService>.
+This property is required. It is read-only.
+
+=item B<userService>
+
+A L<Lingua::Poly::API::Users::Service::UserService>.
+This property is required. It is read-only.
+
+=item B<emailService>
+
+A L<Lingua::Poly::API::Users::Service::EmailService>.
+This property is required. It is read-only.
+
+=back
+
+=head1 METHODS
+
+=over 4
+
+=item B<authorizationUrl CONTROLLER>
+
+Returns a L<Mojo::URL> for the OAuth2 authorization URL.  This URL will display
+the Facebook login dialog for the user.  You have to pass the
+L<Mojo::Controller> initiating the login, so that the server origin and the
+user session can be retrieved.
+
+=item B<redirectUri CONTROLLER>
+
+Returns a L<Mojo::URL> for the OAuth2 redirect URL.  You have to pass the
+L<Mojo::Controller> initiating the login, so that the server origin can be
+retrieved.
+
+=item B<authenticate CONTROLLER, PARAMS>
+
+Returns a L<Mojo::URL> that the user should be redirected to after having
+successfully logged in.  This is the application start page, with optional
+query parameters.  You have to pass q
+L<Mojo::Controller> (normally the controller that responded to the redirect
+URL) and all query parameters that the redirect URL was requested with.
+
+An exception is thrown in case of failure.
+
+=item B<revoke TOKEN, TOKEN_EXPIRES>
+
+Revokes the access token B<TOKEN> issued by Facebook.  If the unix timestamp
+B<TOKEN_EXPIRES> is in the future, nothing happens.
+
+=back
+
+=head1 SEE ALSO
+
+L<https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow>,
+L<Lingua::Poly::API::Users::SmartLogger>,
+L<Lingua::Poly::API::Users::Config>,
+L<Lingua::Poly::API::Users::Service::RequestContextService>,
+L<Lingua::Poly::API::Users::Service::SessionService>,
+L<Lingua::Poly::API::Users::Service::RESTService>,
+L<Lingua::Poly::API::Users::Service::UserService>,
+L<Lingua::Poly::API::Users::Service::EmailService>,
+L<Mojo::URL>, L<perl>
