@@ -11,8 +11,11 @@
 
 use strict;
 
+use lib 't';
+
 use Test::More;
 use Test::MockModule '0.171.0';
+use LPTestLib::MockService;
 
 use Mojo::URL;
 
@@ -21,25 +24,14 @@ my $prefix = '/api/prefix';
 my $config = {
 	prefix => $prefix,
 };
-my $database = Test::MockModule->new(
-	'Lingua::Poly::API::Users::Service::Database'
-);
-my $email_service = Test::MockModule->new(
-	'Lingua::Poly::API::Users::Service::Email',
-);
-bless $email_service, 'Lingua::Poly::API::Users::Service::Email';
-my $logger = Test::MockModule->new(
-	'Lingua::Poly::API::Users::SmartLogger'
-);
-$logger->noop('info', 'debug');
-
-my $request_context_service = Test::MockModule->new(
-	'Lingua::Poly::API::Users::Service::RequestContext',
-);
-$request_context_service->mock(origin => sub {
+my $database = LPTestLib::MockService->new;
+my $email_service = LPTestLib::MockService->new;
+my $logger = LPTestLib::MockService->new;
+#$logger->mockAll;
+my $request_context_service = LPTestLib::MockService->new;
+$request_context_service->mockMethod(origin => sub {
 	return Mojo::URL->new('http://localhost:2304/');
 });
-bless $request_context_service, 'Lingua::Poly::API::Users::Service::RequestContext';
 
 my $rest_service = Test::MockModule->new(
 	'Lingua::Poly::API::Users::Service::RESTClient',
