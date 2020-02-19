@@ -24,7 +24,9 @@ use Mojo::URL;
 use Lingua::Poly::API::Users::Util qw(empty equals decode_jwt);
 use Lingua::Poly::API::Users::Service::OAuth::Google::Discovery;
 
-use base qw(Lingua::Poly::API::Users::Logging);
+use base qw(
+	Lingua::Poly::API::Users::Logging
+);
 
 has logger => (is => 'ro', required => 1);
 has configuration => (is => 'ro', required  => 1);
@@ -133,32 +135,31 @@ sub authenticate {
 	die "facebook did not send an access token"
 		if empty $payload->{access_token};
 	my $access_token = $payload->{access_token};
-	my $expires_in = $payload->{expires_in};
-	# Verify the access token.
-	my $debug_endpoint = URI->new('https://graph.facebook.com/debug_token');
-	$debug_endpoint->query_form(
-		input_token => $access_token,
-		access_token => $client_id,
+
+	my $profile_url = URI->new('https://graph.facebook.com/v6.0/me/');
+	$profile_url->query_form(
+		access_token => $access_token,
+		fields => 'id,email',
+		method => 'get',
 	);
 
-	($payload, $response) = $self->restService->get($debug_endpoint);
+	($payload, $response) = $self->restService->get($profile_url);
 	die $response->status_line if !$response->is_success;
 
-	use Data::Dumper;
-	die Dumper $payload;
+	die "facebook did not send a user id" if empty $payload->{id};
 
 	my $location = Mojo::URL->new($self->configuration->{origin});
+	my ($id, $email) = @{$payload}{qw(id email)};
 
-my $claims = {};
-	my $email = $claims->{email} if $claims->{email_verified};
+	# Everything from here on is generic and should go into a common method.
 	$email = $self->emailService->parseAddress($email) if !empty $email;
 
 	my $user = $self->userService->userByExternalId(
-		FACEBOOK => $claims->{sub}
+		FACEBOOK => $id
 	);
 	my $user_by_email = $self->userService->userByUsernameOrEmail($email)
 		if !empty $email;
-	my $external_id = "GOOGLE:$claims->{sub}";
+	my $external_id = "FACEBOOK:$id";
 
 	if ($user) {
 		if ($user_by_email && $user_by_email->id ne $user->id) {

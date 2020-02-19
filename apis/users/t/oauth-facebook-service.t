@@ -81,14 +81,31 @@ $config->{oauth}->{facebook}->{client_id} = 'client_id';
 is $fb_service->authorizationUrl($ctx), undef, 'no client secret';
 $config->{oauth}->{facebook}->{client_secret} = 'client_secret';
 
+my $state = $session_service->getState($session);
+
 my $auth_url = URI->new('https://www.facebook.com/v6.0/dialog/oauth');
 $auth_url->query_form(
 	client_id => 'client_id',
 	redirect_uri => $redirect_uri,
-	state => $session_service->getState($session),
+	state => $state,
 	response_type => 'code',
 	scope => 'email'
 );
 is $fb_service->authorizationUrl($ctx), $auth_url, 'authorization URL';
+
+my @alphabet = ('-', '_', 'A' .. 'Z', 'a' .. 'z', '0' .. '9');
+my $code = Session::Token->new(alphabet => \@alphabet, length => 340)->get;
+
+my %params = (
+	state => $state,
+	code => $code,
+);
+
+my %token = (
+	expires_in => '5165402',
+	token_type => 'bearer',
+	access_token => Session::Token->new(length => 185)->get,
+);
+
 
 done_testing;
