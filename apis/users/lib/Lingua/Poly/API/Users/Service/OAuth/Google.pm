@@ -61,11 +61,6 @@ has userService => (
 	is => 'ro',
 	required => 1,
 );
-has emailService => (
-	isa => 'Lingua::Poly::API::Users::Service::Email',
-	is => 'ro',
-	#required => 1,
-);
 
 sub __getDiscoveryConfig {
 	my ($self) = @_;
@@ -176,6 +171,8 @@ sub authenticate {
 	die $response->status_line if !$response->is_success;
 
 	my $now = time;
+	my $expires_in = $payload->{expires_in};
+	my $access_token = $payload->{access_token};
 
 	my $claims = decode_jwt $payload->{id_token};
 	die "client_id mismatch\n" if $claims->{aud} ne $client_id;
@@ -184,11 +181,6 @@ sub authenticate {
 	die "missing iat claim\n" if !exists $claims->{iat};
 	$self->warn('clock skew detected (Google)') if $now < $claims->{iat};
 	$self->warn('clock lag detected (Google)') if ($now - 60) > $claims->{iat};
-
-	# The rest of this method should probably go into a dedicated method
-	# of the user service because Facebook login will probably require the
-	# same logic.  It is also easier to test..
-	my $location = Mojo::URL->new($self->configuration->{origin});
 
 	# Next: Google recommends to use the "sub" claim (concatenate that with
 	# "GOOGLE:" in order to satisfy a unique constraint) as the id into the
@@ -208,51 +200,15 @@ sub authenticate {
 	# are merged, and the information from the social login has precedence.
 
 	my $email = $claims->{email} if $claims->{email_verified};
-	$email = $self->emailService->parseAddress($email) if !empty $email;
 
-	my $user = $self->userService->userByExternalId(
-		GOOGLE => $claims->{sub}
+	return $self->userService->login(
+		session => $ctx->stash->{session},
+		externalId => $claims->{sub},
+		provider => 'Google',
+		accessToken => $access_token,
+		expires => $now + $expires_in,
+		email => $email,
 	);
-	my $user_by_email = $self->userService->userByUsernameOrEmail($email)
-		if !empty $email;
-	my $external_id = "GOOGLE:$claims->{sub}";
-
-	if ($user) {
-		if ($user_by_email && $user_by_email->id ne $user->id) {
-			# We have to delete the conflicting user in the database and
-			# merge the data.
-			$user->merge($user_by_email);
-			$self->userService->deleteUser($user_by_email);
-			$self->userService->updateUser($user);
-		}
-	} elsif ($user_by_email) {
-		# User had logged in before but in another way.
-		$user = $user_by_email;
-		if (!equals $user->externalId, $user_by_email->externalId) {
-			$user->externalId($external_id);
-		}
-	} else {
-		# New user.
-		$user = $self->userService->create($email,
-			externalId => $external_id,
-			confirmed => 1,
-		);
-	}
-
-	# Not else! Variable $user may have been assiged to!
-	if ($user) {
-		my $session = $ctx->stash->{session};
-		$session->user($user);
-		$session->nonce(undef);
-		$session->provider('GOOGLE');
-		$session->token($payload->{access_token});
-		$session->token_expires($now + $payload->{expires_in});
-		$self->sessionService->renew($session);
-	}
-
-	$self->database->commit;
-
-	return $location;
 }
 
 sub revoke {

@@ -32,8 +32,8 @@ CREATE TABLE users (
     UNIQUE(identity_provider_id, external_id),
     CHECK((email IS NOT NULL) OR (external_id IS NOT NULL))
 );
-INSERT INTO users(id, email, username, password, confirmed) 
-  SELECT 0, 'placeholder@example.com', 'admin', '{ARGON2}$argon2id$v=19$m=32768,t=12,p=1$MTM1QzRDNkEtMDUzOS0xMUVBLUI0NjItM0ZCMDQyNjU0QTBB$tir07b6/y+fWwkvJe9Cw3A', 't'
+INSERT INTO users(id, email, username, password, identity_provider_id, confirmed) 
+  SELECT 0, 'placeholder@example.com', 'admin', '{ARGON2}$argon2id$v=19$m=32768,t=12,p=1$MTM1QzRDNkEtMDUzOS0xMUVBLUI0NjItM0ZCMDQyNjU0QTBB$tir07b6/y+fWwkvJe9Cw3A', '1','t'
   WHERE NOT EXISTS (
     SELECT 1 FROM users WHERE id = 0);
 
