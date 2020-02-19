@@ -27,14 +27,25 @@ use Lingua::Poly::API::Users::SmartLogger;
 
 use base qw(Lingua::Poly::API::Users::Logging);
 
-has logger => (is => 'ro');
-has database => (is => 'ro');
-has configuration => (
+has logger => (
 	is => 'ro',
-	isa => 'Lingua::Poly::API::Users::Config',
+	isa => 'Lingua::Poly::API::Users::SmartLogger',
 	required => 1
 );
-has userService => (is => 'ro');
+has database => (
+	is => 'ro',
+	isa => 'Lingua::Poly::API::Users::Service::Database',
+	required => 1
+);
+has configuration => (
+	is => 'ro',
+	required => 1
+);
+has userService => (
+	is => 'ro',
+	isa => 'Lingua::Poly::API::Users::Service::User',
+	required => 1
+);
 
 my $last_cleanup = 0;
 

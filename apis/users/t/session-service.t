@@ -11,7 +11,11 @@
 
 use strict;
 
+use lib 't';
+
 use Test::More;
+
+use LPTestLib::MockService;
 
 use Lingua::Poly::API::Users::Model::User;
 use Lingua::Poly::API::Users::Model::Session;
@@ -31,8 +35,16 @@ my $config = bless {
 	secrets => ['MZvl5lxqpxYanaMidLFdWui2TsegLmaA1O8lNMHRgCz']
 }, 'Lingua::Poly::API::Users::Config';
 
+my $database = LPTestLib::MockService->new;
+my $logger = LPTestLib::MockService->new;
+$logger->mockAll;
+my $user_service = LPTestLib::MockService->new;
+
 my $sessionService = Lingua::Poly::API::Users::Service::Session->new(
 	configuration => $config,
+	database => $database,
+	logger => $logger,
+	userService => $user_service,
 );
 
 my $base64url_re = qr/^[-_a-zA-Z0-9]+$/;
