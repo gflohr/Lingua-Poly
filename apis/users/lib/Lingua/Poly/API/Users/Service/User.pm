@@ -17,13 +17,27 @@ use strict;
 use Moose;
 use namespace::autoclean;
 
-use Lingua::Poly::API::Users::Util qw(crypt_password empty);
+use Lingua::Poly::API::Users::Util qw(crypt_password empty equals);
 use Lingua::Poly::API::Users::Validator::Homepage;
 
 use base qw(Lingua::Poly::API::Users::Logging);
 
-has logger => (is => 'ro');
-has database => (is => 'ro');
+has configuration => (is => 'ro', required => 1);
+has logger => (
+	is => 'ro',
+	isa => 'Lingua::Poly::API::Users::SmartLogger',
+	required => 1,
+);
+has database => (
+	is => 'ro',
+	isa => 'Lingua::Poly::API::Users::Service::Database',
+	required => 1,
+);
+has sessionService => (
+	is => 'ro',
+	isa => 'Lingua::Poly::API::Users::Service::Session',
+	required => 1,
+);
 has emailService => (
 	is => 'ro',
 	isa => 'Lingua::Poly::API::Users::Service::Email',
@@ -40,7 +54,8 @@ sub create {
 	$options{confirmed} ||= 1;
 
 	$db->execute(INSERT_USER
-		=> $email, $digest, $options{confirmed}, $options{externalId});
+		=> $email, $digest,
+		   $options{confirmed}, $options{externalId}, $options{provider});
 
 	my $user_id = $db->lastInsertId('users');
 
@@ -48,6 +63,7 @@ sub create {
 		id => $user_id,
 		email => $email,
 		externalId => $options{externalId},
+		provider => $options{provider},
 		password => $options{password},
 		confirmed => $options{confirmed},
 	);
@@ -146,6 +162,61 @@ sub deleteUser {
 	$self->database->execute(DELETE_USER => $user->id);
 
 	return $self;
+}
+
+sub login {
+	my ($self, %args) = @_;
+
+	my ($session, $external_id, $provider, $email, $access_token, $expires) =
+		@args{qw(session externalId provider email accessToken expires)};
+
+	$email = $self->emailService->parseAddress($email) if !empty $email;
+
+	my $user;
+	if (defined $provider) {
+		$user = $self->userByExternalId($provider => $external_id);
+	} else {
+		die "not yet implemented";
+	}
+
+	my $user_by_email = $self->userByUsernameOrEmail($email) if !empty $email;
+
+	if ($user) {
+		if ($user_by_email && $user_by_email->id ne $user->id) {
+			# We have to delete the conflicting user in the database and
+			# merge the data.
+			$user->merge($user_by_email);
+			$self->deleteUser($user_by_email);
+			$self->updateUser($user);
+		}
+	} elsif ($user_by_email) {
+		# User had logged in before but in another way.
+		$user = $user_by_email;
+		if (!equals $user->externalId, $user_by_email->externalId) {
+			$user->externalId($external_id);
+		}
+	} else {
+		# New user.
+		$user = $self->create($email,
+			externalId => $external_id,
+			provider => $provider,
+			confirmed => 1,
+		);
+	}
+
+	# Not else! Variable $user may have been assiged to!
+	if ($user) {
+		$session->user($user);
+		$session->nonce(undef);
+		$session->provider($provider);
+		$session->token($access_token);
+		$session->token_expires($expires);
+		$self->sessionService->renew($session);
+	}
+
+	$self->database->commit;
+
+	return Mojo::URL->new($self->configuration->{origin});
 }
 
 __PACKAGE__->meta->make_immutable;

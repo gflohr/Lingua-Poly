@@ -21,7 +21,7 @@ use HTTP::Request;
 use JSON;
 use Mojo::URL;
 
-use Lingua::Poly::API::Users::Util qw(empty equals decode_jwt);
+use Lingua::Poly::API::Users::Util qw(empty decode_jwt);
 use Lingua::Poly::API::Users::Service::OAuth::Google::Discovery;
 
 use base qw(
@@ -52,11 +52,6 @@ has restService => (
 );
 has userService => (
 	isa => 'Lingua::Poly::API::Users::Service::User',
-	is => 'ro',
-	required => 1,
-);
-has emailService => (
-	isa => 'Lingua::Poly::API::Users::Service::Email',
 	is => 'ro',
 	required => 1,
 );
@@ -135,6 +130,7 @@ sub authenticate {
 	die "facebook did not send an access token"
 		if empty $payload->{access_token};
 	my $access_token = $payload->{access_token};
+	my $expires_in = $payload->{expires_in};
 
 	my $profile_url = URI->new('https://graph.facebook.com/v6.0/me/');
 	$profile_url->query_form(
@@ -148,55 +144,16 @@ sub authenticate {
 
 	die "facebook did not send a user id" if empty $payload->{id};
 
-	my $location = Mojo::URL->new($self->configuration->{origin});
 	my ($id, $email) = @{$payload}{qw(id email)};
 
-	# Everything from here on is generic and should go into a common method.
-	$email = $self->emailService->parseAddress($email) if !empty $email;
-
-	my $user = $self->userService->userByExternalId(
-		FACEBOOK => $id
+	return $self->userService->login(
+		session => $ctx->stash->{session},
+		externalId => $id,
+		provider => 'Facebook',
+		accessToken => $access_token,
+		expires => $now + $expires_in,
+		email => $email,
 	);
-	my $user_by_email = $self->userService->userByUsernameOrEmail($email)
-		if !empty $email;
-	my $external_id = "FACEBOOK:$id";
-
-	if ($user) {
-		if ($user_by_email && $user_by_email->id ne $user->id) {
-			# We have to delete the conflicting user in the database and
-			# merge the data.
-			$user->merge($user_by_email);
-			$self->userService->deleteUser($user_by_email);
-			$self->userService->updateUser($user);
-		}
-	} elsif ($user_by_email) {
-		# User had logged in before but in another way.
-		$user = $user_by_email;
-		if (!equals $user->externalId, $user_by_email->externalId) {
-			$user->externalId($external_id);
-		}
-	} else {
-		# New user.
-		$user = $self->userService->create($email,
-			externalId => $external_id,
-			confirmed => 1,
-		);
-	}
-
-	# Not else! Variable $user may have been assiged to!
-	if ($user) {
-		my $session = $ctx->stash->{session};
-		$session->user($user);
-		$session->nonce(undef);
-		$session->provider('GOOGLE');
-		$session->token($payload->{access_token});
-		$session->token_expires($now + $payload->{expires_in});
-		$self->sessionService->renew($session);
-	}
-
-	$self->database->commit;
-
-	return $location;
 }
 
 sub revoke {
@@ -226,7 +183,6 @@ Lingua::Poly::API::Users::Service::OAuth::Facebook; - Facebook OAuth Service
         sessionService => $session_service,
         resetService => $rest_service,
         userService => $user_service,
-        emailService => $email_service,
     );
 
 =head1 DESCRIPTION
@@ -268,11 +224,6 @@ This property is required. It is read-only.
 =item B<userService>
 
 A L<Lingua::Poly::API::Users::Service::UserService>.
-This property is required. It is read-only.
-
-=item B<emailService>
-
-A L<Lingua::Poly::API::Users::Service::EmailService>.
 This property is required. It is read-only.
 
 =back

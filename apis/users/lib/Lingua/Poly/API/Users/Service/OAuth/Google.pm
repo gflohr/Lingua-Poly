@@ -64,7 +64,7 @@ has userService => (
 has emailService => (
 	isa => 'Lingua::Poly::API::Users::Service::Email',
 	is => 'ro',
-	required => 1,
+	#required => 1,
 );
 
 sub __getDiscoveryConfig {

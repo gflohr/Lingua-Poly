@@ -121,9 +121,11 @@ my $c = container App => ['Env'] => as {
 			class => 'Lingua::Poly::API::Users::Service::User',
 			lifecycle => 'Singleton',
 			dependencies => {
+				configuration => '/Configuration/provider',
 				database  => '/Storage/database',
 				logger => { '/Logging/logger' => { realm => 'user' } },
 				emailService => '/Email',
+				sessionService => 'session',
 			}
 		);
 		service session => (
@@ -160,7 +162,6 @@ my $c = container App => ['Env'] => as {
 				apiPrefix => '/Configuration/apiPrefix',
 				restService => '/REST',
 				userService => '/User/user',
-				emailService => '/Email',
 			}
 		);
 		service Facebook => (
@@ -175,7 +176,6 @@ my $c = container App => ['Env'] => as {
 				apiPrefix => '/Configuration/apiPrefix',
 				restService => '/REST',
 				userService => '/User/user',
-				emailService => '/Email',
 			}
 		);
 	};

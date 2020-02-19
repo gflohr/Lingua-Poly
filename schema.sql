@@ -9,13 +9,13 @@ INSERT INTO identity_providers(name) SELECT 'local'
   WHERE NOT EXISTS (
     SELECT 1 FROM identity_providers WHERE name  = 'local'
   );
-INSERT INTO identity_providers(name) SELECT 'FACEBOOK'
+INSERT INTO identity_providers(name) SELECT 'Facebook'
   WHERE NOT EXISTS (
-    SELECT 1 FROM identity_providers WHERE name  = 'FACEBOOK'
+    SELECT 1 FROM identity_providers WHERE name  = 'Facebook'
   );
-INSERT INTO identity_providers(name) SELECT 'GOOGLE'
+INSERT INTO identity_providers(name) SELECT 'Google'
   WHERE NOT EXISTS (
-    SELECT 1 FROM identity_providers WHERE name  = 'GOOGLE'
+    SELECT 1 FROM identity_providers WHERE name  = 'Google'
   );
 
 CREATE TABLE users (
@@ -23,10 +23,13 @@ CREATE TABLE users (
     email CITEXT UNIQUE,
     username CITEXT UNIQUE,
     password TEXT,
-    external_id TEXT UNIQUE,
+    identity_provider_id INTEGER
+        REFERENCES identity_providers(id) ON DELETE CASCADE,
+    external_id TEXT,
     confirmed BOOLEAN NOT NULL DEFAULT 'f',
     homepage TEXT,
     description TEXT,
+    UNIQUE(identity_provider_id, external_id),
     CHECK((email IS NOT NULL) OR (external_id IS NOT NULL))
 );
 INSERT INTO users(id, email, username, password, confirmed) 
