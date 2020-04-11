@@ -19,11 +19,6 @@ use URI;
 
 use Mojo::Base qw(Lingua::Poly::API::Users::Controller);
 
-my $google_oid_configuration;
-
-use constant GOOGLE_OID_CONFIGURATION_URL =>
-	'https://accounts.google.com/.well-known/openid-configuration';
-
 sub login {
 	my $self = shift->openapi->valid_input or return;
 
@@ -63,7 +58,7 @@ sub logout {
 
 	my $provider = $self->stash->{session}->provider;
 	my $identity_provider = $self->app->sessionService->identityProvider(
-		local => $self
+		$provider => $self
 	);
 
 	$identity_provider->signOut;
