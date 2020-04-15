@@ -1,6 +1,7 @@
 export * from './authorizationUrl';
 export * from './config';
 export * from './empty';
+export * from './passwordChange';
 export * from './profile';
 export * from './token';
 export * from './user';

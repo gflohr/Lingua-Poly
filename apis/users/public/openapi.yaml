@@ -109,6 +109,22 @@ components:
       required:
       - href
       additionalProperties: false
+    PasswordChange:
+      title: PasswordChangeRequest
+      description: Either the oldPassword or a reset token must be present.
+      properties:
+        oldPassword:
+          type: string
+          example: secret
+        resetToken:
+          type: string
+          example: abcd0123
+        password:
+          type: string
+          example: s3cr3t
+      required:
+      - password
+      additionalProperties: false
   requestBodies:
     EmptyRequest:
       content:
@@ -135,6 +151,11 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Profile'
+    PasswordChangeRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PasswordChange'
 tags:
   - name: users
     description: User management
@@ -248,6 +269,19 @@ paths:
              application/json:
                schema:
                  $ref: '#/components/schemas/Profile'
+  /password:
+    patch:
+      tags:
+      - users
+      summary: Change user password
+      x-mojo-to: 'user#changePassword'
+      security:
+      - cookieAuth: []
+      requestBody:
+        $ref: '#/components/requestBodies/PasswordChangeRequest'
+      responses:
+        204:
+          description: Password successfully changed.
   /register:
     post:
       tags:

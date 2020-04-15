@@ -49,6 +49,48 @@ export class OauthService {
 
 
     /**
+     * Facebook OAuth Login Redirect URL
+     * @param code Code for access token
+     * @param state CSRF token
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public oauthFacebookGet(code?: string, state?: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public oauthFacebookGet(code?: string, state?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public oauthFacebookGet(code?: string, state?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public oauthFacebookGet(code?: string, state?: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+
+        let queryParameters = new HttpParams({encoder: this.encoder});
+        if (code !== undefined && code !== null) {
+            queryParameters = queryParameters.set('code', <any>code);
+        }
+        if (state !== undefined && state !== null) {
+            queryParameters = queryParameters.set('state', <any>state);
+        }
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        const httpHeaderAccepts: string[] = [
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        return this.httpClient.get<any>(`${this.configuration.basePath}/oauth/facebook`,
+            {
+                params: queryParameters,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
      * Google OpenID Connect Redirect URL
      * @param error An error occured.
      * @param code Code for access token.
