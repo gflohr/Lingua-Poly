@@ -1,8 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { UsersService } from '../../../core/openapi/lingua-poly';
-import { PasswordValidator } from '../../../core/validators/passwordValidator';
+import { PasswordValidator } from 'src/app/core/validators/passwordValidator';
+import * as fromAuth from '../../../auth/reducers';
+import { Store, select } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { User } from 'src/app/core/openapi/lingua-poly';
+import { tap } from 'rxjs/operators';
 
 @Component({
 	selector: 'app-change-password',
@@ -10,24 +13,40 @@ import { PasswordValidator } from '../../../core/validators/passwordValidator';
 	styleUrls: ['./change-password.component.css']
 })
 export class ChangePasswordComponent {
-	constructor(private fb: FormBuilder,
-		private router: Router,
-		private usersService: UsersService) { }
+	user$: Observable<User>;
 
-		changePasswordForm = this.fb.group ({
-			email: [ null ],
-			oldPassword: ['', [Validators.required ]],
-			password: ['', Validators.required],
-			passwordStrength: [ null ],
-			password2: ['', Validators.required ]
-		}, {
-			validators:
-				[
-					PasswordValidator.passwordMatch,
-					PasswordValidator.passwordStrength
-				]
-			}
+	constructor(
+		private fb: FormBuilder,
+		private authStore: Store<fromAuth.State>
+	) {
+		this.user$ = this.authStore.pipe(
+			select(fromAuth.selectUser),
+			tap(user => {
+				const email = user ? user.email : '';
+				const username = user ? user.username : '';
+				this.changePasswordForm.patchValue({
+					email: email,
+					username: username,
+				});
+			})
 		);
+	}
+
+	changePasswordForm = this.fb.group ({
+		email: [ null ],
+		username: [ null ],
+		oldPassword: ['', [Validators.required ]],
+		password: ['', Validators.required],
+		passwordStrength: [ null ],
+		password2: ['', Validators.required ]
+	}, {
+		validators:
+			[
+				PasswordValidator.passwordMatch,
+				PasswordValidator.passwordStrength
+			]
+		}
+	);
 
 	onSubmit() {
 		//const user = {

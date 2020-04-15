@@ -18,9 +18,19 @@ export class PasswordValidator {
 
 		const email = fg.get('email').value;
 
-		const result = zxcvbn(password.value,
-								[email, 'lingua', 'poly',
-								 'lingua-poly']);
+		let forbidden = ['lingua', 'poly', 'lingua-poly' ];
+
+		const emailControl = fg.get('email');
+		if (emailControl) {
+			forbidden.push(emailControl.value);
+		}
+
+		const usernameControl = fg.get('username');
+		if (usernameControl) {
+			forbidden.push(usernameControl.value);
+		}
+
+		const result = zxcvbn(password.value, forbidden);
 
 		switch (result.score) {
 			case 0:
