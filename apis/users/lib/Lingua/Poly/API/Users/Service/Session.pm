@@ -93,7 +93,7 @@ sub identityProvider {
 sub refreshOrCreate {
 	my ($self, $sid, $fingerprint) = @_;
 
-	my ($user_id, $username, $email, $password, $confirmed,
+	my ($user_id, $username, $email, $external_id, $password, $confirmed,
 	    $homepage, $description);
 	my $database = $self->database;
 
@@ -104,7 +104,7 @@ sub refreshOrCreate {
 		$self->debug('updating session');
 		$database->execute(UPDATE_SESSION => $sid);
 		if (defined $user_id) {
-			($username, $email, $password, $confirmed,
+			($username, $email, $external_id, $password, $confirmed,
 			 $homepage, $description) = $database->getRow(
 				SELECT_USER_BY_ID => $user_id
 			);
@@ -134,6 +134,7 @@ sub refreshOrCreate {
 	if (defined $user_id) {
 		$args{user} = Lingua::Poly::API::Users::Model::User->new(
 			id => $user_id,
+			externalId => $external_id,
 			username => $username,
 			email => $email,
 			password => $password,

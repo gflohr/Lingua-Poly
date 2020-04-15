@@ -98,6 +98,10 @@ sub authorizationUrl {
 sub authenticate {
 	my ($self, $ctx, %params) = @_;
 
+	if ($params{error}) {
+		die "login cancelled\n";
+	}
+
 	my $config = $self->configuration;
 
 	my $client_id = $config->{oauth}->{facebook}->{client_id}
@@ -157,11 +161,27 @@ sub authenticate {
 }
 
 sub revoke {
-	my ($self, $token, $token_expires) = @_;
+	my ($self, $ctx, $token, $token_expires) = @_;
 
 	return $self if $token_expires < time;
 
-	die;
+	my $session = $ctx->stash->{session};
+	my $id = $session->user->externalId;
+
+	# FIXME! Can we just use /me instead of the user id?
+	my $endpoint = URI->new("https://graph.facebook.com/v6.0/$id/");
+	$endpoint->query_form(
+		access_token => $token,
+	);
+
+	$self->debug("revoking token with endpoint '$endpoint'");
+	my ($payload, $response) = $self->restService->delete($endpoint);
+	if (!$response->is_success) {
+		my $msg = $response->status_line;
+		$self->warn("token could not be revoked: $msg");
+	}
+
+	return $self;
 }
 
 __PACKAGE__->meta->make_immutable;

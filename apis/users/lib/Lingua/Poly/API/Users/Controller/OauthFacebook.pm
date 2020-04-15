@@ -20,8 +20,7 @@ use Mojo::Base qw(Lingua::Poly::API::Users::Controller);
 use Mojo::URL;
 
 sub redirect {
-	#my $self = shift->openapi->valid_input or return;
-	my ($self) = @_;
+	my $self = shift->openapi->valid_input or return;
 
 	my $params = $self->req->query_params->to_hash;
 

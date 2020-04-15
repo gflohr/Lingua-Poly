@@ -10,30 +10,31 @@
 # to Public License, Version 2, as published by Sam Hocevar. See
 # http://www.wtfpl.net/ for more details.
 
-package Lingua::Poly::API::Users::IdentityProvider::Google;
+package Lingua::Poly::API::Users::IdentityProvider::Facebook;
 
 use strict;
 
 use Moose;
 use namespace::autoclean;
 
+use Lingua::Poly::API::Users::Util qw(check_password);
+
 use base qw(Lingua::Poly::API::Users::IdentityProvider::Local);
 
 sub authenticate {
 	require Carp;
-	Carp::croak("Indentity provider Google cannot authenticate");
+	Carp::croak("Indentity provider Facebook cannot authenticate");
 }
 
 sub signOut {
 	my ($self) = @_;
-
 
 	my $context = $self->context;
 	my $app = $context->app;
 	my $session = $context->stash->{session};
 	my ($token, $token_expires) = ($session->token, $session->token_expires);
 
-	$app->googleOAuthService->revoke($context, $token, $token_expires);
+	$app->facebookOAuthService->revoke($context, $token, $token_expires);
 
 	$self->SUPER::signOut();
 

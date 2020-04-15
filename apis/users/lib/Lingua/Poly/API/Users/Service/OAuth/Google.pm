@@ -212,7 +212,7 @@ sub authenticate {
 }
 
 sub revoke {
-	my ($self, $token, $token_expires) = @_;
+	my ($self, $context, $token, $token_expires) = @_;
 
 	return $self if $token_expires < time;
 
@@ -230,9 +230,9 @@ sub revoke {
 			content_type => 'application/x-www-form-urlencoded'
 		}
 	);
-	if (!$response->status_line) {
+	if (!$response->is_success) {
 		my $msg = $response->status_line;
-		$self->warning("token could not be revoked: $msg");
+		$self->warn("token could not be revoked: $msg");
 	}
 
 	return $self;

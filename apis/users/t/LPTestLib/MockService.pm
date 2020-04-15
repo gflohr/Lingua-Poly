@@ -113,7 +113,6 @@ sub AUTOLOAD {
 	} elsif ($self->{__mockAll}) {
 		return $self;
 	} elsif ($self->{__mockedInheritance}) {
-		$DB::single = 1;
 		return $self->{__mockedInheritance}->$method(@args);
 	} elsif ('DESTROY' eq $method) {
 		return;

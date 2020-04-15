@@ -109,7 +109,7 @@ DELETE FROM users u
 EOF
 
 		SELECT_USER_BY_ID => <<EOF,
-SELECT username, email, password, confirmed, homepage, description
+SELECT username, email, external_id, password, confirmed, homepage, description
   FROM users WHERE id = ?
 EOF
 
@@ -126,9 +126,12 @@ SELECT id, username, email, external_id,
 EOF
 
 		SELECT_USER_BY_EXTERNAL_ID => <<EOF,
-SELECT id, username, email, external_id,
-       password, confirmed, homepage, description
-  FROM users WHERE external_id = ?
+SELECT u.id, u.username, u.email, u.external_id,
+       u.password, u.confirmed, u.homepage, u.description
+  FROM users u, identity_providers p
+ WHERE u.external_id = ?
+   AND u.identity_provider_id = p.id
+	 AND p.name = ?
 EOF
 
 		UPDATE_USER_ACTIVATE => <<EOF,

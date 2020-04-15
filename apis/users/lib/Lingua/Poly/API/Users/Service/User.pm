@@ -91,7 +91,7 @@ sub userByExternalId {
 	my ($self, $provider, $id) = @_;
 
 	return $self->__userByStatement(
-		SELECT_USER_BY_EXTERNAL_ID => "$provider:$id");
+		SELECT_USER_BY_EXTERNAL_ID => $provider, $id);
 }
 
 sub userByToken {
@@ -174,7 +174,7 @@ sub login {
 
 	my $user;
 	if (defined $provider) {
-		$user = $self->userByExternalId($provider => $external_id);
+		$user = $self->userByExternalId($external_id, $provider);
 	} else {
 		die "not yet implemented";
 	}

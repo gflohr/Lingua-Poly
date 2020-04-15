@@ -128,8 +128,6 @@ sub __afterDispatch {
 	# This must come last in the after_dispatch hook.
 	$self->debug(format_response_line '>>>', $ctx->res);
 	$self->debug(format_headers '>>>', $ctx->res->headers);
-
-	$DB::single = 1;
 }
 
 1;
