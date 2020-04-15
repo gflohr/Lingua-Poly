@@ -168,7 +168,6 @@ sub revoke {
 	my $session = $ctx->stash->{session};
 	my $id = $session->user->externalId;
 
-	# FIXME! Can we just use /me instead of the user id?
 	my $endpoint = URI->new("https://graph.facebook.com/v6.0/$id/");
 	$endpoint->query_form(
 		access_token => $token,
