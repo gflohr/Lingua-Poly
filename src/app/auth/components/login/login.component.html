@@ -31,7 +31,16 @@
 				       for="persistant" translate>Remember me!</label>
 			</div>
 			<button type="submit" class="btn btn-success btn-block"
-			        translate>Login</button>
+					translate>Login</button>
+			<div class="login-options">
+				<p>
+					<span translate>Don't have an account?</span>
+					&nbsp;
+					<a routerLink="/registration" translate>Register!</a>
+					<br />
+					<a routerLink="/reset-password" translate>Forgot your password?</a>
+				</p>
+			</div>
 		</form>
 	</div>
 	<div *ngIf="hasOAuth$ | async"
