@@ -6,6 +6,7 @@ import { userRoutes } from './user.routes';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CoreModule } from '../core/core.module';
 import { ChangePasswordComponent } from './components/change-password/change-password.component';
+import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 
 @NgModule({
 	imports: [
@@ -15,6 +16,6 @@ import { ChangePasswordComponent } from './components/change-password/change-pas
 		FormsModule,
 		ReactiveFormsModule
 	],
-	declarations: [ProfileComponent, ChangePasswordComponent]
+	declarations: [ProfileComponent, ChangePasswordComponent, ResetPasswordComponent]
 })
 export class UserModule { }
