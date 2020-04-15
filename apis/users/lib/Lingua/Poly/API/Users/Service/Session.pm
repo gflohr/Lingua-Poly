@@ -203,6 +203,18 @@ sub getState {
 	return encode_base64url hmac_sha256 $session->sid, $secret;
 }
 
+sub privilegeLevelChange {
+	my ($self, $ctx) = @_;
+
+	my $session = $ctx->stash->{session};
+	$self->delete($session);
+	$self->renew($session);
+
+	$self->database->commit;
+
+	return $self;
+}
+
 __PACKAGE__->meta->make_immutable;
 
 1;

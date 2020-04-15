@@ -16,6 +16,8 @@ use strict;
 
 use HTTP::Status qw(:constants);
 use URI;
+use Data::Password::zxcvbn 1.0.4 qw(password_strength);
+use Lingua::Poly::API::Users::Util qw(check_password);
 
 use Mojo::Base qw(Lingua::Poly::API::Users::Controller);
 
@@ -121,6 +123,45 @@ sub get {
 	my %user = $user->toResponse;
 
 	return $self->render(openapi => \%user, status => HTTP_OK);
+}
+
+sub changePassword {
+	my $self = shift->openapi->valid_input or return;
+
+	my $changeSet = $self->req->json;
+
+	my $user = $self->stash->{session}->user;
+
+	if (!$user->password) {
+		return $self->errorResponse(
+			HTTP_FORBIDDEN, {
+				message => 'user does not have a password'
+			}
+		);
+	}
+
+	if (!check_password $changeSet->{oldPassword}, $user->password) {
+		return $self->errorResponse(
+			HTTP_FORBIDDEN, {
+				message => 'invalid password'
+			}
+		);
+	}
+
+	my $analysis = password_strength $changeSet->{password};
+	my $score = $analysis->{score};
+	if ($score < 3) {
+		return $self->errorResponse(
+			HTTP_BAD_REQUEST, {
+				message => "Password too weak (score: $score/3).",
+			}
+		);
+	}
+
+	$self->app->userService->changePassword($user, $changeSet->{password});
+	$self->app->sessionService->privilegeLevelChange($self);
+
+	return $self->render(json => '', status => HTTP_NO_CONTENT);
 }
 
 1;

@@ -219,6 +219,20 @@ sub login {
 	return Mojo::URL->new($self->configuration->{origin});
 }
 
+sub changePassword {
+	my ($self, $user, $password) = @_;
+
+	my $db = $self->database;
+
+	my $digest = crypt_password $password;
+	$db->execute(UPDATE_USER_PASSWORD => $digest, $user->id);
+	$db->commit;
+
+	$user->password($digest);
+
+	return $self;
+}
+
 __PACKAGE__->meta->make_immutable;
 
 1;

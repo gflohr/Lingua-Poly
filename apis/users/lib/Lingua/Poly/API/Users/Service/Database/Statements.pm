@@ -140,6 +140,10 @@ UPDATE users
  WHERE id = ?
 EOF
 
+		UPDATE_USER_PASSWORD => <<EOF,
+UPDATE users SET password = ? WHERE id = ?
+EOF
+
 		SELECT_CONFIG => <<EOF,
 SELECT value, expires
   FROM configs
