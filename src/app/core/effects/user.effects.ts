@@ -8,7 +8,6 @@ import { UserApiActions } from 'src/app/user/actions';
 import { Router } from '@angular/router';
 import * as fromAuth from '../../auth/reducers';
 import { Store } from '@ngrx/store';
-import { ErrorCodes } from '../services/error-codes.service';
 
 @Injectable()
 export class UserEffects {
