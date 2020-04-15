@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import { fromEvent, merge, timer, of } from 'rxjs';
 import { createEffect, Actions, ofType } from '@ngrx/effects';
 import { map, exhaustMap, switchMapTo, catchError, tap } from 'rxjs/operators';
-import { UserActions } from '../actions';
+import { UserActions, MessageActions } from '../actions';
 import { UsersService, Profile } from '../openapi/lingua-poly';
 import { UserApiActions } from 'src/app/user/actions';
 import { Router } from '@angular/router';
 import * as fromAuth from '../../auth/reducers';
 import { Store } from '@ngrx/store';
+import { ErrorCodes } from '../services/error-codes.service';
 
 @Injectable()
 export class UserEffects {
@@ -44,6 +45,40 @@ export class UserEffects {
 			)
 		)
 	), { dispatch: false });
+
+	changePassword$ = createEffect(() => this.actions$.pipe(
+		ofType(UserActions.changePassword),
+		exhaustMap(props =>
+			this.usersService.passwordPatch(props.payload).pipe(
+				// FIXME! Display message!
+				tap(() => this.router.navigate(['/'])),
+				map(() => MessageActions.displayError({ code: 'STATUS_PASSWORD_CHANGED' })),
+				catchError(error => of(UserApiActions.changePasswordFailure({ error })))
+			)
+		)
+	));
+
+	changePasswordFailure$ = createEffect(() => this.actions$.pipe(
+		ofType(UserApiActions.changePasswordFailure),
+		map(props => {
+			let code;
+			switch (props.error.code) {
+				case 400:
+					code = 'ERROR_WEAK_PASSWORD';
+					break;
+				case 401:
+					code = 'ERROR_NOT_LOGGED_IN';
+					break;
+				case 410:
+					code = 'ERROR_TOKEN_EXPIRED';
+					break;
+				default:
+					code = 'ERROR_PASSWORD_CHANGE_FAILED';
+					break;
+			}
+			return MessageActions.displayError({ code });
+		}),
+	));
 
 	constructor(
 		private actions$: Actions,

@@ -10,3 +10,8 @@ export const profileFailure = createAction(
 	'[User API] Profile Failure',
 	props<{ error: any }>()
 );
+
+export const changePasswordFailure = createAction(
+	'[User API] Change Password Failure',
+	props<{ error: any }>()
+);

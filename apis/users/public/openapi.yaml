@@ -217,6 +217,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
+        400:
+          description: Invalid input, e.g. password too weak
   /profile:
     get:
       tags:
@@ -246,6 +248,8 @@ paths:
       responses:
         204:
           description: Profile updated successfully
+        401:
+          description: Wrong password
   /profile/{name}:
     get:
       tags:
@@ -282,6 +286,10 @@ paths:
       responses:
         204:
           description: Password successfully changed.
+        400:
+          description: Password too weak
+        410:
+          description: Token not found (expired?)
   /register:
     post:
       tags:

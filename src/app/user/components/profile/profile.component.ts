@@ -28,7 +28,6 @@ export class ProfileComponent {
 			select(fromAuth.selectUser),
 			tap(user => {
 				const username = user ? user.username : '';
-				console.log(user);
 				this.profileForm.patchValue({ originalUsername: username });
 			})
 		);

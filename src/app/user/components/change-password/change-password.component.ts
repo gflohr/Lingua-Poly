@@ -4,8 +4,9 @@ import { PasswordValidator } from 'src/app/core/validators/passwordValidator';
 import * as fromAuth from '../../../auth/reducers';
 import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { User } from 'src/app/core/openapi/lingua-poly';
+import { User, PasswordChange } from 'src/app/core/openapi/lingua-poly';
 import { tap } from 'rxjs/operators';
+import { UserActions } from '../../../core/actions';
 
 @Component({
 	selector: 'app-change-password',
@@ -49,13 +50,11 @@ export class ChangePasswordComponent {
 	);
 
 	onSubmit() {
-		//const user = {
-		//	email: this.registrationForm.get('email').value,
-		//	password: this.registrationForm.get('password').value,
-		//} as UserDraft;
-		//this.usersService.usersPost(user).subscribe(() =>
-		//	this.router.navigate(['../registration/received', user.email])
-		//);
+		const changeSet = {
+			password: this.changePasswordForm.get('password').value,
+			oldPassword: this.changePasswordForm.get('oldPassword').value,
+		} as PasswordChange;
+		this.authStore.dispatch(UserActions.changePassword({ payload: changeSet }));
 	}
 
 	get oldPassword() { return this.changePasswordForm.get('oldPassword'); }

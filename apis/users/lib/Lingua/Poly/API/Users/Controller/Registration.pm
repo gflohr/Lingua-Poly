@@ -51,7 +51,7 @@ sub createUser {
 		if ($existing) {
 			if ($existing->confirmed) {
 				# We must never report to the user the email address is already in
-				# our  system, as this would leak personal data.  Instead, we send
+				# our system, as this would leak personal data.  Instead, we send
 				# a mail but suggest to recover the password instead.
 				$suggest_recover = 1;
 			} else {
