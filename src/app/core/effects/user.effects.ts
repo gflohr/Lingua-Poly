@@ -49,7 +49,6 @@ export class UserEffects {
 		ofType(UserActions.changePassword),
 		exhaustMap(props =>
 			this.usersService.passwordPatch(props.payload).pipe(
-				// FIXME! Display message!
 				tap(() => this.router.navigate(['/'])),
 				map(() => MessageActions.displayError({ code: 'STATUS_PASSWORD_CHANGED' })),
 				catchError(error => of(UserApiActions.changePasswordFailure({ error })))
@@ -79,10 +78,21 @@ export class UserEffects {
 		}),
 	));
 
+	resetPassword$ = createEffect(() => this.actions$.pipe(
+		ofType(UserActions.resetPasswordRequest),
+		exhaustMap(props =>
+			this.usersService.passwordResetPost(props.payload).pipe(
+				tap(() => this.router.navigate(['/'])),
+				map(() => MessageActions.displayError({ code: 'STATUS_PASSWORD_CHANGED' })),
+				catchError(() => of(MessageActions.displayError({ code: 'ERROR_PASSWORD_RESET_FAILED' })))
+			)
+		)
+	));
+
 	constructor(
 		private actions$: Actions,
 		private usersService: UsersService,
 		private router: Router,
 		private authStore: Store<fromAuth.State>
-	) { }
+	) {}
 }

@@ -125,6 +125,16 @@ components:
       required:
       - password
       additionalProperties: false
+    PasswordReset:
+      title: PasswordResetRequest
+      description: Send password reset instructions by email.
+      properties:
+        id:
+          type: string
+          example: user@example.com
+      required:
+      - id
+      additionalProperties: false
   requestBodies:
     EmptyRequest:
       content:
@@ -156,6 +166,11 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/PasswordChange'
+    PasswordResetRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PasswordReset'
 tags:
   - name: users
     description: User management
@@ -290,6 +305,17 @@ paths:
           description: Password too weak
         410:
           description: Token not found (expired?)
+  /password/reset:
+    post:
+      tags:
+      - users
+      summary: Reset your password
+      x-mojo-to: 'user#resetPassword'
+      requestBody:
+        $ref: '#/components/requestBodies/PasswordResetRequest'
+      responses:
+        204:
+          description: Request received.
   /register:
     post:
       tags:

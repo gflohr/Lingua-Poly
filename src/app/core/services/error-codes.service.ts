@@ -30,6 +30,14 @@ export const ErrorCodes = {
 		title: _('Password Changed'),
 		text: _('Password was successfully changed.'),
 	},
+	STATUS_PASSWORD_RESET: {
+		title: _('Password Reset'),
+		text: _('Please check your mails!'),
+	},
+	ERROR_PASSWORD_RESET_FAILED: {
+		title: _('Resetting Password Failed'),
+		text: _('Resetting your password failed. Please try again later!'),
+	},
 };
 
 export interface ErrorMessage {

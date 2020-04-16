@@ -3,6 +3,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import * as fromAuth from '../../../auth/reducers';
 import { Store } from '@ngrx/store';
 import { UserActions } from '../../../core/actions';
+import { PasswordReset } from '../../../core/openapi/lingua-poly';
 
 @Component({
 	selector: 'app-reset-password',
@@ -20,7 +21,9 @@ export class ResetPasswordComponent {
 	});
 
 	onSubmit() {
-		const id = this.resetPasswordForm.get('id').value;
-		this.authStore.dispatch(UserActions.resetPasswordRequest({ payload: id }));
+		const request = {
+			id: this.resetPasswordForm.get('id').value,
+		} as PasswordReset;
+		this.authStore.dispatch(UserActions.resetPasswordRequest({ payload: request }));
 	}
 }
