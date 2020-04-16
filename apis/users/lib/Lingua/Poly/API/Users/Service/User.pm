@@ -45,6 +45,11 @@ has emailService => (
 	isa => 'Lingua::Poly::API::Users::Service::Email',
 	required => 1,
 );
+has tokenService => (
+	is => 'ro',
+	isa => 'Lingua::Poly::API::Users::Service::Token',
+	required => 1,
+);
 
 sub create {
 	my ($self, $email, %options) = @_;
@@ -234,13 +239,53 @@ sub changePassword {
 	return $self;
 }
 
+# The only error that is reported back to the user is a failure sending an
+# email.  All other errors are simply ignored so that we do not leak any
+# information about which users are registered.
 sub resetPassword {
-	my ($self, $user_id) = @_;
+	my ($self, $ctx, $user_id) = @_;
 
 	my $user = $self->userByUsernameOrEmail($user_id);
 	return $self if !$user;
 
-	die;
+	# This should not happen.  Users with a password must always have a
+	# validated email address.
+	return $self if empty $user->email;
+
+	my $db = $self->database;
+
+	# If the user is not yet confirmed, simply resend a registration mail.
+	if (!$user->confirmed) {
+		my $token = $self->tokenService->byPurpose(
+				registration => $user->email);
+		return $self if empty $token;
+
+		$self->tokenService->update(registration => $user->email);
+		$self->sendRegistrationMail(
+			siteURL => $ctx->siteURL,
+			token => $token,
+			to => $user->email,
+		);
+
+		return $self;
+	}
+
+	my $token = $self->tokenService->byPurpose(resetPassword => $user->email);
+	if (!$token) {
+		$self->tokenService->create(resetPassword => $user->email);
+	} else {
+		# If the user has already requested a password reset, simply renew
+		# the token and resend the mail.
+		$self->tokenService->update(resetPassword => $user->email);
+	}
+
+	$self->sendPasswordResetMail(
+		siteURL => $ctx->siteURL,
+		token => $token,
+		to => $user->email,
+	);
+
+	return $self;
 }
 
 sub sendRegistrationMail {
@@ -280,6 +325,63 @@ If you did not register, please ignore this email!
 
 In order to confirm the registration, please follow the following
 link:
+
+    {confirmation_url}
+
+There is no need to keep this email.  The above link will expire in
+{expiry_minutes} minutes.
+
+This email was send from an account that is not set up to receive mails.
+
+Best regards,
+Your Lingua::Poly team
+EOF
+
+	$self->emailService->send(
+		to => $options{to},
+		subject => $subject,
+		body => $body,
+	);
+
+	return $self;
+}
+
+sub sendPasswordResetMail {
+	my ($self, %options) = @_;
+
+	if (empty $options{siteURL}) {
+		require Carp;
+		Carp::croak('argument siteURL is mandatory');
+	}
+	if (empty $options{token}) {
+		require Carp;
+		Carp::Croak(('argument token is manatory'));
+	}
+	if (empty $options{to}) {
+		require Carp;
+		Carp::Croak(('argument to is manatory'));
+	}
+
+	my $confirmation_url = Mojo::URL->new($options{siteURL});
+	$confirmation_url->path("/reset-password/token=$options{token}");
+
+	my $subject = __"Reset Lingua::Poly password";
+	my $expiry_minutes = $self->configuration->{session}->{timeout} / 60;
+
+	my %placeholders = (
+		url => $options{siteURL},
+		confirmation_url => $confirmation_url,
+		expiry_minutes => $expiry_minutes,
+	);
+	my $body = __x(<<'EOF', %placeholders);
+Hello,
+
+somebody, hopefully you, has requested to reset your password
+at the Lingua::Poly website ({url}).
+
+If you did not request resetting your password, please ignore this email!
+
+In order to reset your password, please follow the following link:
 
     {confirmation_url}
 

@@ -24,7 +24,6 @@ use Mojo::Base qw(Lingua::Poly::API::Users::Controller);
 sub createUser {
 	my $self = shift->openapi->valid_input or return;
 
-$DB::single = 1;
 	my $userDraft = $self->req->json;
 
 	my @errors;
@@ -74,11 +73,9 @@ $DB::single = 1;
 		return $self->errorResponse(HTTP_BAD_REQUEST, @errors);
 	}
 
-	my $body;
-	my $subject;
-	my $expiry_minutes = $self->config->{session}->{timeout} / 60;
 	if ($suggest_recover) {
-		die "recover not yet implemented";
+		$self->app->userService->resetPassword($self, $userDraft->{email});
+		return $self->render(json => \%user, status => HTTP_CREATED);
 	} else {
 		my $token;
 		my $tokenService = $self->app->tokenService;
@@ -91,7 +88,7 @@ $DB::single = 1;
 			}
 			$tokenService->update(registration => $userDraft->{email});
 		} else {
-			# Create the  user.
+			# Create the user.
 			$self->app->userService->create(
 				$userDraft->{email},
 				password => $userDraft->{password},

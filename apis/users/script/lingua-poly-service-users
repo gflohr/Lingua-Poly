@@ -127,6 +127,7 @@ my $c = container App => ['Env'] => as {
 				logger => { '/Logging/logger' => { realm => 'user' } },
 				emailService => '/Email',
 				sessionService => 'session',
+				tokenService => '/Token',
 			}
 		);
 		service session => (
