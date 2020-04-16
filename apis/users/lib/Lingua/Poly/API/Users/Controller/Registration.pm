@@ -42,10 +42,11 @@ sub createUser {
 
 	my $suggest_recover;
 	my $renew_request;
+	my $existing;
 	if (exists $userDraft->{email}) {
 		# Email already taken?
-		my $existing = $self->app->userService->userByUsernameOrEmail(
-			$userDraft->{email});
+		$existing = $self->app->userService->userByUsernameOrEmail(
+				$userDraft->{email});
 		if ($existing) {
 			if ($existing->confirmed) {
 				# We must never report to the user the email address is already in
@@ -75,6 +76,7 @@ sub createUser {
 
 	if ($suggest_recover) {
 		$self->app->userService->resetPassword($self, $userDraft->{email}, 1);
+		my %user = (email => $userDraft->{email});
 		return $self->render(json => \%user, status => HTTP_CREATED);
 	} else {
 		my $token;
@@ -86,12 +88,14 @@ sub createUser {
 				die "no registration token for $userDraft->{email} found";
 				$self->app->database->rollback;
 			}
+			$self->app->userService->changePassword($existing, $userDraft->{password});
 			$tokenService->update(registration => $userDraft->{email});
 		} else {
 			# Create the user.
 			$self->app->userService->create(
 				$userDraft->{email},
 				password => $userDraft->{password},
+				confirmed => 0,
 			);
 			$token = $tokenService->create(registration => $userDraft->{email});
 		}

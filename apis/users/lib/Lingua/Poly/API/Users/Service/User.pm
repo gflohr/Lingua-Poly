@@ -58,7 +58,7 @@ sub create {
 	my $digest = empty $options{password}
 		? undef : crypt_password $options{password};
 
-	$options{confirmed} ||= 1;
+	$options{confirmed} = 1 if !exists $options{confirmed};
 
 	$db->execute(INSERT_USER
 		=> $email, $digest,
@@ -364,8 +364,7 @@ sub sendPasswordResetMail {
 	}
 
 	my $confirmation_url = Mojo::URL->new($options{siteURL});
-	$confirmation_url->path("/reset-password");
-	$confirmation_url->query(token => $options{token});
+	$confirmation_url->path("/reset-password/$options{token}");
 
 	my $subject = __"Reset Lingua::Poly password";
 	my $expiry_minutes = $self->configuration->{session}->{timeout} / 60;
