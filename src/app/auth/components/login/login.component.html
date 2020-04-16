@@ -7,7 +7,7 @@
 			</small>
 			<div class="form-group">
 				<label for="id" translate>Email address or username</label>
-				<input type="id" class="form-control" id="id"
+				<input type="text" class="form-control" id="id"
 					   formControlName="id"
 					   aria-describedby="idHelp"
 					   placeholder="{{ 'Enter email or username' | translate }}">
@@ -31,6 +31,7 @@
 				       for="persistant" translate>Remember me!</label>
 			</div>
 			<button type="submit" class="btn btn-success btn-block"
+			        [disabled]="!loginForm.dirty || !loginForm.valid"
 					translate>Login</button>
 			<div class="login-options">
 				<p>
