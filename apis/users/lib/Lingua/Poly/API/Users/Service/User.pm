@@ -20,6 +20,8 @@ use namespace::autoclean;
 use Lingua::Poly::API::Users::Util qw(crypt_password empty equals);
 use Lingua::Poly::API::Users::Validator::Homepage;
 
+use Locale::TextDomain qw(Lingua-Poly);
+
 use base qw(Lingua::Poly::API::Users::Logging);
 
 has configuration => (is => 'ro', required => 1);
@@ -239,6 +241,64 @@ sub resetPassword {
 	return $self if !$user;
 
 	die;
+}
+
+sub sendRegistrationMail {
+	my ($self, %options) = @_;
+
+	if (empty $options{siteURL}) {
+		require Carp;
+		Carp::croak('argument siteURL is mandatory');
+	}
+	if (empty $options{token}) {
+		require Carp;
+		Carp::Croak(('argument token is manatory'));
+	}
+	if (empty $options{to}) {
+		require Carp;
+		Carp::Croak(('argument to is manatory'));
+	}
+
+	my $confirmation_url = Mojo::URL->new($options{siteURL});
+	$confirmation_url->path("/registration/confirmed/$options{token}");
+
+	my $subject = __"Confirm Lingua::Poly registration";
+	my $expiry_minutes = $self->configuration->{session}->{timeout} / 60;
+
+	my %placeholders = (
+		url => $options{siteURL},
+		confirmation_url => $confirmation_url,
+		expiry_minutes => $expiry_minutes,
+	);
+	my $body = __x(<<'EOF', %placeholders);
+Hello,
+
+somebody, hopefully you, has registered at the Lingua::Poly website
+({url}).
+
+If you did not register, please ignore this email!
+
+In order to confirm the registration, please follow the following
+link:
+
+    {confirmation_url}
+
+There is no need to keep this email.  The above link will expire in
+{expiry_minutes} minutes.
+
+This email was send from an account that is not set up to receive mails.
+
+Best regards,
+Your Lingua::Poly team
+EOF
+
+	$self->emailService->send(
+		to => $options{to},
+		subject => $subject,
+		body => $body,
+	);
+
+	return $self;
 }
 
 __PACKAGE__->meta->make_immutable;

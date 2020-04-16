@@ -16,8 +16,6 @@ use strict;
 
 use HTTP::Status qw(:constants);
 use Data::Password::zxcvbn 1.0.4 qw(password_strength);
-use Email::Simple 2.216;
-use Email::Sender::Simple 1.300031 qw(sendmail);
 
 use Lingua::Poly::API::Users::Util qw(empty crypt_password check_password);
 
@@ -26,6 +24,7 @@ use Mojo::Base qw(Lingua::Poly::API::Users::Controller);
 sub createUser {
 	my $self = shift->openapi->valid_input or return;
 
+$DB::single = 1;
 	my $userDraft = $self->req->json;
 
 	my @errors;
@@ -100,47 +99,16 @@ sub createUser {
 			$token = $tokenService->create(registration => $userDraft->{email});
 		}
 
-		my $transport = $self->emailSenderTransport;
 		my $url = $self->siteURL;
-		my $confirmation_url = Mojo::URL->new($url);
-		$confirmation_url->path("/registration/confirmed/$token");
 
-		$subject = 'Confirm Lingua::Poly registration';
-		$body = <<EOF;
-Hello,
-
-somebody, hopefully you, has registered at the Lingua::Poly website
-($url).
-
-If you did not register, please ignore this email!
-
-In order to confirm the registration, please follow the following
-link:
-
-     $confirmation_url
-
-There is no need to keep this email.  The above link will expire in
-$expiry_minutes minutes.
-
-This email was send from an account that is not set up to receive mails.
-
-Best regards,
-Your Lingua::Poly team
-EOF
+		$self->app->userService->sendRegistrationMail(
+			to => $userDraft->{email},
+			token => $token,
+			siteURL => $self->siteURL,
+		);
 	}
 
 	$self->app->database->commit;
-
-	my $email = Email::Simple->create(
-		header => [
-			To => $userDraft->{email},
-			From => $self->config->{smtp}->{sender},
-			Subject => $subject,
-		],
-		body => $body,
-	);
-
-	sendmail $email, { transport => $self->emailSenderTransport };
 
 	my %user = (email => $userDraft->{email});
 

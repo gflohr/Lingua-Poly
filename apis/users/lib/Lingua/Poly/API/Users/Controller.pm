@@ -15,7 +15,6 @@ package Lingua::Poly::API::Users::Controller;
 use strict;
 
 use HTTP::Status qw(:constants);
-use Email::Sender::Transport::SMTP 1.300031;
 use Mojo::URL;
 
 use Mojo::Base ('Mojolicious::Controller', 'Lingua::Poly::API::Users::Logging');
@@ -58,10 +57,6 @@ sub logger {
 sub fingerprint {
 	my ($self) = @_;
 
-}
-
-sub emailSenderTransport {
-	return Email::Sender::Transport::SMTP->new(shift->config->{smtp});
 }
 
 sub siteURL {

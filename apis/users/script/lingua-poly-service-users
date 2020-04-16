@@ -74,6 +74,7 @@ my $c = container App => ['Env'] => as {
 		class => 'Lingua::Poly::API::Users::Service::Email',
 		dependencies => {
 			logger => { '/Logging/logger' => { realm => 'request' }},
+			configuration => '/Configuration/provider',
 		}
 	);
 
