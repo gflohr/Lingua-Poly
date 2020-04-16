@@ -72,7 +72,6 @@ sub create {
 sub userByUsernameOrEmail {
 	my ($self, $id) = @_;
 
-
 	my $db = $self->database;
 	my ($statement, @args);
 	if ($id =~ /@/) {
@@ -231,6 +230,15 @@ sub changePassword {
 	$user->password($digest);
 
 	return $self;
+}
+
+sub resetPassword {
+	my ($self, $user_id) = @_;
+
+	my $user = $self->userByUsernameOrEmail($user_id);
+	return $self if !$user;
+
+	die;
 }
 
 __PACKAGE__->meta->make_immutable;

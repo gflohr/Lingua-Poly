@@ -164,4 +164,14 @@ sub changePassword {
 	return $self->render(json => '', status => HTTP_NO_CONTENT);
 }
 
+sub resetPassword {
+	my $self = shift->openapi->valid_input or return;
+
+	my $json = $self->req->json;
+
+	$self->app->userService->resetPassword($json->{id});
+
+	return $self->render(json => '', status => HTTP_NO_CONTENT);
+}
+
 1;
