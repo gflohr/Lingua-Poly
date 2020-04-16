@@ -243,7 +243,7 @@ sub changePassword {
 # email.  All other errors are simply ignored so that we do not leak any
 # information about which users are registered.
 sub resetPassword {
-	my ($self, $ctx, $user_id) = @_;
+	my ($self, $ctx, $user_id, $registration) = @_;
 
 	my $user = $self->userByUsernameOrEmail($user_id);
 	return $self if !$user;
@@ -270,19 +270,23 @@ sub resetPassword {
 		return $self;
 	}
 
-	my $token = $self->tokenService->byPurpose(resetPassword => $user->email);
+	my $token = $self->tokenService->byPurpose(passwordReset => $user->email);
 	if (!$token) {
-		$self->tokenService->create(resetPassword => $user->email);
+		$token = $self->tokenService->create(passwordReset => $user->email);
 	} else {
 		# If the user has already requested a password reset, simply renew
 		# the token and resend the mail.
-		$self->tokenService->update(resetPassword => $user->email);
+		$self->tokenService->update(passwordReset => $user->email);
 	}
+
+	$self->database->commit;
 
 	$self->sendPasswordResetMail(
 		siteURL => $ctx->siteURL,
 		token => $token,
 		to => $user->email,
+		registration => $registration,
+		user => $user,
 	);
 
 	return $self;
@@ -318,18 +322,15 @@ sub sendRegistrationMail {
 	my $body = __x(<<'EOF', %placeholders);
 Hello,
 
-somebody, hopefully you, has registered at the Lingua::Poly website
-({url}).
+somebody, hopefully you, has registered at the Lingua::Poly website ({url}).
 
 If you did not register, please ignore this email!
 
-In order to confirm the registration, please follow the following
-link:
+In order to confirm the registration, please follow the following link:
 
     {confirmation_url}
 
-There is no need to keep this email.  The above link will expire in
-{expiry_minutes} minutes.
+There is no need to keep this email.  The above link will expire in {expiry_minutes} minutes.
 
 This email was send from an account that is not set up to receive mails.
 
@@ -355,15 +356,16 @@ sub sendPasswordResetMail {
 	}
 	if (empty $options{token}) {
 		require Carp;
-		Carp::Croak(('argument token is manatory'));
+		Carp::croak(('argument token is manatory'));
 	}
 	if (empty $options{to}) {
 		require Carp;
-		Carp::Croak(('argument to is manatory'));
+		Carp::croak(('argument to is manatory'));
 	}
 
 	my $confirmation_url = Mojo::URL->new($options{siteURL});
-	$confirmation_url->path("/reset-password/token=$options{token}");
+	$confirmation_url->path("/reset-password");
+	$confirmation_url->query(token => $options{token});
 
 	my $subject = __"Reset Lingua::Poly password";
 	my $expiry_minutes = $self->configuration->{session}->{timeout} / 60;
@@ -372,19 +374,37 @@ sub sendPasswordResetMail {
 		url => $options{siteURL},
 		confirmation_url => $confirmation_url,
 		expiry_minutes => $expiry_minutes,
+		email => $options{user}->email,
 	);
-	my $body = __x(<<'EOF', %placeholders);
+	my $body;
+
+	if (!$options{registration}) {
+		$body = __x(<<'EOF', %placeholders);
 Hello,
 
-somebody, hopefully you, has requested to reset your password
-at the Lingua::Poly website ({url}).
+somebody, hopefully you, has requested to reset your password at the Lingua::Poly website ({url}).
 
 If you did not request resetting your password, please ignore this email!
+EOF
+	} else {
+		$body = __x(<<'EOF', %placeholders);
+Hello,
 
-In order to reset your password, please follow the following link:
+somebody, maybe you, has tried to register with your email address {email} at ({url}).  But you are already registered.
 
-    {confirmation_url}
+If you did not try to register, please ignore this email!
 
+But if you have just forgotten your password, you can reset it now by following this link:
+EOF
+	}
+
+	$body .= <<"EOF";
+
+    $confirmation_url
+
+EOF
+
+	$body .= __x(<<'EOF', %placeholders);
 There is no need to keep this email.  The above link will expire in
 {expiry_minutes} minutes.
 

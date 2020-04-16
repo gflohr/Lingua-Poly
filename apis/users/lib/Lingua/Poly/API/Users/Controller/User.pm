@@ -169,7 +169,7 @@ sub resetPassword {
 
 	my $json = $self->req->json;
 
-	$self->app->userService->resetPassword($json->{id});
+	$self->app->userService->resetPassword($self, $json->{id});
 
 	return $self->render(json => '', status => HTTP_NO_CONTENT);
 }

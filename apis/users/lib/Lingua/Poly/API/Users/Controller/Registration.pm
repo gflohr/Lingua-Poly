@@ -74,7 +74,7 @@ sub createUser {
 	}
 
 	if ($suggest_recover) {
-		$self->app->userService->resetPassword($self, $userDraft->{email});
+		$self->app->userService->resetPassword($self, $userDraft->{email}, 1);
 		return $self->render(json => \%user, status => HTTP_CREATED);
 	} else {
 		my $token;

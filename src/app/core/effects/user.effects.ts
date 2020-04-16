@@ -83,7 +83,7 @@ export class UserEffects {
 		exhaustMap(props =>
 			this.usersService.passwordResetPost(props.payload).pipe(
 				tap(() => this.router.navigate(['/'])),
-				map(() => MessageActions.displayError({ code: 'STATUS_PASSWORD_CHANGED' })),
+				map(() => MessageActions.displayError({ code: 'STATUS_PASSWORD_RESET' })),
 				catchError(() => of(MessageActions.displayError({ code: 'ERROR_PASSWORD_RESET_FAILED' })))
 			)
 		)

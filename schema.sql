@@ -75,7 +75,8 @@ CREATE TABLE tokens (
     purpose token_type NOT NULL,
     token TEXT NOT NULL UNIQUE,
     user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    created TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+    created TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    UNIQUE(purpose, user_id)
 );
 
 CREATE TABLE pos (
