@@ -303,9 +303,29 @@ paths:
           description: Password successfully changed.
         400:
           description: Password too weak
+  /password/reset/{token}:
+    post:
+      tags:
+      - users
+      summary: Change user password with reset token
+      x-mojo-to: 'user#changePassword'
+      parameters:
+        - name: token
+          in: path
+          description: The reset token received by email
+          schema:
+            type: string
+          required: true
+      requestBody:
+        $ref: '#/components/requestBodies/PasswordChangeRequest'
+      responses:
+        204:
+          description: Password successfully changed
+        400:
+          description: Password too weak
         410:
           description: Token not found (expired?)
-  /password/reset:
+  /password/requestReset:
     post:
       tags:
       - users

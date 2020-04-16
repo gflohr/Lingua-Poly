@@ -140,10 +140,10 @@ export class UsersService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public passwordResetPost(passwordReset?: PasswordReset, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public passwordResetPost(passwordReset?: PasswordReset, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public passwordResetPost(passwordReset?: PasswordReset, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-    public passwordResetPost(passwordReset?: PasswordReset, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public passwordRequestResetPost(passwordReset?: PasswordReset, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public passwordRequestResetPost(passwordReset?: PasswordReset, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public passwordRequestResetPost(passwordReset?: PasswordReset, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public passwordRequestResetPost(passwordReset?: PasswordReset, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
         let headers = this.defaultHeaders;
 
@@ -165,8 +165,54 @@ export class UsersService {
             headers = headers.set('Content-Type', httpContentTypeSelected);
         }
 
-        return this.httpClient.post<any>(`${this.configuration.basePath}/password/reset`,
+        return this.httpClient.post<any>(`${this.configuration.basePath}/password/requestReset`,
             passwordReset,
+            {
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Change user password with reset token
+     * @param token The reset token received by email
+     * @param passwordChange 
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public passwordResetTokenPost(token: string, passwordChange?: PasswordChange, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public passwordResetTokenPost(token: string, passwordChange?: PasswordChange, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public passwordResetTokenPost(token: string, passwordChange?: PasswordChange, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public passwordResetTokenPost(token: string, passwordChange?: PasswordChange, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+        if (token === null || token === undefined) {
+            throw new Error('Required parameter token was null or undefined when calling passwordResetTokenPost.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        const httpHeaderAccepts: string[] = [
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            headers = headers.set('Content-Type', httpContentTypeSelected);
+        }
+
+        return this.httpClient.post<any>(`${this.configuration.basePath}/password/reset/${encodeURIComponent(String(token))}`,
+            passwordChange,
             {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
