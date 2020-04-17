@@ -69,6 +69,7 @@ sub logout {
 sub profile {
 	my $self = shift->openapi->valid_input or return;
 
+die "on purpose";
 	my $user = $self->stash->{session}->user;
 
 	my %user = $user->toResponse('self');

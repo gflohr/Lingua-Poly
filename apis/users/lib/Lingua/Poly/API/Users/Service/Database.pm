@@ -27,6 +27,7 @@ has configuration => (is => 'ro');
 has logger => (is => 'ro');
 has preparer => (is => 'ro');
 has dbh => (is => 'rw', init_arg => undef);
+has dirty => (is => 'rw', default => undef);
 
 sub BUILD {
 	my ($self) = @_;
@@ -86,6 +87,10 @@ sub getIterator {
 
 	my ($sql, $sth) = $self->preparer->get($statement);
 
+	if ($statement !~ /^SELECT_/) {
+		$self->dirty(1);
+	}
+
 	if (1) {
 		my @params = @args;
 		$sql =~ s/\?/$self->dbh->quote(shift @params)/ge;
@@ -121,6 +126,7 @@ sub transaction {
 	}
 
 	$self->dbh->commit;
+	$self->dirty(undef);
 
 	return $self;
 }

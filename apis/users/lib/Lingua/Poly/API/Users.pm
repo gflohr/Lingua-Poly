@@ -136,6 +136,7 @@ sub startup {
 
 	my $config = $self->config;
 	$self->hook(before_dispatch => sub { $self->__beforeDispatch(@_) });
+	$self->hook(before_render => sub { $self->__beforeRender(@_) });
 	$self->hook(after_dispatch => sub { $self->__afterDispatch(@_) });
 
 	$self->info("application ready");
@@ -153,6 +154,8 @@ sub __beforeDispatch {
 	my $session_id = $self->requestContextService->sessionID($ctx);
 	$ctx->stash->{session}
 		= $self->sessionService->refreshOrCreate($session_id, $fingerprint);
+
+	$self->database->dirty(undef);
 }
 
 sub __afterDispatch {
@@ -165,6 +168,21 @@ sub __afterDispatch {
 	# This must come last in the after_dispatch hook.
 	$self->debug(format_response_line '>>>', $ctx->res);
 	$self->debug(format_headers '>>>', $ctx->res->headers);
+}
+
+sub __beforeRender {
+	my ($self, $ctx) = @_;
+
+	if ($self->database->dirty) {
+		my $status = $ctx->stash->{status};
+
+		if ($status != HTTP_INTERNAL_SERVER_ERROR) {
+			my $url = $ctx->req->url;
+			$self->error("$url: database is dirty, perform rollback!");
+			$ctx->stash->{status} = HTTP_INTERNAL_SERVER_ERROR;
+		}
+		$self->database->rollback;
+	}
 }
 
 1;
