@@ -16,7 +16,6 @@
  */
 export interface PasswordChange { 
     oldPassword?: string;
-    resetToken?: string;
     password: string;
 }
 

@@ -19,6 +19,7 @@ import { Observable }                                        from 'rxjs';
 
 import { PasswordChange } from '../model/passwordChange';
 import { PasswordReset } from '../model/passwordReset';
+import { Problem } from '../model/problem';
 import { Profile } from '../model/profile';
 import { Token } from '../model/token';
 import { User } from '../model/user';
@@ -97,9 +98,9 @@ export class UsersService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public passwordPatch(passwordChange?: PasswordChange, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public passwordPatch(passwordChange?: PasswordChange, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public passwordPatch(passwordChange?: PasswordChange, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public passwordPatch(passwordChange?: PasswordChange, observe?: 'body', reportProgress?: boolean): Observable<string>;
+    public passwordPatch(passwordChange?: PasswordChange, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<string>>;
+    public passwordPatch(passwordChange?: PasswordChange, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<string>>;
     public passwordPatch(passwordChange?: PasswordChange, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
         let headers = this.defaultHeaders;
@@ -107,6 +108,7 @@ export class UsersService {
         // authentication (cookieAuth) required
         // to determine the Accept header
         const httpHeaderAccepts: string[] = [
+            'application/json'
         ];
         const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         if (httpHeaderAcceptSelected !== undefined) {
@@ -123,7 +125,7 @@ export class UsersService {
             headers = headers.set('Content-Type', httpContentTypeSelected);
         }
 
-        return this.httpClient.patch<any>(`${this.configuration.basePath}/password`,
+        return this.httpClient.patch<string>(`${this.configuration.basePath}/password`,
             passwordChange,
             {
                 withCredentials: this.configuration.withCredentials,
@@ -140,15 +142,16 @@ export class UsersService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public passwordRequestResetPost(passwordReset?: PasswordReset, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public passwordRequestResetPost(passwordReset?: PasswordReset, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public passwordRequestResetPost(passwordReset?: PasswordReset, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public passwordRequestResetPost(passwordReset?: PasswordReset, observe?: 'body', reportProgress?: boolean): Observable<string>;
+    public passwordRequestResetPost(passwordReset?: PasswordReset, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<string>>;
+    public passwordRequestResetPost(passwordReset?: PasswordReset, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<string>>;
     public passwordRequestResetPost(passwordReset?: PasswordReset, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
         let headers = this.defaultHeaders;
 
         // to determine the Accept header
         const httpHeaderAccepts: string[] = [
+            'application/json'
         ];
         const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         if (httpHeaderAcceptSelected !== undefined) {
@@ -165,7 +168,7 @@ export class UsersService {
             headers = headers.set('Content-Type', httpContentTypeSelected);
         }
 
-        return this.httpClient.post<any>(`${this.configuration.basePath}/password/requestReset`,
+        return this.httpClient.post<string>(`${this.configuration.basePath}/password/requestReset`,
             passwordReset,
             {
                 withCredentials: this.configuration.withCredentials,
@@ -183,9 +186,9 @@ export class UsersService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public passwordResetTokenPost(token: string, passwordChange?: PasswordChange, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public passwordResetTokenPost(token: string, passwordChange?: PasswordChange, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public passwordResetTokenPost(token: string, passwordChange?: PasswordChange, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public passwordResetTokenPost(token: string, passwordChange?: PasswordChange, observe?: 'body', reportProgress?: boolean): Observable<string>;
+    public passwordResetTokenPost(token: string, passwordChange?: PasswordChange, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<string>>;
+    public passwordResetTokenPost(token: string, passwordChange?: PasswordChange, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<string>>;
     public passwordResetTokenPost(token: string, passwordChange?: PasswordChange, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
         if (token === null || token === undefined) {
             throw new Error('Required parameter token was null or undefined when calling passwordResetTokenPost.');
@@ -195,6 +198,7 @@ export class UsersService {
 
         // to determine the Accept header
         const httpHeaderAccepts: string[] = [
+            'application/json'
         ];
         const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         if (httpHeaderAcceptSelected !== undefined) {
@@ -211,7 +215,7 @@ export class UsersService {
             headers = headers.set('Content-Type', httpContentTypeSelected);
         }
 
-        return this.httpClient.post<any>(`${this.configuration.basePath}/password/reset/${encodeURIComponent(String(token))}`,
+        return this.httpClient.post<string>(`${this.configuration.basePath}/password/reset/${encodeURIComponent(String(token))}`,
             passwordChange,
             {
                 withCredentials: this.configuration.withCredentials,
@@ -261,9 +265,9 @@ export class UsersService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public profilePatch(profile?: Profile, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public profilePatch(profile?: Profile, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public profilePatch(profile?: Profile, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public profilePatch(profile?: Profile, observe?: 'body', reportProgress?: boolean): Observable<string>;
+    public profilePatch(profile?: Profile, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<string>>;
+    public profilePatch(profile?: Profile, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<string>>;
     public profilePatch(profile?: Profile, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
         let headers = this.defaultHeaders;
@@ -271,6 +275,7 @@ export class UsersService {
         // authentication (cookieAuth) required
         // to determine the Accept header
         const httpHeaderAccepts: string[] = [
+            'application/json'
         ];
         const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         if (httpHeaderAcceptSelected !== undefined) {
@@ -287,7 +292,7 @@ export class UsersService {
             headers = headers.set('Content-Type', httpContentTypeSelected);
         }
 
-        return this.httpClient.patch<any>(`${this.configuration.basePath}/profile`,
+        return this.httpClient.patch<string>(`${this.configuration.basePath}/profile`,
             profile,
             {
                 withCredentials: this.configuration.withCredentials,
@@ -389,9 +394,9 @@ export class UsersService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public userLogout(observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public userLogout(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public userLogout(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public userLogout(observe?: 'body', reportProgress?: boolean): Observable<string>;
+    public userLogout(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<string>>;
+    public userLogout(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<string>>;
     public userLogout(observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
         let headers = this.defaultHeaders;
@@ -399,6 +404,7 @@ export class UsersService {
         // authentication (cookieAuth) required
         // to determine the Accept header
         const httpHeaderAccepts: string[] = [
+            'application/json'
         ];
         const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         if (httpHeaderAcceptSelected !== undefined) {
@@ -406,7 +412,7 @@ export class UsersService {
         }
 
 
-        return this.httpClient.post<any>(`${this.configuration.basePath}/logout`,
+        return this.httpClient.post<string>(`${this.configuration.basePath}/logout`,
             null,
             {
                 withCredentials: this.configuration.withCredentials,

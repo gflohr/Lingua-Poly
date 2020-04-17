@@ -170,7 +170,6 @@ sub changePasswordWithToken {
 
 	my $json = $self->req->json;
 
-$DB::single = 1;
 	if (empty $json->{token}) {
 		return $self->errorResponse(HTTP_GONE, {
 			message => 'no token specified'

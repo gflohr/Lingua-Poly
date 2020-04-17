@@ -33,7 +33,6 @@ sub authorizationUrl {
 
 	if (!defined $url) {
 		return $self->errorResponse(HTTP_NOT_FOUND, 'Invalid or unsupported provider');
-		return $self->render(openapi => 'Invalid or unsupported provider', status => HTTP_NOT_FOUND);
 	}
 
 	return $self->render(openapi => { href => $url });

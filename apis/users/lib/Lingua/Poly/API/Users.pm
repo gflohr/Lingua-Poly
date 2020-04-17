@@ -27,6 +27,8 @@ use CGI::Cookie;
 use Mojolicious::Plugin::Util::RandomString 0.08;
 use Mojolicious::Plugin::RemoteAddr 0.03;
 use Mojolicious::Plugin::OpenAPI 3.31;
+use Mojo::JSON;
+use Mojo::Content::Single;
 
 use Lingua::Poly::API::Users::Util qw(
 	empty
@@ -72,6 +74,33 @@ has emailService => (
 	required => 1
 );
 
+my $renderer = sub {
+	my ($c, $data) = @_;
+
+	my $status = $data->{status} || $c->stash('status') || '200';
+	if ($status >= 400) {
+		$c->res->headers->content_type('application/problem+json; charset=utf-8');
+	} elsif ($status == HTTP_NO_CONTENT) {
+		$c->res->headers->content_type('text/plain');
+		$c->res->content(Mojo::Content::Single->new);
+	}
+
+	if ($c->res->headers->content_type() =~ m{^application/problem\+json;?}) {
+		my %problem = (
+			message => '',
+		);
+		my @messages;
+		if (my $errors = delete $data->{errors}) {
+			foreach my $error (@{$errors}) {
+				push @messages, $error->{message};
+			}
+		}
+		$data->{title} = join "\n", @messages;
+	}
+
+	return Mojo::JSON::encode_json($data);
+};
+
 sub startup {
 	my ($self) = @_;
 
@@ -82,7 +111,7 @@ sub startup {
 
 	$self->config($self->configuration);
 
-	$self->plugin(OpenAPI => {
+	my $openapi = $self->plugin(OpenAPI => {
 		spec => $self->static->file('openapi.yaml')->path,
 		schema => 'v3',
 		security => {
@@ -95,7 +124,9 @@ sub startup {
 
 				return $ctx->$cb;
 			}
-		}
+		},
+		default_response_name => 'Problem',
+		renderer => $renderer,
 	});
 
 	my $config = $self->config;

@@ -32,10 +32,7 @@ sub createUser {
 	my $email = $self->app->emailService->parseAddress($userDraft->{email});
 	if (!$email) {
 		delete $userDraft->{email};
-		push @errors, {
-			message => 'Invalid email address specified.',
-			path => '/body/email',
-		};
+		push @errors, 'Invalid email address specified.';
 	} else {
 		$userDraft->{email} = $email;
 	}
@@ -64,14 +61,17 @@ sub createUser {
 	# Password strong enough?
 	my $analysis = password_strength $userDraft->{password};
 	my $score = $analysis->{score};
-	push @errors, {
-		message => "Password too weak (score: $score/3).",
-		path => '/body/password'
-	} if $score < 3;
+	push @errors, "Password too weak." if $score < 3;
 
 	if (@errors) {
 		$self->app->database->rollback;
-		return $self->errorResponse(HTTP_BAD_REQUEST, @errors);
+		my $errors = join "\n", @errors;
+		my %options;
+		if ($score < 3) {
+			$options{details} = __x("Password strength was: {score}/4".
+			                        score => $score);
+		}
+		return $self->errorResponse(HTTP_BAD_REQUEST, join "\n", @errors);
 	}
 
 	if ($suggest_recover) {
