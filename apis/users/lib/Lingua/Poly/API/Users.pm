@@ -26,6 +26,7 @@ use CGI::Cookie;
 # FIXME! RandomString no longer needed?
 use Mojolicious::Plugin::Util::RandomString 0.08;
 use Mojolicious::Plugin::RemoteAddr 0.03;
+use Mojolicious::Plugin::OpenAPI 3.31;
 
 use Lingua::Poly::API::Users::Util qw(
 	empty
