@@ -95,8 +95,6 @@ my $renderer = sub {
 			message => '',
 		);
 		my @messages;
-		use Data::Dumper;
-		warn Dumper $data;
 		if (my $errors = delete $data->{errors}) {
 			foreach my $error (@{$errors}) {
 				push @messages, $error->{message};
