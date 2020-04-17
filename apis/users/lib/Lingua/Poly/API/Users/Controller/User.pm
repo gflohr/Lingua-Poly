@@ -48,9 +48,7 @@ sub login {
 	$self->res->headers('X-Session-TTL', $self->config->{session}->{timeout});
 	my %user = $user->toResponse('private');
 
-	# FIXME! The validation fails here because the OpenAPI plug-in seems to not
-	# support allOf.
-	#return $self->render(openapi => \%user, status => HTTP_OK);
+	# OpenAPI plug-in does not support inheritance?
 	return $self->render(json => \%user, status => HTTP_OK);
 }
 
@@ -67,7 +65,7 @@ sub logout {
 	$identity_provider->signOut;
 	$self->app->database->commit;
 
-	$self->render(json => '', status => HTTP_NO_CONTENT);
+	$self->render(openapi => '', status => HTTP_NO_CONTENT);
 }
 
 sub profile {
@@ -79,9 +77,7 @@ sub profile {
 
 	$self->res->headers('X-Session-TTL', $self->config->{session}->{timeout});
 
-	# FIXME! The validation fails here because the OpenAPI plug-in seems to not
-	# support allOf.
-	#return $self->render(openapi => \%user, status => HTTP_OK);
+	# OpenAPI plug-in does not support inheritance?
 	return $self->render(json => \%user, status => HTTP_OK);
 }
 
@@ -105,7 +101,7 @@ sub updateProfile {
 		});
 	}
 
-	return $self->render(json => '', status => HTTP_NO_CONTENT);
+	return $self->render(openapi => '', status => HTTP_NO_CONTENT);
 }
 
 sub get {
@@ -123,7 +119,8 @@ sub get {
 
 	my %user = $user->toResponse;
 
-	return $self->render(openapi => \%user, status => HTTP_OK);
+	# OpenAPI plug-in does not support inheritance?
+	return $self->render(json => \%user, status => HTTP_OK);
 }
 
 sub changePassword {
@@ -162,7 +159,7 @@ sub changePassword {
 	$self->app->userService->changePassword($user, $json->{password});
 	$self->app->sessionService->privilegeLevelChange($self);
 
-	return $self->render(json => '', status => HTTP_NO_CONTENT);
+	return $self->render(openapi => '', status => HTTP_NO_CONTENT);
 }
 
 sub changePasswordWithToken {
@@ -213,7 +210,7 @@ sub changePasswordWithToken {
 
 	$self->app->database->commit;
 
-	return $self->render(json => '', status => HTTP_NO_CONTENT);
+	return $self->render(openapi => '', status => HTTP_NO_CONTENT);
 }
 
 sub resetPassword {
@@ -223,7 +220,7 @@ sub resetPassword {
 
 	$self->app->userService->resetPassword($self, $json->{id});
 
-	return $self->render(json => '', status => HTTP_NO_CONTENT);
+	return $self->render(openapi => '', status => HTTP_NO_CONTENT);
 }
 
 1;
