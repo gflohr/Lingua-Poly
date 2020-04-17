@@ -363,12 +363,12 @@ paths:
       requestBody:
         $ref: '#/components/requestBodies/PasswordChangeRequest'
       responses:
-        204:
+        200:
           description: Password successfully changed
           content:
             text/plain:
               schema:
-                $ref: '#/components/schemas/Empty'
+                $ref: '#/components/schemas/User'
         410:
           description: Token not found (expired?)
           content:

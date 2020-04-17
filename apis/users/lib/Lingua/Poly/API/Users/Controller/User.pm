@@ -177,10 +177,13 @@ sub changePasswordWithToken {
 	$session->nonce(undef);
 	$self->app->userService->changePassword($user, $json->{password});
 	$self->app->sessionService->privilegeLevelChange($self);
+	$self->app->tokenService->delete($json->{token});
 
 	$self->app->database->commit;
 
-	return $self->emptyResponse;
+	my %user = $user->toResponse('private');
+
+	return (json => \%user, status => HTTP_OK);
 }
 
 sub resetPassword {
