@@ -79,7 +79,7 @@ SELECT t.token FROM tokens t, users u
   WHERE t.purpose = ?
     AND u.email = ?
     AND t.user_id = u.id
-	AND NOT u.confirmed
+    AND u.confirmed = ?
 EOF
 		INSERT_USER => <<EOF,
 INSERT INTO users(email, password, confirmed, external_id, identity_provider_id)

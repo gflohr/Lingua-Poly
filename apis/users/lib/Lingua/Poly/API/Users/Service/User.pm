@@ -257,7 +257,7 @@ sub resetPassword {
 	# If the user is not yet confirmed, simply resend a registration mail.
 	if (!$user->confirmed) {
 		my $token = $self->tokenService->byPurpose(
-				registration => $user->email);
+				registration => $user->email, 0);
 		return $self if empty $token;
 
 		$self->tokenService->update(registration => $user->email);
@@ -270,7 +270,7 @@ sub resetPassword {
 		return $self;
 	}
 
-	my $token = $self->tokenService->byPurpose(passwordReset => $user->email);
+	my $token = $self->tokenService->byPurpose(passwordReset => $user->email, 1);
 	if (!$token) {
 		$token = $self->tokenService->create(passwordReset => $user->email);
 	} else {

@@ -83,7 +83,7 @@ sub createUser {
 		my $tokenService = $self->app->tokenService;
 		if ($renew_request) {
 			($token) = $tokenService->byPurpose(
-				registration => $userDraft->{email});
+				registration => $userDraft->{email}, 0);
 			if (empty $token) {
 				die "no registration token for $userDraft->{email} found";
 				$self->app->database->rollback;

@@ -41,9 +41,10 @@ sub delete {
 }
 
 sub byPurpose {
-	my ($self, $purpose, $email) = @_;
+	my ($self, $purpose, $email, $confirmed) = @_;
 
-	return $self->database->getRow(SELECT_TOKEN_BY_PURPOSE => $purpose, $email);
+	return $self->database->getRow(SELECT_TOKEN_BY_PURPOSE => $purpose,
+	                               $email, $confirmed);
 }
 
 sub update {
