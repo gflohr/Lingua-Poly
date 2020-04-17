@@ -72,7 +72,8 @@ EOF
 SELECT u.id, u.username, u.email, u.external_id, u.password, u.confirmed FROM tokens t, users u
   WHERE t.purpose = ?
     AND t.token = ?
-	AND t.user_id = u.id
+    AND t.user_id = u.id
+    AND u.confirmed = ?
 EOF
 		SELECT_TOKEN_BY_PURPOSE => <<EOF,
 SELECT t.token FROM tokens t, users u
