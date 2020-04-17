@@ -182,8 +182,7 @@ sub changePasswordWithToken {
 	$self->app->database->commit;
 
 	my %user = $user->toResponse('private');
-
-	return (json => \%user, status => HTTP_OK);
+	return $self->render(json => \%user, status => HTTP_OK);
 }
 
 sub resetPassword {

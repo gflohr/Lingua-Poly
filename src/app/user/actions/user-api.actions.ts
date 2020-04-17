@@ -15,3 +15,8 @@ export const changePasswordFailure = createAction(
 	'[User API] Change Password Failure',
 	props<{ error: any }>()
 );
+
+export const changePasswordWithTokenSuccess = createAction(
+	'[User API] Change Password with Token Success',
+	props<{ user: User }>()
+)

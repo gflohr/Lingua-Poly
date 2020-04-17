@@ -17,6 +17,7 @@ export const authReducer = createReducer(
 	initialState,
 	on(AuthApiActions.loginSuccess, (state, { user }) => ({ ...state, user })),
 	on(UserApiActions.profileSuccess, (state, { user }) => ({ ...state, user })),
+	on(UserApiActions.changePasswordWithTokenSuccess, (state, { user }) => ({ ...state, user })),
 	on(AuthApiActions.logoutSuccess, () => initialState),
 	on(AuthApiActions.logoutFailure, () => initialState),
 );

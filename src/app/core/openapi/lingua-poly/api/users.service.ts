@@ -185,9 +185,9 @@ export class UsersService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public passwordResetPost(passwordChange?: PasswordChange, observe?: 'body', reportProgress?: boolean): Observable<string>;
-    public passwordResetPost(passwordChange?: PasswordChange, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<string>>;
-    public passwordResetPost(passwordChange?: PasswordChange, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<string>>;
+    public passwordResetPost(passwordChange?: PasswordChange, observe?: 'body', reportProgress?: boolean): Observable<User>;
+    public passwordResetPost(passwordChange?: PasswordChange, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<User>>;
+    public passwordResetPost(passwordChange?: PasswordChange, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<User>>;
     public passwordResetPost(passwordChange?: PasswordChange, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
         let headers = this.defaultHeaders;
@@ -212,7 +212,7 @@ export class UsersService {
             headers = headers.set('Content-Type', httpContentTypeSelected);
         }
 
-        return this.httpClient.post<string>(`${this.configuration.basePath}/password/reset`,
+        return this.httpClient.post<User>(`${this.configuration.basePath}/password/reset`,
             passwordChange,
             {
                 withCredentials: this.configuration.withCredentials,

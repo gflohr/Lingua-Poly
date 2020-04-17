@@ -60,11 +60,16 @@ export class UserEffects {
 		ofType(UserActions.changePasswordWithToken),
 		exhaustMap(props =>
 			this.usersService.passwordResetPost(props.payload).pipe(
+				map(user => UserApiActions.changePasswordWithTokenSuccess({ user })),
 				tap(() => this.router.navigate(['/'])),
-				map(() => MessageActions.displayError({ code: 'STATUS_PASSWORD_CHANGED' })),
 				catchError(error => of(UserApiActions.changePasswordFailure({ error })))
 			)
 		)
+	));
+
+	changePasswordWithTokenSuccess$ = createEffect(() => this.actions$.pipe(
+		ofType(UserApiActions.changePasswordWithTokenSuccess),
+		map(() => MessageActions.displayError({ code: 'STATUS_PASSWORD_CHANGED' })),
 	));
 
 	changePasswordFailure$ = createEffect(() => this.actions$.pipe(
