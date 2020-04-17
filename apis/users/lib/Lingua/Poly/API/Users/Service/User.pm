@@ -364,7 +364,7 @@ sub sendPasswordResetMail {
 	}
 
 	my $confirmation_url = Mojo::URL->new($options{siteURL});
-	$confirmation_url->path("/reset-password/$options{token}");
+	$confirmation_url->path("/change-password/$options{token}");
 
 	my $subject = __"Reset Lingua::Poly password";
 	my $expiry_minutes = $self->configuration->{session}->{timeout} / 60;

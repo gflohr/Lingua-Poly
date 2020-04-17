@@ -7,6 +7,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CoreModule } from '../core/core.module';
 import { ChangePasswordComponent } from './components/change-password/change-password.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
+import { ChangePasswordWithTokenComponent } from './components/change-password-with-token/change-password-with-token.component';
 
 @NgModule({
 	imports: [
@@ -16,6 +17,6 @@ import { ResetPasswordComponent } from './components/reset-password/reset-passwo
 		FormsModule,
 		ReactiveFormsModule
 	],
-	declarations: [ProfileComponent, ChangePasswordComponent, ResetPasswordComponent]
+	declarations: [ProfileComponent, ChangePasswordComponent, ResetPasswordComponent, ChangePasswordWithTokenComponent]
 })
 export class UserModule { }

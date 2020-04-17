@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { UsersService, Token } from 'src/app/core/openapi/lingua-poly';
 import * as fromAuth from '../../../auth/reducers';
 import { Store } from '@ngrx/store';
