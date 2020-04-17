@@ -128,7 +128,7 @@ sub get {
 sub changePassword {
 	my $self = shift->openapi->valid_input or return;
 
-	my $changeSet = $self->req->json;
+	my $json = $self->req->json;
 
 	my $user = $self->stash->{session}->user;
 
@@ -140,10 +140,59 @@ sub changePassword {
 		);
 	}
 
-	if (!check_password $changeSet->{oldPassword}, $user->password) {
+	if (!check_password $json->{oldPassword}, $user->password) {
 		return $self->errorResponse(
 			HTTP_FORBIDDEN, {
 				message => 'invalid password'
+			}
+		);
+	}
+
+	my $analysis = password_strength $changeSet->{password};
+	my $score = $analysis->{score};
+	if ($score < 3) {
+		return $self->errorResponse(
+			HTTP_BAD_REQUEST, {
+				message => "Password too weak (score: $score/3).",
+			}
+		);
+	}
+
+	$self->app->userService->changePassword($user, $changeSet->{password});
+	$self->app->sessionService->privilegeLevelChange($self);
+
+	return $self->render(json => '', status => HTTP_NO_CONTENT);
+}
+
+sub changePasswordWithToken {
+	my $self = shift->openapi->valid_input or return;
+
+	my $json = $self->req->json;
+
+	my $user = $self->stash->{session}->user;
+
+	if (!$user->password) {
+		return $self->errorResponse(
+			HTTP_FORBIDDEN, {
+				message => 'user does not have a password'
+			}
+		);
+	}
+
+	if (empty $json->{token}) {
+		return $self->errorResponse(
+			HTTP_BAD_REQUEST, {
+				message => 'no token specified'
+			}
+		);
+	}
+
+	my $token = $self->app->tokenService->byPurpose(
+		resetPassword => $user->email, 1);
+	if ($token ne $json->{token}) {
+		return $Self->errorResponse(
+			HTTP_GONE, {
+				message => 'invalid or expired token'
 			}
 		);
 	}

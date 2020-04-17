@@ -308,7 +308,7 @@ paths:
       tags:
       - users
       summary: Change user password with reset token
-      x-mojo-to: 'user#changePassword'
+      x-mojo-to: 'user#changePasswordWithToken'
       parameters:
         - name: token
           in: path
