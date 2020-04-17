@@ -17,7 +17,7 @@ use strict;
 use HTTP::Status qw(:constants);
 use URI;
 use Data::Password::zxcvbn 1.0.4 qw(password_strength);
-use Lingua::Poly::API::Users::Util qw(check_password);
+use Lingua::Poly::API::Users::Util qw(empty check_password);
 
 use Mojo::Base qw(Lingua::Poly::API::Users::Controller);
 
@@ -38,6 +38,7 @@ sub login {
 	}
 
 	# Upgrade the session with a valid user.
+	# FIXME! Do regular privilege level change!
 	my $session = $self->stash->{session};
 	$session->user($user);
 	$session->nonce(undef);
@@ -148,7 +149,7 @@ sub changePassword {
 		);
 	}
 
-	my $analysis = password_strength $changeSet->{password};
+	my $analysis = password_strength $json->{password};
 	my $score = $analysis->{score};
 	if ($score < 3) {
 		return $self->errorResponse(
@@ -158,7 +159,7 @@ sub changePassword {
 		);
 	}
 
-	$self->app->userService->changePassword($user, $changeSet->{password});
+	$self->app->userService->changePassword($user, $json->{password});
 	$self->app->sessionService->privilegeLevelChange($self);
 
 	return $self->render(json => '', status => HTTP_NO_CONTENT);
@@ -169,7 +170,23 @@ sub changePasswordWithToken {
 
 	my $json = $self->req->json;
 
-	my $user = $self->stash->{session}->user;
+$DB::single = 1;
+	if (empty $json->{token}) {
+		return $self->errorResponse(HTTP_GONE, {
+			message => 'no token specified'
+		});
+	}
+
+	my $user = $self->app->userService->selectUserByToken(
+		resetPassword => $json->{token}, 1);
+
+	if (!$user) {
+		return $self->errorResponse(
+			HTTP_GONE, {
+				message => 'invalid or expired token'
+			}
+		);
+	}
 
 	if (!$user->password) {
 		return $self->errorResponse(
@@ -179,25 +196,7 @@ sub changePasswordWithToken {
 		);
 	}
 
-	if (empty $json->{token}) {
-		return $self->errorResponse(
-			HTTP_BAD_REQUEST, {
-				message => 'no token specified'
-			}
-		);
-	}
-
-	my $token = $self->app->tokenService->byPurpose(
-		resetPassword => $user->email, 1);
-	if ($token ne $json->{token}) {
-		return $Self->errorResponse(
-			HTTP_GONE, {
-				message => 'invalid or expired token'
-			}
-		);
-	}
-
-	my $analysis = password_strength $changeSet->{password};
+	my $analysis = password_strength $json->{password};
 	my $score = $analysis->{score};
 	if ($score < 3) {
 		return $self->errorResponse(
@@ -207,8 +206,13 @@ sub changePasswordWithToken {
 		);
 	}
 
-	$self->app->userService->changePassword($user, $changeSet->{password});
+	my $session = $self->stash->{session};
+	$session->user($user);
+	$session->nonce(undef);
+	$self->app->userService->changePassword($user, $json->{password});
 	$self->app->sessionService->privilegeLevelChange($self);
+
+	$self->app->database->commit;
 
 	return $self->render(json => '', status => HTTP_NO_CONTENT);
 }

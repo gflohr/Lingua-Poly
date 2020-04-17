@@ -61,9 +61,11 @@ export class ChangePasswordWithTokenComponent implements OnInit {
 	onSubmit() {
 		const changeSet = {
 			password: this.changePasswordForm.get('password').value,
-			token: this.changePasswordForm.get('token').value,
 		} as PasswordChange;
-		this.authStore.dispatch(UserActions.changePassword({ payload: changeSet }));
+		this.authStore.dispatch(UserActions.changePasswordWithToken({
+			payload: changeSet,
+			token: this.changePasswordForm.get('token').value,
+		}));
 	}
 
 	get token() { return this.changePasswordForm.get('token'); }

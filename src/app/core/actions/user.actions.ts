@@ -14,6 +14,11 @@ export const changePassword = createAction(
 	props<{ payload: PasswordChange}>()
 );
 
+export const changePasswordWithToken = createAction(
+	'[Change Password with Token Page] Change Password',
+	props<{ payload: PasswordChange, token: string }>()
+);
+
 export const resetPasswordRequest = createAction(
 	'[Reset Password Page] Reset Password',
 	props<{ payload: PasswordReset }>()

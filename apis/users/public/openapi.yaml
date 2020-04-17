@@ -116,9 +116,6 @@ components:
         oldPassword:
           type: string
           example: secret
-        resetToken:
-          type: string
-          example: abcd0123
         password:
           type: string
           example: s3cr3t

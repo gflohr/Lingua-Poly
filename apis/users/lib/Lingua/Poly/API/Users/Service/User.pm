@@ -101,9 +101,9 @@ sub userByExternalId {
 }
 
 sub userByToken {
-	my ($self, $purpose, $token) = @_;
+	my ($self, $purpose, $token, $confirmed) = @_;
 
-	return $self->__userByStatement(SELECT_USER_BY_TOKEN =>  $purpose, $token);
+	return $self->__userByStatement(SELECT_USER_BY_TOKEN =>  $purpose, $token, $confirmed);
 }
 
 sub __userByStatement {
