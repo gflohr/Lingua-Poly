@@ -161,6 +161,7 @@ sub __beforeDispatch {
 sub __afterDispatch {
 	my ($self, $ctx) = @_;
 
+$DB::single = 1;
 	my $session = $ctx->stash->{session};
 	$self->requestContextService->sessionCookie($ctx, $session)
 		if $session;

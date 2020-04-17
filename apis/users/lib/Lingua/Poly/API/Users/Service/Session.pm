@@ -18,7 +18,7 @@ use Moose;
 use namespace::autoclean;
 
 use Session::Token;
-use Digest::SHA qw(hmac_sha256);
+use Digest::SHA qw(sha256_base64 hmac_sha256);
 use MIME::Base64 qw(encode_base64url);
 
 use Lingua::Poly::API::Users::Model::User;
@@ -90,79 +90,78 @@ sub identityProvider {
 	return $class->new(context => $ctx, logger => $logger);
 }
 
+sub digest {
+	my ($self, $sid) = @_;
+
+	return if empty $sid;
+
+	return sha256_base64 $sid;
+}
+
 sub refreshOrCreate {
 	my ($self, $sid, $fingerprint) = @_;
 
-	my ($user_id, $username, $email, $external_id, $password, $confirmed,
-	    $homepage, $description);
 	my $database = $self->database;
 
-	my ($provider, $token, $token_expires, $nonce);
+	my $sid_digest = $self->digest($sid);
 
-	if (defined $sid && (($user_id, $provider, $token, $token_expires, $nonce)
-			= $database->getRow(SELECT_SESSION => $sid, $fingerprint))) {
+	my $raw_session;
+	if (defined $sid_digest) {
+		my ($user_id, $provider, $token, $token_expires, $nonce)
+			= $database->getRow(SELECT_SESSION => $sid_digest, $fingerprint);
+		if (defined $user_id) {
+			$raw_session = {
+				sid => $sid,
+				user_id => $user_id,
+				provider => $provider,
+				token => $token,
+				token_expires => $token_expires,
+				nonce => $nonce,
+			};
+		}
+	}
+
+	if ($raw_session) {
 		$self->debug('updating session');
 		$database->execute(UPDATE_SESSION => $sid);
-		if (defined $user_id) {
-			($username, $email, $external_id, $password, $confirmed,
-			 $homepage, $description) = $database->getRow(
-				SELECT_USER_BY_ID => $user_id
-			);
-			if ((!defined $username && !defined $email) || !$confirmed) {
-				$self->debug("updating anonymous session");
-				undef $user_id;
-			} else {
-				$self->debug("updating session for user id '$user_id'");
-			}
-		}
 	} else {
-		$provider = 'local';
-		$self->debug('creating fresh session');
-		$sid = Session::Token->new(entropy => 256)->get;
-		$nonce = Session::Token->new(entropy => 128)->get;
-		$database->execute(INSERT_SESSION => $sid, $fingerprint, $provider, $nonce);
+		$sid = $raw_session->{sid} = Session::Token->new(entropy => 256)->get;
+		$sid_digest = $self->digest($sid);
+		my $nonce = $raw_session->{nonce} = Session::Token->new(entropy => 128)->get;
+		$database->execute(INSERT_SESSION => $sid, $fingerprint, 'local', $nonce);
+	}
+
+	my $user_id = delete $raw_session->{user_id};
+	if (defined $user_id) {
+		my $user = $self->userService->userById($user_id);
+		if ($user && $user->confirmed) {
+			$raw_session->{user} = $user;
+		}
 	}
 
 	$database->commit;
 
-	my %args = (
-		sid => $sid,
-		provider => $provider,
-		token => $token,
-		token_expires => $token_expires
-	);
-	if (defined $user_id) {
-		$args{user} = Lingua::Poly::API::Users::Model::User->new(
-			id => $user_id,
-			externalId => $external_id,
-			username => $username,
-			email => $email,
-			password => $password,
-			confirmed => $confirmed,
-			homepage => $homepage,
-			description => $description,
-		);
-	}
-	return Lingua::Poly::API::Users::Model::Session->new(%args);
+	return Lingua::Poly::API::Users::Model::Session->new(%$raw_session);
 }
 
 sub renew {
 	my ($self, $session) = @_;
 
 	my $sid = Session::Token->new(entropy => 256)->get;
+	my $sid_digest = $self->digest($sid);
+
 	my $user = $session->user;
 	my $user_id = $user ? $user-> id : undef;
-	# FIXME! It is safer to first delete the old session, and create
-	# a new one.  Otherwise there might be a race with the auto-cleanup.
+
 	$self->database->execute(
 		UPDATE_SESSION_SID =>
-			$sid,
+			$sid_digest,
 			$user_id,
 			$session->provider,
 			$session->token,
 			$session->token_expires,
 			$session->nonce,
-			$session->sid
+			$self->digest($session->sid)
 	);
 	$session->sid($sid);
 
@@ -172,7 +171,7 @@ sub renew {
 sub delete {
 	my ($self, $session) = @_;
 
-	$self->database->execute(DELETE_SESSION => $session->sid);
+	$self->database->execute(DELETE_SESSION => $self->digest($session->sid));
 
 	return $self;
 }
@@ -181,7 +180,7 @@ sub updateNonce {
 	my ($self, $session) = @_;
 
 	$self->database->execute(
-		UPDATE_SESSION_NONCE => $session->nonce, $session->sid);
+		UPDATE_SESSION_NONCE => $session->nonce, $self->digest($session->sid));
 
 	return $self;
 }
@@ -190,7 +189,7 @@ sub getNonce {
 	my ($self, $session) = @_;
 
 	my ($nonce) = $self->database->getRow(
-		SELECT_SESSION_NONCE => $session->sid);
+		SELECT_SESSION_NONCE => $self->digest($session->sid));
 
 	return $nonce;
 }
