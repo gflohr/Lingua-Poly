@@ -16,6 +16,7 @@
  */
 export interface PasswordChange { 
     oldPassword?: string;
+    token?: string;
     password: string;
 }
 

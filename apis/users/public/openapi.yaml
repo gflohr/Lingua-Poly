@@ -360,13 +360,6 @@ paths:
       - users
       summary: Change user password with reset token
       x-mojo-to: 'user#changePasswordWithToken'
-      parameters:
-        - name: token
-          in: path
-          description: The reset token received by email
-          schema:
-            type: string
-          required: true
       requestBody:
         $ref: '#/components/requestBodies/PasswordChangeRequest'
       responses:

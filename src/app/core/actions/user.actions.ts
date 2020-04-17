@@ -16,7 +16,7 @@ export const changePassword = createAction(
 
 export const changePasswordWithToken = createAction(
 	'[Change Password with Token Page] Change Password',
-	props<{ payload: PasswordChange, token: string }>()
+	props<{ payload: PasswordChange }>()
 );
 
 export const resetPasswordRequest = createAction(

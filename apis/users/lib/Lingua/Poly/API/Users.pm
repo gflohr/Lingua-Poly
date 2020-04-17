@@ -22,13 +22,13 @@ use Time::HiRes qw(gettimeofday);
 use YAML;
 use HTTP::Status qw(:constants);
 use CGI::Cookie;
+use Scalar::Util qw(reftype);
 
 # FIXME! RandomString no longer needed?
 use Mojolicious::Plugin::Util::RandomString 0.08;
 use Mojolicious::Plugin::RemoteAddr 0.03;
 use Mojolicious::Plugin::OpenAPI 3.31;
 use Mojo::JSON;
-use Mojo::Content::Single;
 
 use Lingua::Poly::API::Users::Util qw(
 	empty
@@ -77,19 +77,26 @@ has emailService => (
 my $renderer = sub {
 	my ($c, $data) = @_;
 
-	my $status = $data->{status} || $c->stash('status') || '200';
+	my $status;
+	if (ref $data && 'HASH' eq reftype $data) {
+		$status = $data->{status};
+	}
+	$status ||= $c->stash('status');
+	$status ||= 200;
+
 	if ($status >= 400) {
 		$c->res->headers->content_type('application/problem+json; charset=utf-8');
-	} elsif ($status == HTTP_NO_CONTENT) {
-		$c->res->headers->content_type('text/plain');
-		$c->res->content(Mojo::Content::Single->new);
+	} elsif (empty $c->res->headers->content_type) {
+		$c->res->headers->content_type('application/json; charset=utf-8');
 	}
 
-	if ($c->res->headers->content_type() =~ m{^application/problem\+json;?}) {
+	if ($c->res->headers->content_type =~ m{^application/problem\+json;?}) {
 		my %problem = (
 			message => '',
 		);
 		my @messages;
+		use Data::Dumper;
+		warn Dumper $data;
 		if (my $errors = delete $data->{errors}) {
 			foreach my $error (@{$errors}) {
 				push @messages, $error->{message};

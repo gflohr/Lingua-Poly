@@ -71,7 +71,7 @@ sub createUser {
 			$options{details} = __x("Password strength was: {score}/4".
 			                        score => $score);
 		}
-		return $self->errorResponse(HTTP_BAD_REQUEST, join "\n", @errors);
+		return $self->errorResponse(HTTP_BAD_REQUEST, $errors, %options);
 	}
 
 	if ($suggest_recover) {
@@ -121,18 +121,14 @@ sub confirm {
 
 	my $in = $self->req->json;
 	if (!exists $in->{token}) {
-		return $self->errorResponse(HTTP_BAD_REQUEST, {
-			message => 'no token provided'
-		});
+		return $self->errorResponse(HTTP_BAD_REQUEST, 'no token provided');
 	}
 	my $token = $in->{token};
 
 	my $user = $self->app->userService->userByToken(registration => $token, 0);
 	if (!$user) {
 		$self->app->database->rollback;
-		return $self->errorResponse(HTTP_GONE, {
-			message => 'token not found'
-		});
+		return $self->errorResponse(HTTP_GONE, 'token not found');
 	}
 
 	my %user = (email => $user->email, username => $user->username);

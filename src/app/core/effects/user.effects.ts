@@ -59,7 +59,7 @@ export class UserEffects {
 	changePasswordWithToken$ = createEffect(() => this.actions$.pipe(
 		ofType(UserActions.changePasswordWithToken),
 		exhaustMap(props =>
-			this.usersService.passwordResetTokenPost(props.token, props.payload).pipe(
+			this.usersService.passwordResetPost(props.payload).pipe(
 				tap(() => this.router.navigate(['/'])),
 				map(() => MessageActions.displayError({ code: 'STATUS_PASSWORD_CHANGED' })),
 				catchError(error => of(UserApiActions.changePasswordFailure({ error })))

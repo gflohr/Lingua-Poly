@@ -32,9 +32,7 @@ sub login {
 
 	my $user = $identity_provider->authenticate($credentials);
 	if (!$user) {
-		return $self->errorResponse(HTTP_UNAUTHORIZED, {
-			message => 'invalid username or password'
-		});
+		return $self->errorResponse(HTTP_BAD_REQUEST, 'invalid username or password');
 	}
 
 	# Upgrade the session with a valid user.
@@ -96,12 +94,10 @@ sub updateProfile {
 	};
 	if ($@) {
 		$self->error($@);
-		return $self->errorResponse(HTTP_BAD_REQUEST, {
-			message => 'invalid user properties'
-		});
+		return $self->errorResponse(HTTP_BAD_REQUEST, 'invalid user properties');
 	}
 
-	return $self->render(openapi => '', status => HTTP_NO_CONTENT);
+	return $self->emptyResponse;
 }
 
 sub get {
@@ -111,10 +107,7 @@ sub get {
 
 	my $user = $self->app->userService->userByUsernameOrEmail($name);
 	if (!$user) {
-		return $self->errorResponse(
-			HTTP_NOT_FOUND, {
-		    message => 'invalid username or password'
-		});
+		return $self->errorResponse(HTTP_NOT_FOUND, 'invalid username or password');
 	}
 
 	my %user = $user->toResponse;
@@ -131,35 +124,24 @@ sub changePassword {
 	my $user = $self->stash->{session}->user;
 
 	if (!$user->password) {
-		return $self->errorResponse(
-			HTTP_FORBIDDEN, {
-				message => 'user does not have a password'
-			}
-		);
+		return $self->errorResponse(HTTP_FORBIDDEN, 'user does not have a password');
 	}
 
 	if (!check_password $json->{oldPassword}, $user->password) {
-		return $self->errorResponse(
-			HTTP_FORBIDDEN, {
-				message => 'invalid password'
-			}
-		);
+		return $self->errorResponse(HTTP_FORBIDDEN, 'invalid password');
 	}
 
 	my $analysis = password_strength $json->{password};
 	my $score = $analysis->{score};
 	if ($score < 3) {
-		return $self->errorResponse(
-			HTTP_BAD_REQUEST, {
-				message => "Password too weak (score: $score/3).",
-			}
-		);
+		return $self->errorResponse(HTTP_BAD_REQUEST, 'password too weak',
+			"password strength: $score/4).");
 	}
 
 	$self->app->userService->changePassword($user, $json->{password});
 	$self->app->sessionService->privilegeLevelChange($self);
 
-	return $self->render(openapi => '', status => HTTP_NO_CONTENT);
+	return $self->emptyResponse;
 }
 
 sub changePasswordWithToken {
@@ -168,37 +150,25 @@ sub changePasswordWithToken {
 	my $json = $self->req->json;
 
 	if (empty $json->{token}) {
-		return $self->errorResponse(HTTP_GONE, {
-			message => 'no token specified'
-		});
+		return $self->errorResponse(HTTP_GONE, 'no token specified');
 	}
 
-	my $user = $self->app->userService->selectUserByToken(
-		resetPassword => $json->{token}, 1);
+	my $user = $self->app->userService->userByToken(
+		passwordReset => $json->{token}, 1);
 
 	if (!$user) {
-		return $self->errorResponse(
-			HTTP_GONE, {
-				message => 'invalid or expired token'
-			}
-		);
+		return $self->errorResponse(HTTP_GONE, 'invalid or expired token');
 	}
 
 	if (!$user->password) {
-		return $self->errorResponse(
-			HTTP_FORBIDDEN, {
-				message => 'user does not have a password'
-			}
-		);
+		return $self->errorResponse(HTTP_FORBIDDEN, 'user does not have a password');
 	}
 
 	my $analysis = password_strength $json->{password};
 	my $score = $analysis->{score};
 	if ($score < 3) {
-		return $self->errorResponse(
-			HTTP_BAD_REQUEST, {
-				message => "Password too weak (score: $score/3).",
-			}
+		return $self->errorResponse(HTTP_BAD_REQUEST, 'password too weak',
+			details => "password strenth: $score/4)."
 		);
 	}
 
@@ -210,7 +180,7 @@ sub changePasswordWithToken {
 
 	$self->app->database->commit;
 
-	return $self->render(openapi => '', status => HTTP_NO_CONTENT);
+	return $self->emptyResponse;
 }
 
 sub resetPassword {
@@ -220,7 +190,7 @@ sub resetPassword {
 
 	$self->app->userService->resetPassword($self, $json->{id});
 
-	return $self->render(openapi => '', status => HTTP_NO_CONTENT);
+	return $self->emptyResponse;
 }
 
 1;

@@ -20,15 +20,23 @@ use Mojo::URL;
 use Mojo::Base ('Mojolicious::Controller', 'Lingua::Poly::API::Users::Logging');
 
 sub errorResponse {
-	my ($self, $code, $errors, %options) = @_;
+	my ($self, $code, $msg, %options) = @_;
 
 	$code ||= HTTP_BAD_REQUEST;
 
 	$self->res->headers->content_type('application/problem+json; charset=utf-8');
 
-	my $data = { errors => $errors, %options };
+	my $data = { errors => [ { message => $msg, path => '/' } ], %options };
 
 	return $self->render(openapi => $data, status => $code);
+}
+
+sub emptyResponse {
+	my ($self) = @_;
+
+	$self->res->headers->content_type('text/plain');
+
+	return $self->render(text => '', status => HTTP_NO_CONTENT);
 }
 
 # FIXME! Inline where needed!
