@@ -153,12 +153,15 @@ components:
       - href
       additionalProperties: false
     PasswordChange:
-      title: PasswordChangeRequest
+      title: PasswordChange
       description: Either the oldPassword or a reset token must be present.
       properties:
         oldPassword:
           type: string
           example: secret
+        token:
+          type: string
+          example: abcd1234
         password:
           type: string
           example: s3cr3t
@@ -166,7 +169,7 @@ components:
       - password
       additionalProperties: false
     PasswordReset:
-      title: PasswordResetRequest
+      title: PasswordReset
       description: Send password reset instructions by email.
       properties:
         id:
@@ -257,7 +260,7 @@ paths:
         204:
           description: Successful logout
           content:
-            application/json:
+            text/plain:
               schema:
                 $ref: '#/components/schemas/Empty'
   /users:
@@ -308,7 +311,7 @@ paths:
         204:
           description: Profile updated successfully
           content:
-            application/json:
+            text/plain:
               schema:
                 $ref: '#/components/schemas/Empty'
   /profile/{name}:
@@ -348,10 +351,10 @@ paths:
         204:
           description: Password successfully changed.
           content:
-            application/json:
+            text/plain:
               schema:
                 $ref: '#/components/schemas/Empty'
-  /password/reset/{token}:
+  /password/reset:
     post:
       tags:
       - users
@@ -370,7 +373,7 @@ paths:
         204:
           description: Password successfully changed
           content:
-            application/json:
+            text/plain:
               schema:
                 $ref: '#/components/schemas/Empty'
         410:
@@ -391,7 +394,7 @@ paths:
         204:
           description: Request received.
           content:
-            application/json:
+            text/plain:
               schema:
                 $ref: '#/components/schemas/Empty'
   /register:

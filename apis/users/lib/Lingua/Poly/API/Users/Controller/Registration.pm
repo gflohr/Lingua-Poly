@@ -149,7 +149,8 @@ sub confirm {
 	$self->app->sessionService->renew($session);
 	$self->app->database->commit;
 
-	$self->render(openapi => \%user, status => HTTP_OK);
+	# FIXME! Inheritance does not work?
+	$self->render(json => \%user, status => HTTP_OK);
 }
 
 1;
