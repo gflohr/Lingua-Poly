@@ -138,11 +138,10 @@ sub confirm {
 
 	my $session = $self->stash->{session};
 	$session->user($user);
-	$session->nonce(undef);
 
 	$self->app->userService->activate($user);
 	$self->app->tokenService->delete($token);
-	$self->app->sessionService->renew($session);
+	$self->app->sessionService->privilegeLevelChange($session);
 	$self->app->database->commit;
 
 	# FIXME! Inheritance does not work?

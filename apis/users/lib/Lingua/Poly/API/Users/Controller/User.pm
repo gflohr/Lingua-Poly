@@ -35,12 +35,7 @@ sub login {
 		return $self->errorResponse(HTTP_BAD_REQUEST, 'invalid username or password');
 	}
 
-	# Upgrade the session with a valid user.
-	# FIXME! Do regular privilege level change!
-	my $session = $self->stash->{session};
-	$session->user($user);
-	$session->nonce(undef);
-	$self->app->sessionService->renew($session);
+	$self->app->sessionService->privilegeLevelChange($self);
 	$self->app->database->commit;
 
 	$self->res->headers('X-Session-TTL', $self->config->{session}->{timeout});
@@ -61,6 +56,11 @@ sub logout {
 	);
 
 	$identity_provider->signOut;
+
+	my $session = $self->stash->{session};
+	$session->provider('local');
+
+	$self->app->sessionService->privilegeLevelChange($self);
 	$self->app->database->commit;
 
 	$self->render(openapi => '', status => HTTP_NO_CONTENT);
@@ -69,7 +69,6 @@ sub logout {
 sub profile {
 	my $self = shift->openapi->valid_input or return;
 
-die "on purpose";
 	my $user = $self->stash->{session}->user;
 
 	my %user = $user->toResponse('self');
@@ -173,13 +172,9 @@ sub changePasswordWithToken {
 		);
 	}
 
-	my $session = $self->stash->{session};
-	$session->user($user);
-	$session->nonce(undef);
 	$self->app->userService->changePassword($user, $json->{password});
-	$self->app->sessionService->privilegeLevelChange($self);
 	$self->app->tokenService->delete($json->{token});
-
+	$self->app->sessionService->privilegeLevelChange($self);
 	$self->app->database->commit;
 
 	my %user = $user->toResponse('private');
@@ -192,6 +187,7 @@ sub resetPassword {
 	my $json = $self->req->json;
 
 	$self->app->userService->resetPassword($self, $json->{id});
+	$self->app->database->commit;
 
 	return $self->emptyResponse;
 }

@@ -207,10 +207,8 @@ sub privilegeLevelChange {
 	my ($self, $ctx) = @_;
 
 	my $session = $ctx->stash->{session};
-	$self->delete($session);
+	$session->nonce(Session::Token->new(entropy => 128)->get);
 	$self->renew($session);
-
-	$self->database->commit;
 
 	return $self;
 }
