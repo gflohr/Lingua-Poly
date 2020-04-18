@@ -24,6 +24,7 @@ use MIME::Base64 qw(encode_base64url);
 use Lingua::Poly::API::Users::Model::User;
 use Lingua::Poly::API::Users::Model::Session;
 use Lingua::Poly::API::Users::SmartLogger;
+use Lingua::Poly::API::Users::Util qw(empty);
 
 use base qw(Lingua::Poly::API::Users::Logging);
 
@@ -107,9 +108,14 @@ sub refreshOrCreate {
 
 	my $raw_session;
 	if (defined $sid_digest) {
-		my ($user_id, $provider, $token, $token_expires, $nonce)
-			= $database->getRow(SELECT_SESSION => $sid_digest, $fingerprint);
-		if (defined $user_id) {
+		$self->debug(<<EOF);
+Read from cookie:
+	SID: $sid
+	Digest: $sid_digest
+EOF
+		my @row = $database->getRow(SELECT_SESSION => $sid_digest, $fingerprint);
+		if (@row) {
+			my ($user_id, $provider, $token, $token_expires, $nonce) = @row;
 			$raw_session = {
 				sid => $sid,
 				user_id => $user_id,
@@ -119,21 +125,38 @@ sub refreshOrCreate {
 				nonce => $nonce,
 			};
 		}
+	} else {
+		$self->debug('no session cookie');
 	}
 
 	if ($raw_session) {
-		$self->debug('updating session');
-		$database->execute(UPDATE_SESSION => $sid);
+		$self->debug(<<EOF);
+Refresh existing session:
+	SID: $sid
+	Digest: $sid_digest
+EOF
+		$database->execute(UPDATE_SESSION => $sid_digest);
 	} else {
+		$raw_session = {
+			provider => 'local',
+		};
 		$sid = $raw_session->{sid} = Session::Token->new(entropy => 256)->get;
 		$sid_digest = $self->digest($sid);
+		$self->debug(<<EOF);
+Create new session:
+	SID: $sid
+	Digest: $sid_digest
+EOF
+
 		my $nonce = $raw_session->{nonce} = Session::Token->new(entropy => 128)->get;
-		$database->execute(INSERT_SESSION => $sid, $fingerprint, 'local', $nonce);
+		$database->execute(INSERT_SESSION => $sid_digest,
+			$fingerprint, 'local', $nonce);
 	}
 
 	my $user_id = delete $raw_session->{user_id};
 	if (defined $user_id) {
-		my $user = $self->userService->userById($user_id);
+		my $provider = $raw_session->{provider};
+		my $user = $self->userService->userById($provider, $user_id);
 		if ($user && $user->confirmed) {
 			$raw_session->{user} = $user;
 		}
