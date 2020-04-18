@@ -33,7 +33,7 @@
     "@angular/router": "^9.1.2",
     "@biesbjerg/ngx-translate-extract-marker": "^1.0.0",
     "@fortawesome/fontawesome-free": "^5.12.0",
-    "@ng-bootstrap/ng-bootstrap": "^5.1.2",
+    "@ng-bootstrap/ng-bootstrap": "^6.0.3",
     "@ngrx/effects": "^8.5.2",
     "@ngrx/router-store": "^8.5.2",
     "@ngrx/store": "^8.5.2",
