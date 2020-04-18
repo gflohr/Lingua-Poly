@@ -94,10 +94,10 @@ sub userByUsernameOrEmail {
 }
 
 sub userById {
-	my ($self, $provider, $id) = @_;
+	my ($self, $id) = @_;
 
 	return $self->__userByStatement(
-		SELECT_USER_BY_ID => $provider, $id);
+		SELECT_USER_BY_ID => $id);
 }
 
 sub userByExternalId {

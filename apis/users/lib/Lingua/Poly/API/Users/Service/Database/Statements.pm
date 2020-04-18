@@ -110,9 +110,10 @@ DELETE FROM users u
 EOF
 
 		SELECT_USER_BY_ID => <<EOF,
-SELECT id, username, email, external_id,
-       password, confirmed, homepage, description
-  FROM users WHERE id = ?
+SELECT u.id, u.username, u.email, u.external_id,
+       u.password, u.confirmed, u.homepage, u.description
+   FROM users u
+  WHERE u.id = ?
 EOF
 
 		SELECT_USER_BY_USERNAME => <<EOF,

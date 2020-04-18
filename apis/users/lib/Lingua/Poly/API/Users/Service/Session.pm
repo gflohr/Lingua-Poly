@@ -116,6 +116,7 @@ EOF
 		my @row = $database->getRow(SELECT_SESSION => $sid_digest, $fingerprint);
 		if (@row) {
 			my ($user_id, $provider, $token, $token_expires, $nonce) = @row;
+			$self->debug("user id: $user_id");
 			$raw_session = {
 				sid => $sid,
 				user_id => $user_id,
@@ -155,8 +156,7 @@ EOF
 
 	my $user_id = delete $raw_session->{user_id};
 	if (defined $user_id) {
-		my $provider = $raw_session->{provider};
-		my $user = $self->userService->userById($provider, $user_id);
+		my $user = $self->userService->userById($user_id);
 		if ($user && $user->confirmed) {
 			$raw_session->{user} = $user;
 		}

@@ -35,6 +35,8 @@ sub login {
 		return $self->errorResponse(HTTP_BAD_REQUEST, 'invalid username or password');
 	}
 
+	my $session = $self->stash->{session};
+	$session->user($user);
 	$self->app->sessionService->privilegeLevelChange($self);
 	$self->app->database->commit;
 
@@ -63,7 +65,7 @@ sub logout {
 	$self->app->sessionService->privilegeLevelChange($self);
 	$self->app->database->commit;
 
-	$self->render(openapi => '', status => HTTP_NO_CONTENT);
+	return $self->emptyResponse;
 }
 
 sub profile {
