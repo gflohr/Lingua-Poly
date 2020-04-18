@@ -176,11 +176,12 @@ sub __beforeRender {
 	if ($self->database->dirty) {
 		my $status = $ctx->stash->{status};
 
-		if ($status != HTTP_INTERNAL_SERVER_ERROR) {
+		if (defined $status && $status != HTTP_INTERNAL_SERVER_ERROR) {
 			my $url = $ctx->req->url;
 			$self->error("$url: database is dirty, perform rollback!");
 			$ctx->stash->{status} = HTTP_INTERNAL_SERVER_ERROR;
 		}
+
 		$self->database->rollback;
 	}
 }

@@ -35,6 +35,7 @@ sub emptyResponse {
 	my ($self) = @_;
 
 	$self->res->headers->content_type('text/plain');
+	$self->stash->{status} = HTTP_NO_CONTENT;
 
 	return $self->render(text => '', status => HTTP_NO_CONTENT);
 }
