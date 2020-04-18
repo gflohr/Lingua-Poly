@@ -116,7 +116,6 @@ EOF
 		my @row = $database->getRow(SELECT_SESSION => $sid_digest, $fingerprint);
 		if (@row) {
 			my ($user_id, $provider, $token, $token_expires, $nonce) = @row;
-			$self->debug("user id: $user_id");
 			$raw_session = {
 				sid => $sid,
 				user_id => $user_id,
