@@ -42,6 +42,7 @@
     "@types/zxcvbn": "^4.4.0",
     "bootstrap": "^4.3.1",
     "core-js": "^2.5.4",
+    "ngx-cookie-service": "^3.0.4",
     "rxjs": "^6.3.2",
     "zone.js": "^0.9.1",
     "zxcvbn": "^4.4.2"

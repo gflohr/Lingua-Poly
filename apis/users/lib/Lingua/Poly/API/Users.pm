@@ -145,30 +145,30 @@ sub startup {
 sub __aroundDispatch {
 	my ($self, $next, $ctx) = @_;
 
-$DB::single = 1;
 	# Anti-Forgery token.
 	my $cookie_name = 'XSRF-TOKEN';
 	my $header_name = 'X-' . $cookie_name;
 
 	my $header = $ctx->req->headers->header($header_name);
 	my $method = $ctx->req->method;
-	my $cookie = $ctx->cookie($cookie_name);
+	my $token = $ctx->cookie($cookie_name);
 
-	if (empty $cookie) {
-		my $token = Session::Token->new(entropy => 128)->get;
-		$ctx->cookie($cookie_name => $token, {
+	if (empty $token) {
+		my $new_token = Session::Token->new(entropy => 128)->get;
+		$ctx->cookie($cookie_name => $new_token, {
 			path => $ctx->config->{prefix},
 			secure => $ctx->req->is_secure,
 		});
-
-		#return $self->__unauthorizedResponse($ctx) if $method ne 'GET' && $method ne 'HEAD';
 	}
 
-	# There was a cookie sent. Check that it matches the header.
-	#return $self->__unauthorizedResponse($ctx) if !defined $header || $header ne $cookie;
-
-	$header = '[undef]' if !defined $header;
-	$self->info("cookie: $cookie, header: $header");
+	if ($method ne 'GET' && $method ne 'HEAD'
+	    && (empty $header || empty $token || $header ne $token)) {
+		warn "unauthorized!\n";
+		sleep 10;
+	} elsif ($method ne 'GET' && $method ne 'HEAD') {
+		warn "authorized! :)\n";
+		sleep 10;
+	}
 
 	return $next->();
 }
