@@ -2,12 +2,13 @@
   "extends": "../tsconfig.json",
   "compilerOptions": {
     "outDir": "../out-tsc/app",
-    "module": "es6",
     "types": ["node"]
   },
-  "exclude": [
-    "src/test.ts",
-    "**/*.spec.ts",
-    "**/node_modules"
+  "files": [
+    "main.ts",
+    "polyfills.ts"
+  ],
+  "include": [
+    "src/**/*.d.ts"
   ]
 }

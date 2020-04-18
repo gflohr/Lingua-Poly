@@ -1,6 +1,8 @@
 import { FormGroup } from '@angular/forms';
+import { Injectable } from "@angular/core";
 const zxcvbn = require('zxcvbn');
 
+@Injectable()
 export class PasswordValidator {
 	static passwordMatch(fg: FormGroup) {
 		const password = fg.get('password');
