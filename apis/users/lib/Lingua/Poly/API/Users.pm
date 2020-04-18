@@ -163,11 +163,7 @@ sub __aroundDispatch {
 
 	if ($method ne 'GET' && $method ne 'HEAD'
 	    && (empty $header || empty $token || $header ne $token)) {
-		warn "unauthorized!\n";
-		sleep 10;
-	} elsif ($method ne 'GET' && $method ne 'HEAD') {
-		warn "authorized! :)\n";
-		sleep 10;
+		return $self->__unauthorizedResponse($ctx);
 	}
 
 	return $next->();
