@@ -9,7 +9,6 @@ import { ApiModule, BASE_PATH } from './openapi/lingua-poly';
 import { environment } from 'src/environments/environment';
 import { ApiInterceptorService } from './services/api-interceptor.service';
 import { EffectsModule } from '@ngrx/effects';
-import { UserDomainService } from './services/domain/user.domain.service';
 import { AuthEffects } from '../auth/auth.effects';
 import { ConnectFormDirective } from './directives/connect-form.directive';
 import { StoreModule } from '@ngrx/store';
@@ -45,7 +44,6 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
 	providers: [
 		HttpClient,
 		TranslateService,
-		UserDomainService,
 		PasswordValidator,
 		{
 			provide: BASE_PATH, useValue: environment.basePath
