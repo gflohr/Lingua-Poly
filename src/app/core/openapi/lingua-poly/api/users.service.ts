@@ -224,6 +224,39 @@ export class UsersService {
     }
 
     /**
+     * Delete your account
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public profileDeletePost(observe?: 'body', reportProgress?: boolean): Observable<string>;
+    public profileDeletePost(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<string>>;
+    public profileDeletePost(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<string>>;
+    public profileDeletePost(observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        const httpHeaderAccepts: string[] = [
+            'text/plain'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        return this.httpClient.post<string>(`${this.configuration.basePath}/profile/delete`,
+            null,
+            {
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
      * Get user profile
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
