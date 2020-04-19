@@ -88,7 +88,7 @@ sub delete {
 
 	$self->app->database->commit;
 
-	return $self->logout;
+	return $self->emptyResponse;
 }
 
 sub profile {
@@ -109,6 +109,7 @@ sub updateProfile {
 
 	my $user = $self->stash->{session}->user;
 	my $json = $self->req->json;
+	my $db = $self->app->database;
 
 	$user->username($json->{username});
 	$user->homepage($json->{homepage});
@@ -119,8 +120,11 @@ sub updateProfile {
 	};
 	if ($@) {
 		$self->error($@);
+		$db->rollback;
 		return $self->errorResponse(HTTP_BAD_REQUEST, 'invalid user properties');
 	}
+
+	$db->commit;
 
 	return $self->emptyResponse;
 }
