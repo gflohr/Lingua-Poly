@@ -321,7 +321,7 @@ paths:
       summary: Delete your account
       x-mojo-to: 'user#delete'
       security:
-      - cookieAuth
+      - cookieAuth: []
       responses:
         204:
           description: Accounted successfully deleted

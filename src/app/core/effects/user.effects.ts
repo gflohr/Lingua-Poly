@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { fromEvent, merge, timer, of } from 'rxjs';
 import { createEffect, Actions, ofType } from '@ngrx/effects';
-import { map, exhaustMap, switchMapTo, catchError, tap } from 'rxjs/operators';
+import { map, exhaustMap, switchMapTo, catchError, tap, switchMap } from 'rxjs/operators';
 import { UserActions, MessageActions } from '../actions';
 import { UsersService, Profile } from '../openapi/lingua-poly';
 import { UserApiActions } from 'src/app/user/actions';
@@ -114,6 +114,23 @@ export class UserEffects {
 			catchError(() => of(UserActions.logoutConfirmationDismiss()))
 		))
 	));
+
+	deleteAccount$ = createEffect(() => this.actions$.pipe(
+		ofType(UserApiActions.deleteAccount),
+		switchMap(() =>
+			this.usersService.profileDeletePost().pipe(
+				tap(() => this.router.navigate(['/'])),
+				map(() => UserApiActions.deleteAccountSuccess()),
+				map(() => MessageActions.displayError({ code: 'STATUS_ACCOUNT_DELETION_SUCCESS' })),
+				catchError(error => of(UserApiActions.deleteAccountFailure({ error })))
+			),
+		)
+	));
+
+	deleteAccountFailure$ = createEffect(() => this.actions$.pipe(
+		ofType(UserApiActions.deleteAccountFailure),
+		map(() => MessageActions.displayError({ code: 'ERROR_ACCOUNT_DELETION_FAILURE' })),
+	), { dispatch: false });
 
 	constructor(
 		private actions$: Actions,

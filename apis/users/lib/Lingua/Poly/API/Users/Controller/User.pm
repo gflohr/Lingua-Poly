@@ -72,6 +72,11 @@ sub delete {
 
 	my $app = $self->app;
 
+	my $session = $self->stash->{session};
+	my $user = $session->user;
+
+	$self->app->userService->delete($user);
+
 	my $provider = $self->stash->{session}->provider;
 	my $identity_provider = $self->app->sessionService->identityProvider(
 		$provider => $self
@@ -80,11 +85,6 @@ sub delete {
 	$identity_provider->signOut;
 
 	$self->app->sessionService->privilegeLevelChange($self);
-
-	my $session = $self->stash->{session};
-	my $user = $session->user;
-
-	$self->app->userService->delete($user);
 
 	$self->app->database->commit;
 

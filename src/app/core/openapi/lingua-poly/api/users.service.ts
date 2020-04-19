@@ -235,6 +235,7 @@ export class UsersService {
 
         let headers = this.defaultHeaders;
 
+        // authentication (cookieAuth) required
         // to determine the Accept header
         const httpHeaderAccepts: string[] = [
             'text/plain'
