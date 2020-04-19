@@ -8,6 +8,8 @@ import { UserApiActions } from 'src/app/user/actions';
 import { Router } from '@angular/router';
 import * as fromAuth from '../../auth/reducers';
 import { Store } from '@ngrx/store';
+import { ModalDialogService } from '../services/modal-dialog.service';
+import { DeleteAccountConfirmationComponent } from '../../user/components/delete-account-confirmation/delete-account-confirmation.component';
 
 @Injectable()
 export class UserEffects {
@@ -105,10 +107,19 @@ export class UserEffects {
 		)
 	));
 
+	deleteAccountConfirmation$ = createEffect(() => this.actions$.pipe(
+		ofType(UserActions.deleteAccountConfirmation),
+		exhaustMap(() => this.dialogService.runDialog(DeleteAccountConfirmationComponent).pipe(
+			map(() => UserApiActions.deleteAccount()),
+			catchError(() => of(UserActions.logoutConfirmationDismiss()))
+		))
+	));
+
 	constructor(
 		private actions$: Actions,
 		private usersService: UsersService,
 		private router: Router,
-		private authStore: Store<fromAuth.State>
+		private authStore: Store<fromAuth.State>,
+		private dialogService: ModalDialogService,
 	) {}
 }

@@ -51,6 +51,6 @@ export class ProfileComponent {
 	}
 
 	onDelete() {
-		this.authStore.dispatch(UserActions.deleteAccount());
+		this.authStore.dispatch(UserActions.deleteAccountConfirmation());
 	}
 }

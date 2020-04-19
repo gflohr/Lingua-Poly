@@ -21,6 +21,10 @@ export const changePasswordWithTokenSuccess = createAction(
 	props<{ user: User }>()
 )
 
+export const deleteAccount = createAction(
+	'[User API] Delete Account'
+);
+
 export const deleteAccountSuccess = createAction(
 	'[User API] Delete Account Success'
 );

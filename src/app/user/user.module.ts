@@ -8,6 +8,7 @@ import { CoreModule } from '../core/core.module';
 import { ChangePasswordComponent } from './components/change-password/change-password.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { ChangePasswordWithTokenComponent } from './components/change-password-with-token/change-password-with-token.component';
+import { DeleteAccountConfirmationComponent } from './components/delete-account-confirmation/delete-account-confirmation.component';
 
 @NgModule({
 	imports: [
@@ -17,6 +18,6 @@ import { ChangePasswordWithTokenComponent } from './components/change-password-w
 		FormsModule,
 		ReactiveFormsModule
 	],
-	declarations: [ProfileComponent, ChangePasswordComponent, ResetPasswordComponent, ChangePasswordWithTokenComponent]
+	declarations: [ProfileComponent, ChangePasswordComponent, ResetPasswordComponent, ChangePasswordWithTokenComponent, DeleteAccountConfirmationComponent]
 })
 export class UserModule { }

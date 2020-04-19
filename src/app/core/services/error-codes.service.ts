@@ -38,6 +38,14 @@ export const ErrorCodes = {
 		title: _('Resetting Password Failed'),
 		text: _('Resetting your password failed. Please try again later!'),
 	},
+	STATUS_ACCOUNT_DELETIION_SUCCESS: {
+		title: _('Account Deleted'),
+		text: _('Your account and all your personal data was successfully deleted.'),
+	},
+	ERROR_ACCOUNT_DELETIION_FAILED: {
+		title: _('Account Deletion Faield'),
+		text: _('There was an error deleting your account. Please try again later'),
+	},
 };
 
 export interface ErrorMessage {
