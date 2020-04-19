@@ -160,6 +160,26 @@ INSERT INTO configs(name, value, expires)
   ON CONFLICT(name) DO UPDATE
     SET value = EXCLUDED.value, expires = EXCLUDED.value
 EOF
+
+		INSERT_AUTH_TOKEN => <<EOF,
+INSERT INTO auth_tokens(user_id, token, selector, last_seen)
+  VALUES(?, ?, ?, NOW())
+EOF
+
+		SELECT_AUTH_TOKEN => <<EOF,
+SELECT id, token FROM auth_tokens
+ WHERE selector = ?
+EOF
+
+		UPDATE_AUTH_TOKEN => <<EOF,
+UPDATE auth_tokens SET last_seen = NOW() WHERE selector = ?
+EOF
+
+		DELETE_AUTH_TOKEN_STALE => <<EOF,
+DELETE FROM auth_tokens
+  WHERE EXTRACT(EPOCH FROM(NOW() - last_seen)) > ?
+EOF
+
 	}, shift;
 };
 

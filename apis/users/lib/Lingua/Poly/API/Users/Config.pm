@@ -49,6 +49,10 @@ EOF
 	$self->{session} //= {};
 	$self->{session}->{timeout} ||= 2 * 60 * 60;
 	$self->{session}->{cookieName} //= 'id';
+	$self->{session}->{remember} ||= 4 * 7 * 24 * 60 * 60;
+
+	$self->{session}->{entropy} //= {};
+	$self->{session}->{entropy}->{remember} = 256;
 
 	$self->{prefix} = $args{apiPrefix};
 

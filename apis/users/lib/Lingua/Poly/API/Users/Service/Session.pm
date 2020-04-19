@@ -20,6 +20,7 @@ use namespace::autoclean;
 use Session::Token;
 use Digest::SHA qw(sha256_base64 hmac_sha256);
 use MIME::Base64 qw(encode_base64url);
+use String::Compare::ConstantTime 0.321;
 
 use Lingua::Poly::API::Users::Model::User;
 use Lingua::Poly::API::Users::Model::Session;
@@ -68,6 +69,7 @@ sub maintain {
 		[ DELETE_USER_STALE => $config->{session}->{timeout} ],
 		[ DELETE_SESSION_STALE => $config->{session}->{timeout} ],
 		[ DELETE_TOKEN_STALE => $config->{session}->{timeout} ],
+		[ DELETE_AUTH_TOKEN_STALE => $config->{session}->{remember} ],
 	);
 
 	return $self;
@@ -232,6 +234,17 @@ sub privilegeLevelChange {
 	$self->renew($session);
 
 	return $self;
+}
+
+sub remember {
+	my ($self, $user) = @_;
+
+	my $entropy = $self->configuration->{session}->{entropy}->{remember};
+	my $token = Session::Token->new(entropy => $entropy)->get;
+	my $selector = Session::Token->new(entropy => $entropy)->get;
+	my $token_digest = $self->digest($token);
+
+	my $cookie_value = $selector . $token;
 }
 
 __PACKAGE__->meta->make_immutable;

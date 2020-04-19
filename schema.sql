@@ -68,6 +68,14 @@ CREATE TABLE sessions (
     last_seen TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
+CREATE TABLE auth_tokens (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+    token TEXT NOT NULL,
+    selector TEXT NOT NULL UNIQUE,
+    last_seen TIMESTAMP WITH TIME ZONE NOT NULL
+);
+
 CREATE TYPE token_type
         AS ENUM('registration', 'passwordReset', 'emailChange');
 CREATE TABLE tokens (

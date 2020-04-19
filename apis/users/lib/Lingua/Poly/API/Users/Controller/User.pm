@@ -28,15 +28,17 @@ sub login {
 		local => $self
 	);
 
-	my $credentials = $self->req->json;
+	my $json = $self->req->json;
 
-	my $user = $identity_provider->authenticate($credentials);
+	my $user = $identity_provider->authenticate($json);
 	if (!$user) {
 		return $self->errorResponse(HTTP_BAD_REQUEST, 'invalid username or password');
 	}
 
 	my $session = $self->stash->{session};
 	$session->user($user);
+
+	$self->app->sessionService->remember($user) if $json->{persistant}
 	$self->app->sessionService->privilegeLevelChange($self);
 	$self->app->database->commit;
 
