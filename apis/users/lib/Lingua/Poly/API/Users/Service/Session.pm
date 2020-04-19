@@ -237,14 +237,28 @@ sub privilegeLevelChange {
 }
 
 sub remember {
-	my ($self, $user) = @_;
+	my ($self, $ctx, $user) = @_;
 
-	my $entropy = $self->configuration->{session}->{entropy}->{remember};
+	my $config = $self->configuration;
+
+	my $entropy = $config->{session}->{entropy}->{remember};
 	my $token = Session::Token->new(entropy => $entropy)->get;
 	my $selector = Session::Token->new(entropy => $entropy)->get;
 	my $token_digest = $self->digest($token);
 
+	my $db = $self->database;
+	$db->execute(INSERT_AUTH_TOKEN => $user->id, $token_digest, $selector);
+
+	my $cookie_name = $config->{session}->{rememberCookie};
 	my $cookie_value = $selector . $token;
+
+	$ctx->cookie($cookie_name => $cookie_value, {
+		path => $config->{prefix},
+		httponly => 1,
+		secure => $ctx->req->is_secure,
+	});
+
+	return $self;
 }
 
 __PACKAGE__->meta->make_immutable;

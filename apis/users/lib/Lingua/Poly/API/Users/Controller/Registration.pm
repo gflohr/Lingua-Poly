@@ -141,7 +141,7 @@ sub confirm {
 
 	$self->app->userService->activate($user);
 	$self->app->tokenService->delete($token);
-	$self->app->sessionService->privilegeLevelChange($session);
+	$self->app->sessionService->privilegeLevelChange($self);
 	$self->app->database->commit;
 
 	# FIXME! Inheritance does not work?

@@ -38,7 +38,7 @@ sub login {
 	my $session = $self->stash->{session};
 	$session->user($user);
 
-	$self->app->sessionService->remember($user) if $json->{persistant}
+	$self->app->sessionService->remember($self, $user) if $json->{persistant};
 	$self->app->sessionService->privilegeLevelChange($self);
 	$self->app->database->commit;
 

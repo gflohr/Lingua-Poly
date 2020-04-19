@@ -156,7 +156,7 @@ sub __aroundDispatch {
 	if (empty $token) {
 		my $new_token = Session::Token->new(entropy => 128)->get;
 		$ctx->cookie($cookie_name => $new_token, {
-			path => $ctx->config->{prefix},
+			path => '/',
 			secure => $ctx->req->is_secure,
 		});
 	}
