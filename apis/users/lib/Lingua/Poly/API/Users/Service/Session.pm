@@ -48,6 +48,11 @@ has userService => (
 	isa => 'Lingua::Poly::API::Users::Service::User',
 	required => 1
 );
+has requestContextService => (
+	is => 'ro',
+	isa => 'Lingua::Poly::API::Users::Service::RequestContext',
+	required => 1
+);
 
 my $last_cleanup = 0;
 
@@ -102,7 +107,7 @@ sub digest {
 }
 
 sub refreshOrCreate {
-	my ($self, $sid, $fingerprint) = @_;
+	my ($self, $ctx, $sid, $fingerprint) = @_;
 
 	my $database = $self->database;
 
@@ -156,6 +161,31 @@ EOF
 	}
 
 	my $user_id = delete $raw_session->{user_id};
+	my ($auth_selector, $auth_token);
+	my $auth_token_value = $self->requestContextService->authToken($ctx);
+	if (!empty $auth_token_value) {
+		($auth_selector, $auth_token) = $self->__splitAuthCookie($auth_token_value);
+		$database->execute(UPDATE_AUTH_TOKEN => $auth_selector);
+	}
+
+	# Try the long-term cookie.
+	if (!defined $user_id) {
+		if (!empty $auth_token_value) {
+			my $auth_token_digest;
+			($user_id, $auth_token_digest) = $database->getRow(
+				SELECT_AUTH_TOKEN => $auth_selector
+			);
+
+			if (!empty $auth_token_digest && !empty $user_id) {
+				if (!String::Compare::ConstantTime::equals(
+					$auth_token_digest, $self->digest($auth_token))) {
+					$self->deleteAuthCookie($ctx, $auth_token_value);
+					undef $user_id;
+				}
+			}
+		}
+	}
+
 	if (defined $user_id) {
 		my $user = $self->userService->userById($user_id);
 		if ($user && $user->confirmed) {
@@ -166,6 +196,24 @@ EOF
 	$database->commit;
 
 	return Lingua::Poly::API::Users::Model::Session->new(%$raw_session);
+}
+
+sub __splitAuthCookie {
+	my ($self, $value) = @_;
+
+	my $l = length $value;
+	$l >>= 1;
+
+	my $selector = substr $value, 0, $l;
+	my $token = substr $value, $l;
+
+	return $selector, $token;
+}
+
+sub create {
+	my ($self, $sid) = @_;
+
+	return Lingua::Poly::API::Users::Model::Session->new(sid => $sid);
 }
 
 sub renew {
@@ -256,7 +304,20 @@ sub remember {
 		path => $config->{prefix},
 		httponly => 1,
 		secure => $ctx->req->is_secure,
+		expires => time + $config->{session}->{remember},
 	});
+
+	return $self;
+}
+
+sub deleteAuthCookie {
+	my ($self, $ctx, $cookie) = @_;
+
+	my ($selector, undef) = $self->__splitAuthCookie($cookie);
+	$self->database->execute(DELETE_AUTH_TOKEN => $selector);
+	my $cookie_name = $self->configuration->{session}->{rememberCookie};
+
+	$ctx->cookie($cookie_name => '', { expires => 0 });
 
 	return $self;
 }

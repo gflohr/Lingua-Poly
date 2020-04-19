@@ -188,8 +188,10 @@ sub __beforeDispatch {
 
 	my $fingerprint = $self->requestContextService->fingerprint($ctx);
 	my $session_id = $self->requestContextService->sessionID($ctx);
+	my $auth_token = $self->requestContextService->authToken($ctx);
+
 	$ctx->stash->{session}
-		= $self->sessionService->refreshOrCreate($session_id, $fingerprint);
+		= $self->sessionService->refreshOrCreate($ctx, $session_id, $fingerprint);
 
 	$self->database->dirty(undef);
 }

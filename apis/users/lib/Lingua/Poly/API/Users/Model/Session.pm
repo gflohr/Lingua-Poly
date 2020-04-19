@@ -23,7 +23,7 @@ has user => (
 	isa => 'Lingua::Poly::API::Users::Model::User',
 	is => 'rw',
 );
-has provider => (is => 'rw');
+has provider => (is => 'rw', default => 'local');
 has token => (is => 'rw');
 has token_expires => (is => 'rw', isa => 'Maybe[Int]');
 has nonce => (is => 'rw', required => 1, builder => '__build_nonce');

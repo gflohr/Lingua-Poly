@@ -167,12 +167,15 @@ INSERT INTO auth_tokens(user_id, token, selector, last_seen)
 EOF
 
 		SELECT_AUTH_TOKEN => <<EOF,
-SELECT id, token FROM auth_tokens
- WHERE selector = ?
+SELECT user_id, token FROM auth_tokens WHERE selector = ?
 EOF
 
 		UPDATE_AUTH_TOKEN => <<EOF,
 UPDATE auth_tokens SET last_seen = NOW() WHERE selector = ?
+EOF
+
+		DELETE_AUTH_TOKEN => <<EOF,
+DELETE FROM auth_tokens WHERE selector = ?
 EOF
 
 		DELETE_AUTH_TOKEN_STALE => <<EOF,

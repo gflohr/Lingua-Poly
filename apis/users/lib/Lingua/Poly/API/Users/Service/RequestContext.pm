@@ -44,6 +44,17 @@ sub sessionID {
 	return $ctx->cookie($cookie_name);
 }
 
+sub authToken {
+	my ($self, $ctx) = @_;
+
+	my $cookie_name = $self->configuration->{session}->{rememberCookie};
+
+	my $value = $ctx->cookie($cookie_name);
+	return if empty $value;
+
+	return $value;
+}
+
 sub sessionCookie {
 	my ($self, $ctx, $session) = @_;
 

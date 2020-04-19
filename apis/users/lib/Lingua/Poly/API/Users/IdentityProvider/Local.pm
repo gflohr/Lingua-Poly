@@ -74,8 +74,13 @@ sub signOut {
 
 	my $fingerprint = $app->requestContextService->fingerprint($context);
 	my $session_id = $app->requestContextService->sessionID($context);
-	$context->stash->{session}
-		= $app->sessionService->refreshOrCreate($session_id, $fingerprint);
+	my $auth_token = $app->requestContextService->authToken($context);
+	if ($auth_token) {
+		$app->sessionService->deleteAuthCookie($context, $auth_token);
+	}
+	$session = $app->sessionService->create($session->sid);
+	$app->sessionService->renew($session);
+	$context->stash->{session} = $session;
 
 	return $self;
 }

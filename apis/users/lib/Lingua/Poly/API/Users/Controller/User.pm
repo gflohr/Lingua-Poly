@@ -61,9 +61,6 @@ sub logout {
 
 	$identity_provider->signOut;
 
-	my $session = $self->stash->{session};
-	$session->provider('local');
-
 	$self->app->sessionService->privilegeLevelChange($self);
 	$self->app->database->commit;
 
