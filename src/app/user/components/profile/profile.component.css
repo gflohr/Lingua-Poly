@@ -9,3 +9,7 @@ input {
 .form-control:focus {
 	margin-right: 0.25rem;
 }
+
+.delete-account {
+	margin-top: 5rem;
+}

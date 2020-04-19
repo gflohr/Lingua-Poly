@@ -57,9 +57,22 @@ saving an empty value.
 			Say something about yourself
 		</small>
 	</div>
-	<div class="float-right">
+	<div class="form-group float-right">
 		<button class="btn btn-link" translate>Cancel</button>
 		<button class="btn btn-primary" [disabled]="!profileForm.dirty || !profileForm.valid"
 			translate>Save</button>
+	</div>
+</form>
+<form class="delete-account">
+	<div class="form-group">
+		<h3 class="subheadline clearfix" translate>Delete Account</h3>
+		<div translate>
+			Delete your account and all of your user data.
+			Account deletion cannot be reverted!
+		</div>
+	</div>
+	<div class="form-group float-right">
+		<button class="btn btn-danger"
+		        (click)="onDelete()" translate>Delete Account</button>
 	</div>
 </form>

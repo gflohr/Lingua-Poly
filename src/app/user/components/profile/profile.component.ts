@@ -49,4 +49,8 @@ export class ProfileComponent {
 		delete profile.originalUsername;
 		this.authStore.dispatch(UserActions.setProfile({ payload: profile }));
 	}
+
+	onDelete() {
+		this.authStore.dispatch(UserActions.deleteAccount());
+	}
 }
