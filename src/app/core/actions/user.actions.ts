@@ -23,3 +23,11 @@ export const resetPasswordRequest = createAction(
 	'[Reset Password Page] Reset Password',
 	props<{ payload: PasswordReset }>()
 );
+
+export const deleteAccount = createAction('[Profile Page] Delete Account');
+export const deleteAccountConfirmation = createAction(
+	'[Profile Page] Delete Account Confirmation'
+);
+export const logoutConfirmationDismiss = createAction(
+	'[Profile Page] Delete Account Confirmation Dismiss'
+);
