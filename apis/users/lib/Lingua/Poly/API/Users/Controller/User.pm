@@ -67,6 +67,30 @@ sub logout {
 	return $self->emptyResponse;
 }
 
+sub delete {
+	my $self = shift->openapi->valid_input or return;
+
+	my $app = $self->app;
+
+	my $provider = $self->stash->{session}->provider;
+	my $identity_provider = $self->app->sessionService->identityProvider(
+		$provider => $self
+	);
+
+	$identity_provider->signOut;
+
+	$self->app->sessionService->privilegeLevelChange($self);
+
+	my $session = $self->stash->{session};
+	my $user = $session->user;
+
+	$self->app->userService->delete($user);
+
+	$self->app->database->commit;
+
+	return $self->logout;
+}
+
 sub profile {
 	my $self = shift->openapi->valid_input or return;
 

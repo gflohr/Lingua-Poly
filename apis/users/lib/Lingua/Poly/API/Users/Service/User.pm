@@ -429,6 +429,14 @@ EOF
 	return $self;
 }
 
+sub delete {
+	my ($self, $user) = @_;
+
+	$self->database->execute(DELETE_USER => $user-> id);
+
+	return $self;
+}
+
 __PACKAGE__->meta->make_immutable;
 
 1;
