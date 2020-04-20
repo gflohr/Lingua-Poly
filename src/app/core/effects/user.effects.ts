@@ -129,8 +129,8 @@ export class UserEffects {
 
 	deleteAccountFailure$ = createEffect(() => this.actions$.pipe(
 		ofType(UserApiActions.deleteAccountFailure),
-		map(() => MessageActions.displayError({ code: 'ERROR_ACCOUNT_DELETION_FAILURE' })),
-	), { dispatch: false });
+		map(() => MessageActions.displayError({ code: 'ERROR_ACCOUNT_DELETION_FAILED' })),
+	));
 
 	constructor(
 		private actions$: Actions,

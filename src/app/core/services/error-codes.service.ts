@@ -42,8 +42,8 @@ export const ErrorCodes = {
 		title: _('Account Deleted'),
 		text: _('Your account and all your personal data was successfully deleted.'),
 	},
-	ERROR_ACCOUNT_DELETIION_FAILED: {
-		title: _('Account Deletion Faield'),
+	ERROR_ACCOUNT_DELETION_FAILED: {
+		title: _('Account Deletion Failed'),
 		text: _('There was an error deleting your account. Please try again later'),
 	},
 };
