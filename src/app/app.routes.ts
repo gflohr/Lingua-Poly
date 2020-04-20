@@ -6,13 +6,13 @@ export const appRoutes: Routes = [
 			path: ':lingua',
 			data: { title: 'lingua selector'},
 			component: AppComponent,
-			loadChildren: () => import('./main/main.module').then(m => m.MainModule)
+			loadChildren: () => import('./route-container/route-container.module').then(m => m.RouteContainerModule)
 		},
 		{
 			path: '',
 			data: { title: 'lingua redirect' },
 			pathMatch: 'full',
 			// FIXME! Redirect to controller that does the content negotiation.
-			redirectTo: '/en/start'
+			redirectTo: '/en/main/start'
 		},
 ];

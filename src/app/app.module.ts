@@ -19,6 +19,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
 import { ApiModule } from './core/openapi/lingua-poly';
 import { AppLinguaComponent } from './app-lingua.component';
+import { RouteContainerModule } from './route-container/route-container.module';
 
 @NgModule({
 	declarations: [
@@ -33,6 +34,7 @@ import { AppLinguaComponent } from './app-lingua.component';
 		MainModule,
 		UserModule,
 		RouterModule.forRoot(appRoutes),
+		RouteContainerModule,
 		StoreModule.forRoot(ROOT_REDUCERS, { metaReducers }),
 		EffectsModule.forRoot([
 			ConfigEffects,

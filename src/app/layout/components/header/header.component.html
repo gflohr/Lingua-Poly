@@ -11,13 +11,13 @@
 	<span class="navbar-brand mr-0 mr-md-2">Lingua::Poly</span>
 	<ul class="navbar-nav flex-row ml-md-auto d-none d-md-flex">
 		<li class="nav-item" *ngIf="!(loggedIn$ | async)">
-			<a class="nav-item nav-link mr-md-2"  routerLink="/login">
+			<a class="nav-item nav-link mr-md-2"  routerLink="auth/login">
 				<span class="fas fa-sign-in-alt" title="{{ 'Login' | translate}}" aria-hidden="true"></span>
 				<span translate>Login</span>
 			</a>
 		</li>
 		<li class="nav-item" *ngIf="loggedIn$ | async">
-			<a class="nav-item nav-link mr-md-2" href="/profile" translate>
+			<a class="nav-item nav-link mr-md-2" routerLink="user/profile" translate>
 				<span class="fas fa-user" title="{{ 'Profile' | translate}}" aria-hidden="true"></span>
 				{{ username$ | async }}
 			</a>
