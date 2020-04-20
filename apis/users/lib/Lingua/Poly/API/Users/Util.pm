@@ -62,6 +62,8 @@ sub crypt_password($) {
 sub check_password($$) {
 	my ($cleartext, $digest) = @_;
 
+	return if empty $digest;
+
 	return Password::OWASP::Argon2->new->check_password($cleartext, $digest);
 }
 

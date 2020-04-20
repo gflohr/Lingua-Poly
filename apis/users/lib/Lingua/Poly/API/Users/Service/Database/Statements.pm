@@ -101,6 +101,7 @@ EOF
 UPDATE users
    SET email = NULL,
        username = ?,
+       password = NULL,
        identity_provider_id = (SELECT id FROM identity_providers WHERE name = ?),
        external_id = id,
        homepage = NULL,
