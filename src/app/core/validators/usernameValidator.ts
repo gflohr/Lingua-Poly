@@ -13,10 +13,6 @@ export class UsernameValidator {
 		if (name.includes('@')) return { atSign: true };
 		if (name.includes(':')) return { colon: true };
 
-		if (name.match(/^user-[0-9a-f]*$/i)) {
-			return { reserved: true };
-		}
-
 		return null;
 	}
 }

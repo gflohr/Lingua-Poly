@@ -24,6 +24,10 @@ export class UsernameAvailableValidator implements AsyncValidator {
 			return of(null);
 		}
 
+		if (control.value.match(/^user-[0-9a-f]*$/i)) {
+			return of({ reserved: true });
+		}
+
 		return this.usersService.getUserByName(control.value).pipe(
 			map(() => ({ unavailable: true })),
 			catchError(() => of(null)),

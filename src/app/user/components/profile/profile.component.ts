@@ -27,7 +27,7 @@ export class ProfileComponent {
 		this.user$ = this.authStore.pipe(
 			select(fromAuth.selectUser),
 			tap(user => {
-				const username = user ? user.username : '';
+				let username = user ? user.username : '';
 				this.profileForm.patchValue({ originalUsername: username });
 			})
 		);
