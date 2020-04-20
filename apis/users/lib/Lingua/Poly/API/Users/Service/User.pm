@@ -446,7 +446,8 @@ EOF
 sub delete {
 	my ($self, $user) = @_;
 
-	$self->database->execute(DELETE_USER => $user-> id);
+	my $username = $self->__randomUsername;
+	$self->database->execute(DELETE_USER => $username, 'local', $user-> id);
 
 	return $self;
 }

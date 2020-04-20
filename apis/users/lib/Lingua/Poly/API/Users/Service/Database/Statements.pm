@@ -98,7 +98,14 @@ UPDATE users
 EOF
 
 		DELETE_USER => <<EOF,
-DELETE FROM users where id = ?
+UPDATE users
+   SET email = NULL,
+       username = ?,
+       identity_provider_id = (SELECT id FROM identity_providers WHERE name = ?),
+       external_id = id,
+       homepage = NULL,
+       description = NULL
+ WHERE id = ?
 EOF
 
 		DELETE_USER_STALE => <<EOF,

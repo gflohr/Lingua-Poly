@@ -121,10 +121,14 @@ export class UserEffects {
 			this.usersService.profileDeletePost().pipe(
 				tap(() => this.router.navigate(['/'])),
 				map(() => UserApiActions.deleteAccountSuccess()),
-				map(() => MessageActions.displayError({ code: 'STATUS_ACCOUNT_DELETION_SUCCESS' })),
 				catchError(error => of(UserApiActions.deleteAccountFailure({ error })))
 			),
 		)
+	));
+
+	deleteAccountSuccess$ = createEffect(() => this.actions$.pipe(
+		ofType(UserApiActions.deleteAccountSuccess),
+		map(() => MessageActions.displayError({ code: 'STATUS_ACCOUNT_DELETION_SUCCESS' })),
 	));
 
 	deleteAccountFailure$ = createEffect(() => this.actions$.pipe(

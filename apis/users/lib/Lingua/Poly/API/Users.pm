@@ -166,7 +166,24 @@ sub __aroundDispatch {
 		return $self->__unauthorizedResponse($ctx);
 	}
 
-	return $next->();
+	my $retval = eval { $next->() };
+	if ($@) {
+		$ctx->res->headers->content_type('application/problem+json; charset=utf-8');
+
+		my $data = {
+			errors => [
+				{
+					message => 'Internal server error',
+					path => '/'
+				}
+			]
+		};
+
+		my $status = HTTP_INTERNAL_SERVER_ERROR;
+		return $ctx->render(openapi => $data, status => $status);
+	}
+
+	return $retval;
 }
 
 sub __unauthorizedResponse {
