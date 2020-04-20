@@ -83,8 +83,8 @@ SELECT t.token FROM tokens t, users u
     AND u.confirmed = ?
 EOF
 		INSERT_USER => <<EOF,
-INSERT INTO users(email, password, confirmed, external_id, identity_provider_id)
-  VALUES(?, ?, ?, ?,
+INSERT INTO users(email, username, password, confirmed, external_id, identity_provider_id)
+  VALUES(?, ?, ?, ?, ?,
     (SELECT id FROM identity_providers WHERE name = ?))
 EOF
 		UPDATE_USER => <<EOF,

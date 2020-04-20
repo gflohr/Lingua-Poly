@@ -32,7 +32,7 @@ sub login {
 
 	my $user = $identity_provider->authenticate($json);
 	if (!$user) {
-		return $self->errorResponse(HTTP_BAD_REQUEST, 'invalid username or password');
+		return $self->errorResponse(HTTP_UNAUTHORIZED, 'invalid username or password');
 	}
 
 	my $session = $self->stash->{session};

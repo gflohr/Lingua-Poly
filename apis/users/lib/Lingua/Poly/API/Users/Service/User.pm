@@ -17,6 +17,9 @@ use strict;
 use Moose;
 use namespace::autoclean;
 
+use Crypt::URandom 0.36;
+use MIME::Base64;
+
 use Lingua::Poly::API::Users::Util qw(crypt_password empty equals);
 use Lingua::Poly::API::Users::Validator::Homepage;
 
@@ -60,8 +63,10 @@ sub create {
 
 	$options{confirmed} = 1 if !exists $options{confirmed};
 
+	my $username = $self->__randomUsername;
+
 	$db->execute(INSERT_USER
-		=> $email, $digest,
+		=> $email, $username, $digest,
 		   $options{confirmed}, $options{externalId}, $options{provider});
 
 	my $user_id = $db->lastInsertId('users');
@@ -150,6 +155,8 @@ sub updateUser {
 
 	if (!length $user->username) {
 		$user->username(undef);
+	} elsif ($user->username =~ /^user-[0-9a-f]*$/i) {
+		die "this username is reserved for anonymous users.\n";
 	} elsif ($user->username =~ m{[/\@:]}) {
 		die "username must not contain a slash or an at-sign or a colon.\n";
 	}
@@ -435,6 +442,70 @@ sub delete {
 	$self->database->execute(DELETE_USER => $user-> id);
 
 	return $self;
+}
+
+sub __randomUsername {
+	my ($self) = @_;
+
+	# All these words can be created with hexchars, when you replace 1 with l,
+	# and 0 with o.
+	my @stopwords = qw(
+		affe
+		baba
+		babe
+		babi
+		bad
+		ball
+		bed
+		beef
+		bella
+		belle
+		bello
+		blood
+		bob
+		boob
+		caca
+		calf
+		cloac
+		coca
+		dead
+		deaf
+		debacle
+		doof
+		doll
+		eel
+		face
+		fecal
+		flea
+		fool
+	);
+	my $re = join '|', @stopwords;
+
+	my $deleet_hex = sub {
+		my ($word) = @_;
+
+		my %leet = (
+			0 => 'o',
+			1 => 'l',
+		);
+
+		$word =~ s/([01])/$leet{$1}/g;
+
+		return $word;
+	};
+
+	my $db = $self->database;
+	while(1) {
+		my $binary = Crypt::URandom::urandom(4);
+		my $name = sprintf '%08lx', unpack 'L', $binary;
+		next if $name =~ /$re/;
+		$name = 'user-' . $name;
+		next if $db->getRow(SELECT_USER_BY_USERNAME => $name);
+
+		return $name;
+	}
+
+	# NOT REACHED
 }
 
 __PACKAGE__->meta->make_immutable;
