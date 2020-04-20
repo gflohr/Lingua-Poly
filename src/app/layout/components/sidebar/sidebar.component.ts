@@ -13,6 +13,7 @@ import { AuthActions } from '../../../auth/actions';
 })
 export class SidebarComponent {
 	loggedIn$: Observable<boolean>;
+	lingua: 'en';
 
 	constructor(
 		private authStore: Store<fromAuth.State>

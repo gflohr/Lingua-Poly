@@ -17,10 +17,13 @@ import { ConfigEffects, UserEffects, RouterEffects, MessageEffects } from './cor
 import { UserModule } from './user/user.module';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
+import { ApiModule } from './core/openapi/lingua-poly';
+import { AppLinguaComponent } from './app-lingua.component';
 
 @NgModule({
 	declarations: [
-		AppComponent
+		AppComponent,
+		AppLinguaComponent
 	],
 	imports: [
 		BrowserModule,
@@ -31,18 +34,19 @@ import { environment } from '../environments/environment';
 		UserModule,
 		RouterModule.forRoot(appRoutes),
 		StoreModule.forRoot(ROOT_REDUCERS, { metaReducers }),
-		StoreRouterConnectingModule.forRoot({
-			routerState: RouterState.Minimal
-		}),
 		EffectsModule.forRoot([
 			ConfigEffects,
 			UserEffects,
 			RouterEffects,
-			MessageEffects
+			MessageEffects,
 		]),
-		StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production })
+		StoreRouterConnectingModule.forRoot({
+			routerState: RouterState.Minimal
+		}),
+		StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
+		ApiModule,
 	],
 	providers: [],
-	bootstrap: [AppComponent]
+	bootstrap: [ AppLinguaComponent ],
 })
 export class AppModule { }

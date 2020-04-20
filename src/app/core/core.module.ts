@@ -5,7 +5,7 @@ import { TranslateService, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { PasswordValidator } from './validators/passwordValidator';
-import { ApiModule, BASE_PATH } from './openapi/lingua-poly';
+import { BASE_PATH } from './openapi/lingua-poly';
 import { environment } from 'src/environments/environment';
 import { EffectsModule } from '@ngrx/effects';
 import { AuthEffects } from '../auth/auth.effects';
@@ -21,7 +21,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
 @NgModule({
 	imports: [
 		CommonModule,
-		EffectsModule.forRoot([
+		EffectsModule.forFeature([
 			AuthEffects
 		]),
 		TranslateModule.forRoot({
@@ -33,7 +33,6 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
 			useDefaultLang: true
 		}),
 		HttpClientModule,
-		ApiModule,
 		StoreModule.forFeature(fromCore.coreFeatureKey, fromCore.coreReducers),
 	],
 		exports: [

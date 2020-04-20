@@ -12,7 +12,7 @@ import { DisclaimerComponent } from './components/disclaimer/disclaimer.componen
 	imports: [
 		CommonModule,
 		RouterModule.forChild(mainRoutes),
-		CoreModule
+		CoreModule,
 	],
 	declarations: [StartComponent, LegalDisclosureComponent, DataPrivacyComponent, DisclaimerComponent]
 })

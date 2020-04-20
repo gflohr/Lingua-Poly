@@ -7,7 +7,7 @@ import { Routes } from '@angular/router';
 
 export const mainRoutes: Routes = [
 	{
-		path: '',
+		path: 'start',
 		component: StartComponent,
 		data: { title: _('Start') }
 	},
@@ -25,10 +25,5 @@ export const mainRoutes: Routes = [
 		path: 'data-privacy',
 		component: DataPrivacyComponent,
 		data: { title: _('Data Privacy') }
-	},
-	{
-		path: ':lingua/mytest',
-		component:	StartComponent,
-		data: { title: _('Test') }
 	},
 ];

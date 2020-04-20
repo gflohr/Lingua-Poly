@@ -38,6 +38,11 @@ export class AppComponent implements OnInit, OnDestroy {
 				this.router.navigate([this.router.url.split('?')[0]]);
 			}
 		});
+
+		this.route.paramMap.subscribe(params => {
+			const lingua = params.get('lingua');
+			console.log(`lingua: ${lingua}`);
+		});
 	}
 
 	ngOnDestroy() {
