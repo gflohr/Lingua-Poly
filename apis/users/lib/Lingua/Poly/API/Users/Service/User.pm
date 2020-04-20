@@ -153,10 +153,17 @@ sub updateUser {
 
 	# The RDBMS checks the uniqueness of the username.
 
+	my $db = $self->database;
 	if (!length $user->username) {
 		$user->username(undef);
 	} elsif ($user->username =~ /^user-[0-9a-f]*$/i) {
-		die "this username is reserved for anonymous users.\n";
+		my (undef, $original) = $db->getRow(SELECT_USER_BY_ID => $user->id);
+
+		if ($original ne $user->username) {
+			die "this username is reserved for anonymous users.\n";
+		}
+
+		$user->username($original);
 	} elsif ($user->username =~ m{[/\@:]}) {
 		die "username must not contain a slash or an at-sign or a colon.\n";
 	}
@@ -168,7 +175,7 @@ sub updateUser {
 		$homepage = Lingua::Poly::API::Users::Validator::Homepage->new->check($homepage);
 	}
 
-	$self->database->execute(
+	$db->execute(
 		UPDATE_USER => $user->email, $user->externalId, $user->username,
 		               $homepage, $user->description, $user->id
 	);
