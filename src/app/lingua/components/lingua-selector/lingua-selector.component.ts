@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { LinguaService } from '../../../core/services/lingua.service';
+import { Router } from '@angular/router';
 
 const linguaKey = 'lingua-poly-lingua';
 
@@ -10,13 +12,14 @@ const linguaKey = 'lingua-poly-lingua';
 export class LinguaSelectorComponent implements OnInit {
 	lingua: string;
 
-	constructor() { }
+	constructor(
+		private linguaService: LinguaService,
+		private router: Router,
+	) { }
 
 	ngOnInit(): void {
-		const supported = ['en', 'de'];
-
-		const stored = localStorage.getItem(linguaKey);
-		if (supported.includes(stored)) {
+		const stored = this.linguaService.getLingua();
+		if (stored !== null && this.linguaService.supportedLingua(stored)) {
 			this.lingua = stored;
 		}
 
@@ -25,22 +28,22 @@ export class LinguaSelectorComponent implements OnInit {
 
 			console.log(languages);
 			for (let i = 0; i < languages.length; ++i) {
-				if (supported.includes(languages[i])) {
+				if (this.linguaService.supportedLingua(languages[i])) {
 					this.lingua = languages[i];
 					break;
 				}
 				if (languages[i].match(/^[a-z]{2}-/)
-					&& supported.includes(languages[i].substr(0, 2))) {
+					&& this.linguaService.supportedLingua(languages[i].substr(0, 2))) {
 					this.lingua = languages[i].substr(0, 2);
 					break;
 				}
 			}
 		}
 
-		if (!this.lingua) this.lingua = supported[0];
+		if (!this.lingua) this.lingua = this.linguaService.defaultLingua();
 
-		localStorage.setItem(linguaKey, this.lingua);
+		this.linguaService.setLingua(this.lingua);
 
-		console.log(`selected language: ${this.lingua}`);
+		this.router.navigate([`/${this.lingua}/main/start`]);
 	}
 }

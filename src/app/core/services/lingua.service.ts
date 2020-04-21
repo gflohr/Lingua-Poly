@@ -1,17 +1,45 @@
 import { Injectable, OnInit } from '@angular/core';
 
-const linguaKey = 'lingua-poly-lingua';
+const KEY = 'lingua-poly-lingua';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class LinguaService {
-	constructor() { }
+	supported = [
+		'en-us',
+		'de'
+	];
 
-	storageAvailable(type: string) {
+	defaultLingua(): string {
+		return 'en-us';
+	}
+
+	supportedLingua(lingua: string): boolean {
+		if(this.supported.includes(lingua))
+			return true;
+		else
+			return false;
+	}
+
+	getLingua(): string {
+		if (this.checkLocalStorage()) {
+			return localStorage.getItem(KEY);
+		} else {
+			return null;
+		}
+	}
+
+	setLingua(lingua: string) {
+		if (this.checkLocalStorage()) {
+			localStorage.setItem(KEY, lingua);
+		}
+	}
+
+	checkLocalStorage() {
 		let storage;
 		try {
-			storage = window[type];
+			storage = window['localStorage'];
 			let x = '__storage_test__';
 			storage.setItem(x, x);
 			storage.removeItem(x);
