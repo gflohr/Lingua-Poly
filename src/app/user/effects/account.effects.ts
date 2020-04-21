@@ -2,14 +2,14 @@ import { Injectable } from '@angular/core';
 import { fromEvent, merge, timer, of } from 'rxjs';
 import { createEffect, Actions, ofType } from '@ngrx/effects';
 import { map, exhaustMap, switchMapTo, catchError, tap, switchMap } from 'rxjs/operators';
-import { UserApiActions } from './actions';
+import { UserApiActions } from '../actions';
 import { Router } from '@angular/router';
-import * as fromAuth from '../auth/reducers'
+import * as fromAuth from '../../auth/reducers'
 import { Store } from '@ngrx/store';
-import { UsersService } from '../core/openapi/lingua-poly';
-import { ModalDialogService } from '../core/services/modal-dialog.service';
-import { DeleteAccountConfirmationComponent } from './components/delete-account-confirmation/delete-account-confirmation.component';
-import { UserActions, MessageActions } from '../core/actions';
+import { UsersService } from '../../core/openapi/lingua-poly';
+import { ModalDialogService } from '../../core/services/modal-dialog.service';
+import { DeleteAccountConfirmationComponent } from '../components/delete-account-confirmation/delete-account-confirmation.component';
+import { UserActions, MessageActions } from '../../core/actions';
 
 @Injectable()
 export class UserEffects {

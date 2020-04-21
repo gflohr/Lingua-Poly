@@ -20,7 +20,7 @@ import { environment } from '../environments/environment';
 import { ApiModule } from './core/openapi/lingua-poly';
 import { AppLinguaComponent } from './app-lingua.component';
 import { RouteContainerModule } from './route-container/route-container.module';
-import { UserEffects } from './user/user.effects';
+import { UserEffects } from './user/effects';
 
 @NgModule({
 	declarations: [
