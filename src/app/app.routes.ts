@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { AppComponent } from './app.component';
+import { LinguaSelectorComponent } from './lingua/components/lingua-selector/lingua-selector.component';
 
 export const appRoutes: Routes = [
 		{
@@ -11,8 +12,6 @@ export const appRoutes: Routes = [
 		{
 			path: '',
 			data: { title: 'lingua redirect' },
-			pathMatch: 'full',
-			// FIXME! Redirect to controller that does the content negotiation.
-			redirectTo: '/en/main/start'
+			component: LinguaSelectorComponent,
 		},
 ];

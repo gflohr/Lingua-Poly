@@ -1075,6 +1075,11 @@
     rxjs "6.5.4"
     webpack-sources "1.4.3"
 
+"@ngx-pwa/local-storage@^9.0.3":
+  version "9.0.3"
+  resolved "https://registry.yarnpkg.com/@ngx-pwa/local-storage/-/local-storage-9.0.3.tgz#f4c4c0c482569962336751603f70c6577a0c4e86"
+  integrity sha512-lMQhrcWN/gDre2kBZQBPxoRiIwxcKzJ1JgmscwazM5BtfGY3YiFj3tndAM3ECQAOvTY/bcW98Y9g7wOHFXdO0A==
+
 "@ngx-translate/core@^10.0.2":
   version "10.0.2"
   resolved "https://registry.yarnpkg.com/@ngx-translate/core/-/core-10.0.2.tgz#5eeb78f47845b476a1e892fb2fb153dbbaf72850"
