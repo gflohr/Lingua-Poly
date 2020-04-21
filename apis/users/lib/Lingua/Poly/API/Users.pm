@@ -163,6 +163,14 @@ sub __aroundDispatch {
 
 	if ($method ne 'GET' && $method ne 'HEAD'
 	    && (empty $header || empty $token || $header ne $token)) {
+		if (empty $header) {
+			$self->debug('no X-XSRF-TOKEN header');
+		} elsif (empty $token) {
+			$self->debug('no XSRF-TOKEN cookie');
+		} else {
+			$self->debug('XSRF-TOKEN mismatch');
+		}
+
 		return $self->__unauthorizedResponse($ctx);
 	}
 
