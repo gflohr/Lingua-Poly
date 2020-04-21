@@ -5,7 +5,7 @@ const KEY = 'lingua-poly-lingua';
 @Injectable({
 	providedIn: 'root'
 })
-export class LinguaService {
+export class UILinguaService {
 	supported = [
 		'en-us',
 		'de'

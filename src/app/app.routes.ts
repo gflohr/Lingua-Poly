@@ -4,14 +4,14 @@ import { LinguaSelectorComponent } from './lingua/components/lingua-selector/lin
 
 export const appRoutes: Routes = [
 		{
-			path: ':lingua',
+			path: ':uiLingua/:lingua',
 			data: { title: 'lingua selector'},
 			component: AppComponent,
 			loadChildren: () => import('./route-container/route-container.module').then(m => m.RouteContainerModule)
 		},
 		{
 			path: '',
-			data: { title: 'lingua redirect' },
+			data: { title: 'Lingua Redirect' },
 			component: LinguaSelectorComponent,
 		},
 ];
