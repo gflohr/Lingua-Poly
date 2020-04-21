@@ -1,4 +1,5 @@
 import { createReducer, Action } from '@ngrx/store';
+import { applicationConfig } from '../../app.config';
 
 export const statusFeatureKey = 'status';
 
@@ -9,8 +10,8 @@ export interface State {
 
 // FIXME! Hardcode these values in constants.
 export const initialState: State = {
-	uiLingua: 'en-us',
-	lingua: 'fi',
+	uiLingua: applicationConfig.defaultLocale,
+	lingua: applicationConfig.defaultLanguage,
 };
 
 export const userReducer = createReducer(

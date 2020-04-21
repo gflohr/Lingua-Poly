@@ -3,7 +3,8 @@ import { environment }	from './../environments/environment';
 export const applicationConfig = {
 		appName: 'Lingua::Poly',
 		availableLocales: ['en-us', 'de'],
-		defaultLocale: 'en-us'
+		defaultLocale: 'en-us',
+		defaultLanguage: 'fi',
 };
 
 export class ApiEndpoint {

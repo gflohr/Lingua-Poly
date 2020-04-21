@@ -1,4 +1,5 @@
-import { Injectable, OnInit } from '@angular/core';
+import { Injectable } from '@angular/core';
+import { applicationConfig } from '../../app.config';
 
 const KEY = 'lingua-poly-lingua';
 
@@ -6,17 +7,12 @@ const KEY = 'lingua-poly-lingua';
 	providedIn: 'root'
 })
 export class UILinguaService {
-	supported = [
-		'en-us',
-		'de'
-	];
-
 	defaultLingua(): string {
-		return 'en-us';
+		return applicationConfig.defaultLocale;
 	}
 
 	supportedLingua(lingua: string): boolean {
-		if(this.supported.includes(lingua))
+		if(applicationConfig.availableLocales.includes(lingua))
 			return true;
 		else
 			return false;
