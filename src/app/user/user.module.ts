@@ -9,6 +9,9 @@ import { ChangePasswordComponent } from './components/change-password/change-pas
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { ChangePasswordWithTokenComponent } from './components/change-password-with-token/change-password-with-token.component';
 import { DeleteAccountConfirmationComponent } from './components/delete-account-confirmation/delete-account-confirmation.component';
+import { StoreModule } from '@ngrx/store';
+
+import * as fromUser from './reducers';
 
 @NgModule({
 	imports: [
@@ -16,7 +19,8 @@ import { DeleteAccountConfirmationComponent } from './components/delete-account-
 		CoreModule,
 		RouterModule.forChild(userRoutes),
 		FormsModule,
-		ReactiveFormsModule
+		ReactiveFormsModule,
+		StoreModule.forFeature(fromUser.userFeatureKey, fromUser.userReducers),
 	],
 	declarations: [ProfileComponent, ChangePasswordComponent, ResetPasswordComponent, ChangePasswordWithTokenComponent, DeleteAccountConfirmationComponent]
 })
