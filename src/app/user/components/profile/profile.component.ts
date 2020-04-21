@@ -9,7 +9,7 @@ import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { User } from 'src/app/core/openapi/lingua-poly';
 import { tap } from 'rxjs/operators';
-import { UserActions } from 'src/app/core/actions';
+import { AccountActions } from 'src/app/user/actions';
 
 @Component({
 	selector: 'app-profile',
@@ -47,10 +47,10 @@ export class ProfileComponent {
 	onSubmit() {
 		const profile = this.profileForm.getRawValue();
 		delete profile.originalUsername;
-		this.authStore.dispatch(UserActions.setProfile({ payload: profile }));
+		this.authStore.dispatch(AccountActions.setProfile({ payload: profile }));
 	}
 
 	onDelete() {
-		this.authStore.dispatch(UserActions.deleteAccountConfirmation());
+		this.authStore.dispatch(AccountActions.deleteAccountConfirmation());
 	}
 }

@@ -1,20 +1,20 @@
 import { Injectable } from '@angular/core';
-import { fromEvent, merge, timer, of } from 'rxjs';
+import { of } from 'rxjs';
 import { createEffect, Actions, ofType } from '@ngrx/effects';
-import { map, exhaustMap, switchMapTo, catchError, tap, switchMap } from 'rxjs/operators';
-import { UserApiActions } from '../actions';
+import { map, exhaustMap, catchError, tap, switchMap } from 'rxjs/operators';
+import { UserApiActions, AccountActions } from '../actions';
 import { Router } from '@angular/router';
 import * as fromAuth from '../../auth/reducers'
 import { Store } from '@ngrx/store';
 import { UsersService } from '../../core/openapi/lingua-poly';
 import { ModalDialogService } from '../../core/services/modal-dialog.service';
 import { DeleteAccountConfirmationComponent } from '../components/delete-account-confirmation/delete-account-confirmation.component';
-import { UserActions, MessageActions } from '../../core/actions';
+import { MessageActions } from '../../core/actions';
 
 @Injectable()
 export class UserEffects {
 	getProfile$ = createEffect(() => this.actions$.pipe(
-		ofType(UserActions.requestProfile),
+		ofType(AccountActions.requestProfile),
 		exhaustMap(() =>
 			this.usersService.profileGet().pipe(
 				map(user => UserApiActions.profileSuccess({ user })),
@@ -24,10 +24,10 @@ export class UserEffects {
 	));
 
 	setProfile$ = createEffect(() => this.actions$.pipe(
-		ofType(UserActions.setProfile),
+		ofType(AccountActions.setProfile),
 		exhaustMap((props) =>
 			this.usersService.profilePatch(props.payload).pipe(
-				tap(() => this.authStore.dispatch(UserActions.requestProfile())),
+				tap(() => this.authStore.dispatch(AccountActions.requestProfile())),
 				tap(() => this.router.navigate(['/'])),
 				catchError(error => of(UserApiActions.profileFailure({ error })))
 			)
@@ -35,7 +35,7 @@ export class UserEffects {
 	), { dispatch: false });
 
 	changePassword$ = createEffect(() => this.actions$.pipe(
-		ofType(UserActions.changePassword),
+		ofType(AccountActions.changePassword),
 		exhaustMap(props =>
 			this.usersService.passwordPatch(props.payload).pipe(
 				tap(() => this.router.navigate(['/'])),
@@ -46,7 +46,7 @@ export class UserEffects {
 	));
 
 	changePasswordWithToken$ = createEffect(() => this.actions$.pipe(
-		ofType(UserActions.changePasswordWithToken),
+		ofType(AccountActions.changePasswordWithToken),
 		exhaustMap(props =>
 			this.usersService.passwordResetPost(props.payload).pipe(
 				map(user => UserApiActions.changePasswordWithTokenSuccess({ user })),
@@ -84,7 +84,7 @@ export class UserEffects {
 	));
 
 	resetPassword$ = createEffect(() => this.actions$.pipe(
-		ofType(UserActions.resetPasswordRequest),
+		ofType(AccountActions.resetPasswordRequest),
 		exhaustMap(props =>
 			this.usersService.passwordRequestResetPost(props.payload).pipe(
 				tap(() => this.router.navigate(['/'])),
@@ -95,10 +95,10 @@ export class UserEffects {
 	));
 
 	deleteAccountConfirmation$ = createEffect(() => this.actions$.pipe(
-		ofType(UserActions.deleteAccountConfirmation),
+		ofType(AccountActions.deleteAccountConfirmation),
 		exhaustMap(() => this.dialogService.runDialog(DeleteAccountConfirmationComponent).pipe(
 			map(() => UserApiActions.deleteAccount()),
-			catchError(() => of(UserActions.logoutConfirmationDismiss()))
+			catchError(() => of(AccountActions.logoutConfirmationDismiss()))
 		))
 	));
 

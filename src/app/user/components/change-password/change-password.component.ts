@@ -6,7 +6,7 @@ import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { User, PasswordChange } from 'src/app/core/openapi/lingua-poly';
 import { tap } from 'rxjs/operators';
-import { UserActions } from '../../../core/actions';
+import { AccountActions } from '../../../user/actions';
 
 @Component({
 	selector: 'app-change-password',
@@ -54,7 +54,7 @@ export class ChangePasswordComponent {
 			password: this.changePasswordForm.get('password').value,
 			oldPassword: this.changePasswordForm.get('oldPassword').value,
 		} as PasswordChange;
-		this.authStore.dispatch(UserActions.changePassword({ payload: changeSet }));
+		this.authStore.dispatch(AccountActions.changePassword({ payload: changeSet }));
 	}
 
 	get oldPassword() { return this.changePasswordForm.get('oldPassword'); }

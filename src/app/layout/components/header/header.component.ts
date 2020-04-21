@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import * as fromAuth from '../../../auth/reducers';
-import { UserActions } from '../../../core/actions';
+import { AccountActions } from '../../../user/actions';
 import { AuthActions } from '../../../auth/actions';
 
 @Component({
@@ -22,7 +22,7 @@ export class HeaderComponent implements OnInit {
 	}
 
 	ngOnInit() {
-		this.authStore.dispatch(UserActions.requestProfile());
+		this.authStore.dispatch(AccountActions.requestProfile());
 	}
 
 	logout() {

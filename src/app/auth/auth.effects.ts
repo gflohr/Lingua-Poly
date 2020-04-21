@@ -5,7 +5,7 @@ import { UsersService, OauthService } from '../core/openapi/lingua-poly';
 import { of } from 'rxjs';
 import { LoginPageActions, AuthApiActions, AuthActions } from './actions';
 import { Router } from '@angular/router';
-import { UserActions } from '../core/actions';
+import { AccountActions } from '../user/actions';
 import { LogoutConfirmationComponent } from '../layout/components/logout-confirmation/logout-confirmation.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import * as fromAuth from './reducers';
@@ -37,11 +37,6 @@ export class AuthEffects {
 				catchError(error => of(AuthApiActions.loginFailure({ error })))
 			)
 		)
-	));
-
-	logoutIdleUser$ = createEffect(() => this.actions$.pipe(
-		ofType(UserActions.idleTimeout),
-		map(() => AuthActions.logout())
 	));
 
 	logoutConfirmation$ = createEffect(() => this.actions$.pipe(

@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import * as fromAuth from '../../../auth/reducers';
 import { Store } from '@ngrx/store';
-import { UserActions } from '../../../core/actions';
+import { AccountActions } from '../../../user/actions';
 import { PasswordReset } from '../../../core/openapi/lingua-poly';
 
 @Component({
@@ -24,6 +24,6 @@ export class ResetPasswordComponent {
 		const request = {
 			id: this.resetPasswordForm.get('id').value,
 		} as PasswordReset;
-		this.authStore.dispatch(UserActions.resetPasswordRequest({ payload: request }));
+		this.authStore.dispatch(AccountActions.resetPasswordRequest({ payload: request }));
 	}
 }

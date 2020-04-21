@@ -6,7 +6,7 @@ import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { User, PasswordChange, Token } from 'src/app/core/openapi/lingua-poly';
 import { tap } from 'rxjs/operators';
-import { UserActions } from '../../../core/actions';
+import { AccountActions } from '../../../user/actions';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -63,7 +63,7 @@ export class ChangePasswordWithTokenComponent implements OnInit {
 			password: this.changePasswordForm.get('password').value,
 			token: this.changePasswordForm.get('token').value,
 		} as PasswordChange;
-		this.authStore.dispatch(UserActions.changePasswordWithToken({
+		this.authStore.dispatch(AccountActions.changePasswordWithToken({
 			payload: changeSet
 		}));
 	}
