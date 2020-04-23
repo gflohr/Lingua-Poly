@@ -21,6 +21,7 @@ import { ApiModule } from './core/openapi/lingua-poly';
 import { AppLinguaComponent } from './app-lingua.component';
 import { RouteContainerModule } from './route-container/route-container.module';
 import { UserEffects } from './user/effects';
+import { LinguaModule } from './lingua/lingua.module';
 
 @NgModule({
 	declarations: [
@@ -30,6 +31,7 @@ import { UserEffects } from './user/effects';
 	imports: [
 		BrowserModule,
 		CoreModule,
+		LinguaModule,
 		AuthModule,
 		LayoutModule,
 		MainModule,

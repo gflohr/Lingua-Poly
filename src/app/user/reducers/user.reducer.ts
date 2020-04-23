@@ -1,5 +1,6 @@
-import { createReducer, Action } from '@ngrx/store';
+import { createReducer, Action, on } from '@ngrx/store';
 import { applicationConfig } from '../../app.config';
+import { LinguaActions } from '../../lingua/actions';
 
 export const statusFeatureKey = 'status';
 
@@ -16,6 +17,7 @@ export const initialState: State = {
 
 export const userReducer = createReducer(
 	initialState,
+	on(LinguaActions.UILinguaChanged, (state, { lingua }) => ({ ...state, uiLingua: lingua })),
 );
 
 export function reducer(state: State | undefined, action: Action) {
