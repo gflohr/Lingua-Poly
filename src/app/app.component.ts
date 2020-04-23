@@ -3,10 +3,12 @@ import { TranslateService } from '@ngx-translate/core';
 import { applicationConfig } from './app.config';
 import * as fromAuth from './auth/reducers';
 import * as fromRoot from './app.reducers';
+import * as fromUser from './user/reducers';
 import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { ConfigActions, MessageActions } from './core/actions';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import { LinguaActions } from './lingua/actions';
 
 @Component({
 	selector: 'app-root',
@@ -16,10 +18,12 @@ import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 
 export class AppComponent implements OnInit, OnDestroy {
 	loggedIn$: Observable<boolean>;
+	uiLingua$: Observable<string>;
 
 	constructor(
 		private translate: TranslateService,
 		private store: Store<fromRoot.State & fromAuth.State>,
+		private userStore: Store<fromUser.State>,
 		private route: ActivatedRoute,
 		private router: Router,
 	) {
@@ -27,6 +31,7 @@ export class AppComponent implements OnInit, OnDestroy {
 		this.translate.use(applicationConfig.defaultLocale);
 
 		this.loggedIn$ = this.store.pipe(select(fromAuth.selectLoggedIn));
+		this.uiLingua$ = this.userStore.pipe(select(fromUser.selectUILingua));
 	}
 
 	ngOnInit() {
@@ -40,8 +45,9 @@ export class AppComponent implements OnInit, OnDestroy {
 		});
 
 		this.route.paramMap.subscribe(params => {
-			const lingua = params.get('lingua');
-			console.log(`lingua: ${lingua}`);
+			const lingua = params.get('uiLingua');
+			// FIXME! Check that the language actually changed.
+			this.userStore.dispatch(LinguaActions.UILinguaChangeDetected({ lingua }));
 		});
 	}
 
