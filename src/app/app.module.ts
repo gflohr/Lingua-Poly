@@ -22,6 +22,7 @@ import { AppLinguaComponent } from './app-lingua.component';
 import { RouteContainerModule } from './route-container/route-container.module';
 import { UserEffects } from './user/effects';
 import { LinguaModule } from './lingua/lingua.module';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
 	declarations: [
@@ -50,6 +51,7 @@ import { LinguaModule } from './lingua/lingua.module';
 		}),
 		StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
 		ApiModule,
+		SharedModule,
 	],
 	providers: [],
 	bootstrap: [ AppLinguaComponent ],
