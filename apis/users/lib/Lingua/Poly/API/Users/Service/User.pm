@@ -343,7 +343,7 @@ sub sendRegistrationMail {
 	my $body = __x(<<'EOF', %placeholders);
 Hello,
 
-somebody, hopefully you, has registered at the Lingua::Poly website ({url}).
+somebody, hopefully you, has registered at the Lingua::Poly website {url}.
 
 If you did not register, please ignore this email!
 
@@ -351,7 +351,7 @@ In order to confirm the registration, please follow the following link:
 
     {confirmation_url}
 
-There is no need to keep this email.  The above link will expire in {expiry_minutes} minutes.
+There is no need to keep this email. The above link will expire in {expiry_minutes} minutes.
 
 This email was send from an account that is not set up to receive mails.
 
@@ -402,7 +402,7 @@ sub sendPasswordResetMail {
 		$body = __x(<<'EOF', %placeholders);
 Hello,
 
-somebody, hopefully you, has requested to reset your password at the Lingua::Poly website ({url}).
+somebody, hopefully you, has requested to reset your password at the Lingua::Poly website {url}.
 
 If you did not request resetting your password, please ignore this email!
 EOF
@@ -410,7 +410,7 @@ EOF
 		$body = __x(<<'EOF', %placeholders);
 Hello,
 
-somebody, maybe you, has tried to register with your email address {email} at ({url}).  But you are already registered.
+somebody, maybe you, has tried to register with your email address {email} at {url}. But you are already registered.
 
 If you did not try to register, please ignore this email!
 

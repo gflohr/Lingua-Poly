@@ -14,7 +14,7 @@ use strict;
 
 use Locale::PO;
 
-my $en_po = '../src/assets/i18n/en.po';
+my $en_po = '../src/assets/i18n/en-us.po';
 my $entries = Locale::PO->load_file_asarray($en_po, 'utf-8')
     or die "$0: cannot open '$en_po' for reading: $!\n";
 

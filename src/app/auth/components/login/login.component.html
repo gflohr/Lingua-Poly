@@ -28,7 +28,7 @@
 				<input type="checkbox" class="form-check-input" id="persistant"
 				       formControlName="persistant">
 				<label class="form-check-label"
-				       for="persistant" translate>Remember me!</label>
+				       for="persistant" translate>Remember me on this computer!</label>
 			</div>
 			<button type="submit" class="btn btn-success btn-block"
 			        [disabled]="!loginForm.dirty || !loginForm.valid"
@@ -51,7 +51,7 @@
 			<span *ngIf="hasOAuthFacebook$ | async"
 				class="login-span-or" translate>or</span>
 			<button *ngIf="hasOAuthFacebook$ | async" type="submit" class="btn btn-primary btn-facebook btn-block"
-				(click)="signInWithFacebook()" translate>
+				(click)="signInWithFacebook()">
 				<span class="fab fa-facebook-f"
 					  title="{{ 'Login with Facebook' | translate}}"
 					  aria-hidden="true"></span>
@@ -59,7 +59,7 @@
 				<span translate>Login with Facebook</span>
 			</button>
 			<button *ngIf="hasOAuthGoogle$ | async" type="submit" class="btn btn-primary btn-google btn-block"
-				(click)="signInWithGoogle()" translate>
+				(click)="signInWithGoogle()">
 				<span class="fab fa-google"
 					  title="{{ 'Login with Google' | translate}}"
 					  aria-hidden="true"></span>
