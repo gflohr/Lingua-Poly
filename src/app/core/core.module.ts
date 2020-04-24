@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
-import { TranslateService, TranslateLoader } from '@ngx-translate/core';
+import { TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { PasswordValidator } from './validators/passwordValidator';
@@ -42,7 +42,6 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
 	declarations: [ConnectFormDirective],
 	providers: [
 		HttpClient,
-		TranslateService,
 		PasswordValidator,
 		CookieService,
 		{
