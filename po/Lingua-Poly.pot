@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: Guido Flohr <guido.flohr@cantanea.com>\n"
-"POT-Creation-Date: 2020-01-21 14:52+0200\n"
+"POT-Creation-Date: 2020-04-24 08:29+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,13 +17,99 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+#: ../apis/users/lib/Lingua/Poly/API/Users/Controller/Registration.pm:71
+#, perl-brace-format
+msgid "Password strength was: {score}/4"
+msgstr ""
+
+#: ../apis/users/lib/Lingua/Poly/API/Users/Service/User.pm:335
+msgid "Confirm Lingua::Poly registration"
+msgstr ""
+
+#: ../apis/users/lib/Lingua/Poly/API/Users/Service/User.pm:344
+#, perl-brace-format
+msgid ""
+"Hello,\n"
+"\n"
+"somebody, hopefully you, has registered at the Lingua::Poly website "
+"({url}).\n"
+"\n"
+"If you did not register, please ignore this email!\n"
+"\n"
+"In order to confirm the registration, please follow the following link:\n"
+"\n"
+"    {confirmation_url}\n"
+"\n"
+"There is no need to keep this email.  The above link will expire in "
+"{expiry_minutes} minutes.\n"
+"\n"
+"This email was send from an account that is not set up to receive mails.\n"
+"\n"
+"Best regards,\n"
+"Your Lingua::Poly team\n"
+msgstr ""
+
+#: ../apis/users/lib/Lingua/Poly/API/Users/Service/User.pm:390
+msgid "Reset Lingua::Poly password"
+msgstr ""
+
+#: ../apis/users/lib/Lingua/Poly/API/Users/Service/User.pm:403
+#, perl-brace-format
+msgid ""
+"Hello,\n"
+"\n"
+"somebody, hopefully you, has requested to reset your password at the Lingua::"
+"Poly website ({url}).\n"
+"\n"
+"If you did not request resetting your password, please ignore this email!\n"
+msgstr ""
+
+#: ../apis/users/lib/Lingua/Poly/API/Users/Service/User.pm:411
+#, perl-brace-format
+msgid ""
+"Hello,\n"
+"\n"
+"somebody, maybe you, has tried to register with your email address {email} "
+"at ({url}).  But you are already registered.\n"
+"\n"
+"If you did not try to register, please ignore this email!\n"
+"\n"
+"But if you have just forgotten your password, you can reset it now by "
+"following this link:\n"
+msgstr ""
+
+#: ../apis/users/lib/Lingua/Poly/API/Users/Service/User.pm:428
+#, perl-brace-format
+msgid ""
+"There is no need to keep this email.  The above link will expire in\n"
+"{expiry_minutes} minutes.\n"
+"\n"
+"This email was send from an account that is not set up to receive mails.\n"
+"\n"
+"Best regards,\n"
+"Your Lingua::Poly team\n"
+msgstr ""
+
+msgid " "
+msgstr ""
+
 msgid ""
 "<div *ngIf=\"this.success; then successBlock else errorBlock\"></div>\n"
 "\t\t<ng-template #successBlock translate>Registration completed successfully!"
 "</ng-template>\n"
 "\t\t<ng-template #errorBlock translate>Registration failed!  Most probably\n"
-"\t\t\tthe link from the email has expired.  Please try again!\n"
+"\t\t\tthe link from the email has expired.  Please try again\n"
+"\t\t\t<a routerLink=\"/registration\" translate>here</a>!\n"
 "\t\t</ng-template>"
+msgstr ""
+
+msgid ""
+"<div class=\"col-12\">\n"
+"Please fill in your email address or username, and we will send\n"
+"you an email with instrucutions how to set a new password.  Please\n"
+"note that for data privacy reasons, you will not get any error message\n"
+"if the email address or username is not valid.\n"
+"\t\t</div>"
 msgstr ""
 
 msgid ""
@@ -148,10 +234,10 @@ msgstr ""
 
 msgid ""
 "<span class=\"fab fa-google\"\n"
-"\t\t\t\t\t\ttitle=\"{{ 'Login with Google' | translate}}\"\n"
-"\t\t\t\t\t\taria-hidden=\"true\"></span>\n"
-"\t\t\t\t\t&nbsp;\n"
-"\t\t\t\t\t<span translate>Login with Google</span>"
+"\t\t\t\t\t  title=\"{{ 'Login with Google' | translate}}\"\n"
+"\t\t\t\t\t  aria-hidden=\"true\"></span>\n"
+"\t\t\t\t&nbsp;\n"
+"\t\t\t\t<span translate>Login with Google</span>"
 msgstr ""
 
 msgid ""
@@ -166,6 +252,11 @@ msgstr ""
 msgid ""
 "All of this information is optional.  You can delete it at any point by\n"
 "saving an empty value."
+msgstr ""
+
+msgid ""
+"All your personal user data will be deleted and your account\n"
+"\t\t\tname will be renamed to a random username."
 msgstr ""
 
 #, perl-brace-format
@@ -184,6 +275,12 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
+msgid "Change Password"
+msgstr ""
+
+msgid "Change password"
+msgstr ""
+
 msgid "Confirmation being sent ..., please wait!"
 msgstr ""
 
@@ -193,7 +290,18 @@ msgstr ""
 msgid "Data Privacy Statement"
 msgstr ""
 
+msgid "Delete Account"
+msgstr ""
+
 msgid "Disclaimer"
+msgstr ""
+
+msgid ""
+"Do you really want to delete your account?\n"
+"\t\tThis cannot be reverted!"
+msgstr ""
+
+msgid "Don't have an account?"
 msgstr ""
 
 msgid "Email address"
@@ -202,16 +310,22 @@ msgstr ""
 msgid "Email address or username"
 msgstr ""
 
-msgid "Enter email"
+msgid "Enter email address"
 msgstr ""
 
 msgid "Enter email or username"
+msgstr ""
+
+msgid "Enter your old password"
 msgstr ""
 
 msgid "Features"
 msgstr ""
 
 msgid "Finnish"
+msgstr ""
+
+msgid "Forgot your password?"
 msgstr ""
 
 msgid "Homepage"
@@ -261,6 +375,15 @@ msgstr ""
 msgid "My Lingua::Poly"
 msgstr ""
 
+msgid "New password"
+msgstr ""
+
+msgid "Okay"
+msgstr ""
+
+msgid "Old Password"
+msgstr ""
+
 msgid "Password"
 msgstr ""
 
@@ -280,6 +403,9 @@ msgstr ""
 msgid "Register"
 msgstr ""
 
+msgid "Register!"
+msgstr ""
+
 msgid "Registration"
 msgstr ""
 
@@ -295,10 +421,16 @@ msgstr ""
 msgid "Report a bug"
 msgstr ""
 
+msgid "Reset Password"
+msgstr ""
+
 msgid "Save"
 msgstr ""
 
 msgid "Search word"
+msgstr ""
+
+msgid "Sign In"
 msgstr ""
 
 msgid "Sign-in"
@@ -310,7 +442,7 @@ msgstr ""
 msgid "Start"
 msgstr ""
 
-msgid "Test"
+msgid "Submit"
 msgstr ""
 
 msgid "The homepage must start with \"https://\" or \"http://\"."
@@ -328,13 +460,22 @@ msgstr ""
 msgid "This name is already taken."
 msgstr ""
 
+msgid "This name is reserved for anonymous users."
+msgstr ""
+
 msgid "Username"
+msgstr ""
+
+msgid "You cannot use a colon in your username."
 msgstr ""
 
 msgid "You cannot use a slash in your username."
 msgstr ""
 
 msgid "You cannot use an at sign in your username."
+msgstr ""
+
+msgid "You have to specify your old password."
 msgstr ""
 
 msgid "or"

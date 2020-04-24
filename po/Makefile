@@ -17,6 +17,7 @@ EGREP     = grep -E
 include PACKAGE
 
 MO_FILES = $(addsuffix .gmo, $(LINGUAS))
+JSON_FILES = $(addprefix $(jsoni18ndir), $(addsuffix .json, $(LINGUAS)))
 
 TD = $(strip $(TEXTDOMAIN))
 
@@ -42,12 +43,12 @@ pot: $(TD).pot
 clean:
 	rm -f *~ *.bak *.gmo
 
-js.pot: $(top_srcdir)/src/assets/i18n/en.po
+js.pot: $(jsi18ndir)/en-us.po
 	$(srcdir)/make-js-pot
 
-$(top_srcdir)/src/assets/i18n/en.po: $(JSPOTFILES)
+$(jsi18ndir)/en-us.po: $(JSPOTFILES)
 	$(NODE) ../node_modules/@biesbjerg/ngx-translate-extract/bin/cli.js \
-		--input=../src --output=../src/assets/i18n/en.po --clean --sort \
+		--input=../src --output=$(jsi18ndir)/en-us.po --clean --sort \
 		--format=pot --marker=_ ; \
 
 $(TD).pot: $(POTFILES)

@@ -4,13 +4,26 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+msgid " "
+msgstr ""
+
 msgid ""
 "<div *ngIf=\"this.success; then successBlock else errorBlock\"></div>\n"
 "\t\t<ng-template #successBlock translate>Registration completed "
 "successfully!</ng-template>\n"
 "\t\t<ng-template #errorBlock translate>Registration failed!  Most probably\n"
-"\t\t\tthe link from the email has expired.  Please try again!\n"
+"\t\t\tthe link from the email has expired.  Please try again\n"
+"\t\t\t<a routerLink=\"/registration\" translate>here</a>!\n"
 "\t\t</ng-template>"
+msgstr ""
+
+msgid ""
+"<div class=\"col-12\">\n"
+"Please fill in your email address or username, and we will send\n"
+"you an email with instrucutions how to set a new password.  Please\n"
+"note that for data privacy reasons, you will not get any error message\n"
+"if the email address or username is not valid.\n"
+"\t\t</div>"
 msgstr ""
 
 msgid ""
@@ -139,10 +152,10 @@ msgstr ""
 
 msgid ""
 "<span class=\"fab fa-google\"\n"
-"\t\t\t\t\t\ttitle=\"{{ 'Login with Google' | translate}}\"\n"
-"\t\t\t\t\t\taria-hidden=\"true\"></span>\n"
-"\t\t\t\t\t&nbsp;\n"
-"\t\t\t\t\t<span translate>Login with Google</span>"
+"\t\t\t\t\t  title=\"{{ 'Login with Google' | translate}}\"\n"
+"\t\t\t\t\t  aria-hidden=\"true\"></span>\n"
+"\t\t\t\t&nbsp;\n"
+"\t\t\t\t<span translate>Login with Google</span>"
 msgstr ""
 
 msgid ""
@@ -160,6 +173,11 @@ msgid ""
 msgstr ""
 
 msgid ""
+"All your personal user data will be deleted and your account\n"
+"\t\t\tname will be renamed to a random username."
+msgstr ""
+
+msgid ""
 "An email with further instructions has been sent to [[email]].\n"
 "Please check your spam folder if the mail does not arrive in\n"
 "the next couple of minutes."
@@ -174,6 +192,12 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
+msgid "Change Password"
+msgstr ""
+
+msgid "Change password"
+msgstr ""
+
 msgid "Confirmation being sent ..., please wait!"
 msgstr ""
 
@@ -183,7 +207,18 @@ msgstr ""
 msgid "Data Privacy Statement"
 msgstr ""
 
+msgid "Delete Account"
+msgstr ""
+
 msgid "Disclaimer"
+msgstr ""
+
+msgid ""
+"Do you really want to delete your account?\n"
+"\t\tThis cannot be reverted!"
+msgstr ""
+
+msgid "Don't have an account?"
 msgstr ""
 
 msgid "Email address"
@@ -192,16 +227,22 @@ msgstr ""
 msgid "Email address or username"
 msgstr ""
 
-msgid "Enter email"
+msgid "Enter email address"
 msgstr ""
 
 msgid "Enter email or username"
+msgstr ""
+
+msgid "Enter your old password"
 msgstr ""
 
 msgid "Features"
 msgstr ""
 
 msgid "Finnish"
+msgstr ""
+
+msgid "Forgot your password?"
 msgstr ""
 
 msgid "Homepage"
@@ -251,6 +292,15 @@ msgstr ""
 msgid "My Lingua::Poly"
 msgstr ""
 
+msgid "New password"
+msgstr ""
+
+msgid "Okay"
+msgstr ""
+
+msgid "Old Password"
+msgstr ""
+
 msgid "Password"
 msgstr ""
 
@@ -269,6 +319,9 @@ msgstr ""
 msgid "Register"
 msgstr ""
 
+msgid "Register!"
+msgstr ""
+
 msgid "Registration"
 msgstr ""
 
@@ -284,11 +337,17 @@ msgstr ""
 msgid "Report a bug"
 msgstr ""
 
+msgid "Reset Password"
+msgstr ""
+
 msgid "Save"
 msgstr ""
 
 msgid "Search word"
 msgstr "Search word"
+
+msgid "Sign In"
+msgstr ""
 
 msgid "Sign-in"
 msgstr ""
@@ -299,7 +358,7 @@ msgstr ""
 msgid "Start"
 msgstr "Start"
 
-msgid "Test"
+msgid "Submit"
 msgstr ""
 
 msgid "The homepage must start with \"https://\" or \"http://\"."
@@ -317,13 +376,22 @@ msgstr ""
 msgid "This name is already taken."
 msgstr ""
 
+msgid "This name is reserved for anonymous users."
+msgstr ""
+
 msgid "Username"
+msgstr ""
+
+msgid "You cannot use a colon in your username."
 msgstr ""
 
 msgid "You cannot use a slash in your username."
 msgstr ""
 
 msgid "You cannot use an at sign in your username."
+msgstr ""
+
+msgid "You have to specify your old password."
 msgstr ""
 
 msgid "or"
