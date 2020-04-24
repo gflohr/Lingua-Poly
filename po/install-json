@@ -19,7 +19,7 @@ sub save_json($$);
 
 my @linguas = @ARGV or die "Usage: $0 LINGUAS\n";
 
-my $en_po = '../src/assets/i18n/en.po';
+my $en_po = '../src/assets/i18n/en-us.po';
 my $entries = Locale::PO->load_file_asarray($en_po, 'utf-8')
     or die "$0: cannot open '$en_po' for reading: $!\n";
 
@@ -37,9 +37,10 @@ foreach my $lingua (@linguas) {
     my $entries = Locale::PO->load_file_asarray("$lingua.po", 'utf-8')
         or die "$0: cannot open '$lingua.po' for reading: $!\n";
 
+    my %needed_here = %needed;
     foreach my $entry (@$entries) {
         my $msgid = $entry->dequote($entry->msgid);
-        next if !delete $needed{$msgid};
+        next if !delete $needed_here{$msgid};
         my $msgstr = $entry->dequote($entry->msgstr);
         $msgstr = $msgid if '' eq $msgstr;
         if ($entry->has_flag('perl-brace-format')) {
