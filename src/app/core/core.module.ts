@@ -1,8 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
-import { TranslateLoader } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { PasswordValidator } from './validators/passwordValidator';
 import { BASE_PATH } from './openapi/lingua-poly';
@@ -14,24 +12,12 @@ import { StoreModule } from '@ngrx/store';
 import * as fromCore from './reducers';
 import { CookieService } from 'ngx-cookie-service';
 
-export function HttpLoaderFactory(httpClient: HttpClient) {
-	return new TranslateHttpLoader(httpClient, './assets/i18n/', '.json');
-}
-
 @NgModule({
 	imports: [
 		CommonModule,
 		EffectsModule.forFeature([
 			AuthEffects
 		]),
-		TranslateModule.forRoot({
-			loader: {
-				provide: TranslateLoader,
-				useFactory: HttpLoaderFactory,
-				deps: [HttpClient]
-			},
-			useDefaultLang: true
-		}),
 		HttpClientModule,
 		StoreModule.forFeature(fromCore.coreFeatureKey, fromCore.coreReducers),
 	],

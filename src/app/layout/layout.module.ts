@@ -15,7 +15,7 @@ import { ErrorMessageComponent } from './components/error-message/error-message.
 		CommonModule,
 		NgbModule,
 		RouterModule,
-		CoreModule
+		CoreModule,
 	],
 	exports: [
 		HeaderComponent,

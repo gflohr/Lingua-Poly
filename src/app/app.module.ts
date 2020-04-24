@@ -23,6 +23,13 @@ import { RouteContainerModule } from './route-container/route-container.module';
 import { UserEffects } from './user/effects';
 import { LinguaModule } from './lingua/lingua.module';
 import { SharedModule } from './shared/shared.module';
+import { HttpClient } from '@angular/common/http';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+
+export function HttpLoaderFactory(httpClient: HttpClient) {
+	return new TranslateHttpLoader(httpClient, './assets/i18n/', '.json');
+}
 
 @NgModule({
 	declarations: [
@@ -51,7 +58,14 @@ import { SharedModule } from './shared/shared.module';
 		}),
 		StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
 		ApiModule,
-		SharedModule,
+		TranslateModule.forRoot({
+			loader: {
+				provide: TranslateLoader,
+				useFactory: HttpLoaderFactory,
+				deps: [HttpClient]
+			},
+			useDefaultLang: true
+		}),
 	],
 	providers: [],
 	bootstrap: [ AppLinguaComponent ],
