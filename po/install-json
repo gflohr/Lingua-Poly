@@ -58,7 +58,7 @@ sub save_json($$) {
     my ($filename, $data) = @_;
 
     print "generating '$filename'.\n";
-    open my $fh, '>:encoding(utf8)', $filename
+    open my $fh, '>:raw', $filename
         or die "cannot open '$filename' for writing: $!\n";
     $fh->print(encode_json $data)
         or die "cannot write to '$filename': $!\n";
