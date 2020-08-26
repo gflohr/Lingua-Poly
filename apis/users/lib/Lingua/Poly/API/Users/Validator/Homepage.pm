@@ -133,7 +133,7 @@ sub __checkHostname {
 		    || ($octets[0] == 100 && $octets[1] >= 64 && $octets[1] <= 127)
 		    # Link-local addresses.
 		    || ($octets[0] == 169 && $octets[1] == 254)) {
-		    die "ipv4_special\n";
+			die "ipv4_special\n";
 		}
 		$host = join '.', @octets;
 	} elsif ($host =~ /^[0-9a-f:]+$/ && ($host =~ y/:/:/ >= 2)) {
