@@ -145,28 +145,28 @@ sub __checkHostname {
 			$is_ip = $norm =~ /^(?:[0-9a-f]{4}:){7}[0-9a-f]{4}$/;
 			if ($is_ip
 			    && ($max == 0 # the unspecified address
-				    # Loopback.
-				    || '0000:0000:0000:0000:0000:0000:0000:0001' eq $norm
-				    # IPv4 mapped addresses.
-				    || $norm =~ /^0000:0000:0000:0000:0000:ffff/
-				    # IPv4 translated addresses.
-				    || $norm =~ /^0000:0000:0000:0000:ffff:0000/
-				    # IPv4/IPv6 address translation.
-				    || $norm =~ /^0064:ff9b:0000:0000:0000:0000/
-				    # IPv4 compatible.
-					|| $norm =~ /^0000:0000:0000:0000:0000:0000/
-				    # Discard prefix.
-				    || $norm =~ /^0100/
-				    # Teredo tunneling, ORCHIDv2, documentation, 6to4.
-				    || $norm =~ /^200[12]/
-				    # Private networks.
-				    || $norm =~ /^f[cd]/
-				    # Link-local.
-				    || $norm =~ /^fe[89ab]/
-				    # Multicast.
-				    || $norm =~ /^ff/
-				    )
-				) {
+			        # Loopback.
+			        || '0000:0000:0000:0000:0000:0000:0000:0001' eq $norm
+			        # IPv4 mapped addresses.
+			        || $norm =~ /^0000:0000:0000:0000:0000:ffff/
+			        # IPv4 translated addresses.
+			        || $norm =~ /^0000:0000:0000:0000:ffff:0000/
+			        # IPv4/IPv6 address translation.
+			        || $norm =~ /^0064:ff9b:0000:0000:0000:0000/
+			        # IPv4 compatible.
+			        || $norm =~ /^0000:0000:0000:0000:0000:0000/
+			        # Discard prefix.
+			        || $norm =~ /^0100/
+			        # Teredo tunneling, ORCHIDv2, documentation, 6to4.
+			        || $norm =~ /^200[12]/
+			        # Private networks.
+			        || $norm =~ /^f[cd]/
+			        # Link-local.
+			        || $norm =~ /^fe[89ab]/
+			        # Multicast.
+			        || $norm =~ /^ff/
+			        )
+			    ) {
 				die "ipv6_special\n";
 			}
 
