@@ -124,16 +124,16 @@ sub __checkHostname {
 
 		# IPv4 addresses with special purpose?
 		if (# Loopback.
-			$octets[0] == 127
-			# Private IP ranges.
-			|| $octets[0] == 10
-			|| ($octets[0] == 172 && $octets[1] >= 16 && $octets[1] <= 31)
-			|| ($octets[0] == 192 && $octets[1] == 168)
-			# Carrier-grade NAT deployment.
-			|| ($octets[0] == 100 && $octets[1] >= 64 && $octets[1] <= 127)
-			# Link-local addresses.
-			|| ($octets[0] == 169 && $octets[1] == 254)) {
-			die "ipv4_special\n";
+		    $octets[0] == 127
+		    # Private IP ranges.
+		    || $octets[0] == 10
+		    || ($octets[0] == 172 && $octets[1] >= 16 && $octets[1] <= 31)
+		    || ($octets[0] == 192 && $octets[1] == 168)
+		    # Carrier-grade NAT deployment.
+		    || ($octets[0] == 100 && $octets[1] >= 64 && $octets[1] <= 127)
+		    # Link-local addresses.
+		    || ($octets[0] == 169 && $octets[1] == 254)) {
+		    die "ipv4_special\n";
 		}
 		$host = join '.', @octets;
 	} elsif ($host =~ /^[0-9a-f:]+$/ && ($host =~ y/:/:/ >= 2)) {
@@ -165,7 +165,7 @@ sub __checkHostname {
 				    || $norm =~ /^fe[89ab]/
 				    # Multicast.
 				    || $norm =~ /^ff/
-					)
+				    )
 				) {
 				die "ipv6_special\n";
 			}
